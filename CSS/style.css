@@ -1,0 +1,335 @@
+
+:root {
+    --bg-color: #2c2b2b;
+    --card-bg: #111111;
+    --accent: #4cf8c4; 
+    --text-main: #ffffff;
+    --text-dim: #888888;
+    --border: 1px solid #222;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    min-height: 100vh;
+}
+
+/* navbar*/
+.navbar {
+    background: #000;
+    border-bottom: var(--border);
+    padding: 1rem 5%;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1800px; /*para alargar em telas maiores*/
+    margin: 0 auto;
+}
+.nav-links a{
+    color: var(--text-main);      
+    text-decoration: none;      
+    font-weight: 500;          
+    font-size: 0.9rem;
+    transition: 0.3s;
+    padding: 0 10px;            
+}
+
+.logo-img { 
+    height: 100px; 
+    filter: brightness(0) invert(1); }
+
+/*layout adaptável */
+.profile-page {
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 25px;
+    padding: 30px 2%;
+    margin: 0 auto;
+}
+
+/* quando a tela cresce, o conteúdo espalha-se */
+@media (min-width: 1100px) {
+    .profile-page {
+        grid-template-columns: 380px 1fr; 
+        align-items: start;
+    }
+}
+
+/* card principal*/
+.profile-display-card {
+    background: var(--card-bg);
+    border: var(--border);
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.profile-header-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+}
+
+.profile-avatar img {
+    width: 160px;
+    height: 160px;
+    border-radius: 25px;
+    border: 2px solid var(--accent);
+    object-fit: cover;
+}
+
+.user-name { 
+    font-size: 1.8rem; 
+    letter-spacing: -1px;
+}
+
+.user-handle {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.member-badge {
+    background: var(--accent);
+    color: #000;
+    font-weight: 800;
+    padding: 4px 12px;
+    font-size: 0.7rem;
+    border-radius: 50px;
+    text-transform: uppercase;
+}
+
+.qr-access-container {
+    background: var(--accent);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    color: #000;
+}
+
+.btn-qr-primary {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.qr-image {
+    background: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    width: 150px;
+}
+.archetype-tag {
+    display: inline-block;
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    font-weight: 800;
+    padding: 4px 12px;
+    font-size: 0.7rem;
+    border-radius: 50px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.user-motto {
+    font-style: italic;
+    color: var(--text-dim);
+    border-left: 2px solid var(--accent);
+    padding-left: 15px;
+    margin: 15px 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+
+/* info */
+.profile-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.detail-item {
+    background: #1a1a1a;
+    padding: 15px;
+    border-radius: 12px;
+    border-left: 3px solid var(--accent);
+}
+
+.detail-label {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    display: block;
+}
+
+.detail-value { font-size: 0.85rem; font-weight: bold; margin-top: 5px; }
+
+/*hall of fame*/
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.stat-box {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.stat-number { color: var(--accent); font-size: 1.5rem; font-weight: 800; display: block; }
+.stat-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; }
+
+
+/* badges */
+.badge-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.badge {
+    background: #1a1a1a;
+    border: var(--border);
+    padding: 20px 10px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-size: 2.5rem;
+    position: relative;
+    transition: 0.3s;
+}
+
+.badge:hover { border-color: var(--accent); transform: translateY(-5px); }
+
+/* gerar o texto por baixo do badge que irá depender do badge */
+.badge::after {
+    content: attr(title);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: center;
+    font-weight: bold;
+}
+
+
+/* gráfico de barras*/
+.stats-section {
+    background: var(--card-bg);
+    border: var(--border);
+    border-radius: 20px;
+    padding: 30px;
+}
+
+.subtitle {
+    color: var(--text-dim); 
+    font-size: 0.75rem;     
+    margin: 5px;        
+}
+.stats-filter {
+    background-color: #1a1a1a;     
+    color: var(--text-main);     
+    border: 1px solid #333;      
+    padding: 5px 5px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    outline: none;                
+    transition: 0.3s;
+}
+
+.stats-filter:hover {
+    border-color: var(--accent); 
+}
+
+.stats-filter option {
+    background: #1a1a1a; /*garante que a lista que desce também é escura*/
+    color: white;
+}
+
+
+.chart-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 250px; 
+    margin-top: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #222;
+}
+
+.bar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end; 
+    width: 10%;
+    height: 100%;
+}
+
+.bar {
+    width: 100%;
+    background: var(--accent);
+    border-radius: 6px 6px 0 0;
+    position: relative;
+    box-shadow: 0 0 5px var(--accent);
+    transition: 0.3s;
+}
+
+.bar:hover { filter: brightness(1.1); transform: scaleX(1.1); }
+
+/* pop up que aparece no hover de uma barra */
+.bar::after {
+    content: attr(data-time);
+    position: absolute;
+    top: -30px;
+    font-size: 0.7rem;
+    background: #222;
+    padding: 4px 8px;
+    border-radius: 4px;
+    opacity: 0;
+}
+.bar:hover::after {opacity: 1;}
+
+
+/*botões */
+.btn-edit-profile {
+    background: var(--text-main);
+    color: #000;
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: bold;
+    display: block;
+    transition: 0.3s;
+}
+.btn-edit-profile:hover { background: var(--accent); }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | Cubo Gym</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../CSS/style.css">
 </head>
 <body>
 
@@ -15,48 +15,94 @@
             </a>
             
             <nav class="nav-links">
-                <a href="dashboard.html">Dashboard</a>
-                <a href="logout.php" class="btn-logout">Logout</a>
+                <a href="dashboard.html">DASHBOARD</a>
+                <a href="logout.php" class="btn-logout">LOGOUT</a>
             </nav>
         </div>
     </header>
 
     <main class="profile-page">
-        <section class="profile-display-card">
-            
-            <div class="profile-header-info">
-                <figure class="profile-avatar">
-                    <img src="../images/profile_pic.webp" alt="User Profile Picture">
-                </figure>
-                <div class="user-meta">
-                    <h1 class="user-name">João Silva</h1>
-                    <p class="user-handle">@jsilva_gym</p>
-                    <span class="member-badge">Gold Member</span>
-                </div>
-            </div>
-
-            <div class="qr-access-container">
-                <button class="btn-qr-primary" id="entry-key-trigger">
-                    <span class="icon">🔑</span> Digital Entry Key
-                </button>
+        <aside class="sidebar-container">
+            <section class="profile-display-card">
                 
-                <div class="qr-display-area">
-                    <img src="../images/qr-sample.png" alt="User Access QR Code" class="qr-image">
-                    <p class="qr-status">Ready to Scan</p>
+                <div class="profile-header-info">
+                    <figure class="profile-avatar">
+                        <img src="../images/profile_pic.webp" alt="User Profile Picture">
+                    </figure>
+                    <div class="user-meta">
+                        <h1 class="user-name">João Silva</h1>
+                        <p class="user-handle">@jsilva_gym</p>
+                        <span class="member-badge">Gold Member</span>
+                    </div>
+                </div>
+
+                <div class="qr-access-container">
+                    <button class="btn-qr-primary" id="entry-key-trigger">
+                        <span class="icon">🔑</span> Digital Entry Key
+                    </button>
+                    
+                    <div class="qr-display-area">
+                        <img src="../images/random_qr.png" alt="User Access QR Code" class="qr-image">
+                        <p class="qr-status">Ready to Scan</p>
+                    </div>
+                </div>
+
+                <div class="user-identity">
+                    <span class="archetype-tag">Powerlifter</span>
+                    <blockquote class="user-motto">"Training for my first 500kg total."</blockquote>
+                    
+                    <div class="privacy-status">
+                        <span class="status-icon">🔒</span>
+                        <small>Profile is Private to Gym Members</small>
+                    </div>
+                </div>
+
+            </section>
+        </aside>
+        <div class="main-content">
+
+            <div class="profile-details">
+                <div class="detail-item">
+                    <span class="detail-label">Full Name</span>
+                    <p class="detail-value">João Marques Silva</p>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Email Address</span>
+                    <p class="detail-value">joao.silva@gmil.com</p>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Member Since</span>
+                    <p class="detail-value">January 2024</p>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Home Gym</span>
+                    <p class="detail-value">Cubo Gym - Porto, Paranhos</p>
                 </div>
             </div>
 
-            <div class="user-identity">
-                <span class="archetype-tag">Powerlifter</span>
-                <blockquote class="user-motto">"Training for my first 500kg total."</blockquote>
+            <div class="hall-of-fame">
+                <h3>Hall of Fame</h3>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <span class="stat-number">142</span>
+                        <span class="stat-label">Lifetime Visits</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">26</span>
+                        <span class="stat-label">Classes Attended</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">Earned Badges</span>
+                    </div>
+                </div>
                 
-                <div class="privacy-status">
-                    <span class="status-icon">🔒</span>
-                    <small>Profile is Private to Gym Members</small>
+                <div class="badge-container">
+                    <span class="badge" title="Early Bird: 50 morning sessions">🌅</span>
+                    <span class="badge" title="A+ Student: 20 classes completed">🏃</span>
+                    <span class="badge" title="Century Club: 100 visits">💯</span>
                 </div>
             </div>
-
-            <hr class="section-divider">
 
             <div class="stats-section">
                 <header class="stats-header">
@@ -115,54 +161,13 @@
                 </div>
             </div>
             
-            <div class="hall-of-fame">
-                <h3>Hall of Fame</h3>
-                <div class="stats-row">
-                    <div class="stat-box">
-                        <span class="stat-number">142</span>
-                        <span class="stat-label">Lifetime Visits</span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-number">26</span>
-                        <span class="stat-label">Classes Attended</span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-number">12</span>
-                        <span class="stat-label">Earned Badges</span>
-                    </div>
-                </div>
-                
-                <div class="badge-container">
-                    <span class="badge" title="Early Bird: 50 morning sessions">🌅</span>
-                    <span class="badge" title="A+ Student: 20 classes completed">🏃</span>
-                    <span class="badge" title="Century Club: 100 visits">💯</span>
-                </div>
-            </div>
+            
 
-            <div class="profile-details">
-                <div class="detail-item">
-                    <span class="detail-label">Full Name</span>
-                    <p class="detail-value">João Marques Silva</p>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Email Address</span>
-                    <p class="detail-value">joao.silva@gmil.com</p>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Member Since</span>
-                    <p class="detail-value">January 2024</p>
-                </div>
-                <div class="info-block">
-                    <h4>Home Gym</h4>
-                    <p>Cubo Gym - Porto, Paranhos</p>
-                </div>
-            </div>
-
+            
             <div class="profile-actions">
                 <a href="edit-profile.html" class="btn-edit-profile">Edit Profile</a>
             </div>
-
-        </section>
+        </div>
     </main>
 
     </body>
