@@ -35,6 +35,17 @@
                 </div>
             </div>
 
+            <div class="qr-access-container">
+                <button class="btn-qr-primary" id="entry-key-trigger">
+                    <span class="icon">🔑</span> Digital Entry Key
+                </button>
+                
+                <div class="qr-display-area">
+                    <img src="../images/qr-sample.png" alt="User Access QR Code" class="qr-image">
+                    <p class="qr-status">Ready to Scan</p>
+                </div>
+            </div>
+
             <div class="user-identity">
                 <span class="archetype-tag">Powerlifter</span>
                 <blockquote class="user-motto">"Training for my first 500kg total."</blockquote>
@@ -47,12 +58,73 @@
 
             <hr class="section-divider">
 
+            <div class="stats-section">
+                <header class="stats-header">
+                    <div class="header-titles">
+                        <h3>Time Spent Training</h3>
+                        <p class="subtitle">Calculated via QR Check-in/out</p>
+                    </div>
+                    <select class="stats-filter">
+                        <option>Last 7 Days</option>
+                        <option>Last 30 Days</option>
+                    </select>
+                </header>
+
+                <div class="chart-container">
+                    <div class="chart-wrapper">
+                        <div class="bar-group">
+                            <div class="bar" style="height: 45%;" data-time="55min"></div>
+                            <span class="day-label">M</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 80%;" data-time="1h 40min"></div>
+                            <span class="day-label">T</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 0%;" data-time="Rest"></div>
+                            <span class="day-label">W</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 65%;" data-time="1h 15min"></div>
+                            <span class="day-label">T</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 90%;" data-time="2h 10min"></div>
+                            <span class="day-label">F</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 30%;" data-time="45min"></div>
+                            <span class="day-label">S</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 0%;" data-time="Rest"></div>
+                            <span class="day-label">S</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <span class="legend-label">Weekly Total</span>
+                            <strong>6h 45min</strong>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-label">Daily Avg.</span>
+                            <strong>1h 21min</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="hall-of-fame">
                 <h3>Hall of Fame</h3>
                 <div class="stats-row">
                     <div class="stat-box">
                         <span class="stat-number">142</span>
                         <span class="stat-label">Lifetime Visits</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">26</span>
+                        <span class="stat-label">Classes Attended</span>
                     </div>
                     <div class="stat-box">
                         <span class="stat-number">12</span>
@@ -62,7 +134,7 @@
                 
                 <div class="badge-container">
                     <span class="badge" title="Early Bird: 50 morning sessions">🌅</span>
-                    <span class="badge" title="Iron Lung: 10km run milestone">🏃</span>
+                    <span class="badge" title="A+ Student: 20 classes completed">🏃</span>
                     <span class="badge" title="Century Club: 100 visits">💯</span>
                 </div>
             </div>
@@ -83,13 +155,6 @@
                 <div class="info-block">
                     <h4>Home Gym</h4>
                     <p>Cubo Gym - Porto, Paranhos</p>
-                </div>
-            </div>
-
-            <div class="membership-access">
-                <div class="qr-container">
-                    <img src="../images/randomqr.png" alt="Membership QR Code" class="qr-code">
-                    <p>Scan for Gym Entry</p>
                 </div>
             </div>
 
