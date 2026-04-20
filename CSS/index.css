@@ -110,3 +110,52 @@ body {
     border-color: #00bfa6;
     transform: scale(1.15);
 }
+
+/*stats*/
+.stats {
+    display: flex;
+    justify-content: space-around;
+    padding: 60px 8%;
+    background-color: white;
+    font-family: 'League Gothic', sans-serif;
+    color: black;
+}
+
+.stat-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 15px;
+    align-items: center;
+}
+
+.stat-card img {
+    grid-row: 1 / 3;
+    height: 30px;
+    opacity: 0.2;
+}
+
+.stat-number {
+    font-size: 28px;
+    color: #00bfa6;
+    margin: 0;
+}
+
+.stat-text {
+    font-size: 24px;
+    color: black;
+}
+
+/*about*/
+.about {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 80px 10%;
+    background-color: black;
+}
+
+.about-text {
+    max-width: 400px;
+    font-family: 'League Gothic', sans-serif;
+}
