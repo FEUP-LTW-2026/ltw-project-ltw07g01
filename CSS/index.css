@@ -1,0 +1,112 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'League Gothic', sans-serif;
+    background-color: black;
+    color: white;
+}
+
+/*navbar*/
+.navbar {
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding : 0px 40px;
+    background-color: black;
+}
+
+.logo img{
+    height: 60px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 115px;
+
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-family: 'League Gothic', sans-serif;
+    letter-spacing: 1px;
+
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: #00bfa6;
+}
+
+/*hero*/
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 80px 10%;
+    background: linear-gradient( to bottom, #000000 0%, #2a2a2a 40%, #000000 100%);
+    min-height: 100vh;
+}
+
+
+.hero-title {
+    font-family: 'League Gothic', sans-serif;
+    color: white;
+    margin: 0;
+}
+
+.hero-title h1 {
+    font-size: 120px;
+    margin: 0;
+    color: #00bfa6;
+    margin-bottom: -20px;
+}
+
+.hero-title h2 {
+    font-size: 60px;
+    margin: 0 0 170px 45px;
+    
+    
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+    font-size: 25px;
+    font-family: 'League Gothic', sans-serif;
+    align-items: center;
+    gap: 85px;
+}
+
+.hero-divider {
+    width: 1.5px;
+    height: 150px;
+    background-color: #00bfa6;
+}
+
+.hero-buttons a {
+    padding: 10px 25px;
+    border: 2px solid white;
+    border-radius: 50px;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+    align-items: center;
+}
+
+.hero-buttons a:hover {
+    color: #00bfa6;
+    border-color: #00bfa6;
+    transform: scale(1.15);
+}
