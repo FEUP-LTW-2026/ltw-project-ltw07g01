@@ -146,16 +146,77 @@ body {
     color: black;
 }
 
-/*about*/
+/* about */
 .about {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 80px 10%;
+    align-items: center;
+
+    padding: 80px 0 80px 10%;
     background-color: black;
 }
 
 .about-text {
-    max-width: 400px;
+    max-width: 420px;
     font-family: 'League Gothic', sans-serif;
 }
+
+.about-text h2 {
+    margin: 0;
+    font-size: 90px;
+    line-height: 0.95;
+    color: white;
+    font-weight: normal;
+}
+
+.about-text h2 span {
+    color: #00bfa6;
+}
+
+.about-divider {
+    width: 190px;
+    height: 2px;
+    background-color: #00bfa6;
+    margin: 18px 0 35px 0;
+}
+
+.about-text p {
+    margin: 0;
+    color: white;
+    font-size: 40px;
+    line-height: 1.2;
+}
+
+.about-text p + p {
+    margin-top: 6px;
+}
+
+.about-button {
+    display: inline-block;
+    margin-top: 45px;
+    padding: 12px 38px;
+
+    border: 3px solid white;
+    border-radius: 999px;
+
+    color: white;
+    text-decoration: none;
+    font-family: 'League Gothic', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+    transition: 0.3s;
+}
+
+.about-button:hover {
+    color: #00bfa6;
+    border-color: #00bfa6;
+    transform: scale(1.15);
+}
+
+.about-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 23px solid #00bfa6;
+}
+
