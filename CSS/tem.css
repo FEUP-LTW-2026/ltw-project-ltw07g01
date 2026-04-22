@@ -15,7 +15,6 @@ body {
             #AFAFAF 75%,
             #FFFFFF 100%
     );
-    margin: 0;
 }
 
 .navbar {
@@ -47,11 +46,25 @@ body {
 .nav-links a:hover {
     color: #00bfa6;
 }
+.main-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
+    gap: 40px;
+    padding: 40px;
+    flex-wrap: wrap; /* ajuste a ecras pequenos*/
+}
+.bigGuy {
+    height: auto;
+    max-height: 500px;
+   border-radius: 15px;
+}
 .types-membership-container{
     display: flex;
     justify-content: center;
-    width: 100%;
+    align-items: center;
+    padding: 40px 0;
 }
 .types-memberships{
         text-decoration: none;
@@ -81,7 +94,11 @@ body {
     border: 2px solid white;
     border-radius: 15px;
 }
-
+/*
+.types-memberships span:active {
+    background-color: #00bfa6;
+}
+*/
 .banner{
     display: flex;
     justify-content: center;
@@ -151,4 +168,53 @@ body {
     width: 80%;
     border-bottom: 2px solid white;
     padding-bottom: 20px;
+}
+
+.wrapper-perguntas{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.comparison {
+    margin: 50px auto;
+    width: 80%;
+    color: black;
+}
+
+.comparison table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.comparison th, .comparison td {
+    border: 1px solid #333;
+    padding: 15px;
+    text-align: center;
+}
+
+.wrapper-perguntas {
+    flex-direction: column;
+    padding: 50px;
+    font-size: 20px;
+    background: #00bfa6;
+}
+
+.faq-item {
+    margin: 15px 0;
+    max-width: 600px;
+    text-align: left;
+}
+
+.footer {
+    background: black;
+    color: white;
+    text-align: center;
+    padding: 30px;
+    margin-top: 50px;
+}
+
+.social-links a {
+    color: #00bfa6;
 }
