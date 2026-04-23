@@ -234,7 +234,7 @@ body {
     min-height: 420px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     box-sizing: border-box;
 }
 
@@ -282,6 +282,7 @@ body {
 .card p,
 .card1 p {
     margin: 0;
+    margin-bottom: 30px;
     font-size: 28px;
     line-height: 1.25;
     font-family: 'League Gothic', sans-serif;
@@ -299,7 +300,8 @@ body {
 .card-button {
     display: inline-block;
     align-self: flex-start;
-    margin-top: 40px;
+    margin-top: auto;
+    margin-bottom: 20px;
     padding: 12px 38px;
     border-radius: 50px;
     text-decoration: none;
