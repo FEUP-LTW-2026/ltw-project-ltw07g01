@@ -325,3 +325,44 @@ body {
 .card-button:hover {
     transform: scale(1.15);
 }
+
+/* footer */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 30px 10%;
+    background-color: black;
+    border-top: 2px solid #00bfa6;
+}
+
+.footer-left img {
+    height: 80px;
+    display: block;
+}
+
+.footer-center {
+    display: flex;
+    gap: 40px;
+}
+
+.footer-center a {
+    text-decoration: none;
+    color: white;
+    font-family: 'League Gothic', sans-serif;
+    font-size: 20px;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.footer-center a:hover {
+    color: #00bfa6;
+}
+
+.footer-right p {
+    margin: 0;
+    color: #00bfa6;
+    font-family: 'League Gothic', sans-serif;
+    font-size: 20px;
+}
