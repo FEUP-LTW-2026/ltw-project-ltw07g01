@@ -21,7 +21,7 @@ body {
 }
 
 .logo img{
-    height: 60px;
+    height: 85px;
 }
 
 .nav-links {
@@ -220,3 +220,106 @@ body {
     border: 23px solid #00bfa6;
 }
 
+/* cards */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    padding: 80px 0;
+}
+
+.card,
+.card1 {
+    padding: 70px 75px;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.card {
+    background-color: #d9d9d9;
+}
+
+.card1 {
+    background-color: #00bfa6;
+}
+
+.card h2,
+.card1 h2 {
+    margin: 0;
+    font-size: 70px;
+    line-height: 0.9;
+    max-width: 320px;
+    font-family: 'League Gothic', sans-serif;
+    font-weight: normal;
+}
+
+.card h2 {
+    color: #4f4f4f;
+}
+
+.card1 h2 {
+    color: white;
+}
+
+.about-divider,
+.about-divider1 {
+    width: 190px;
+    height: 3px;
+    margin: 25px 0 35px 0;
+}
+
+.about-divider {
+    background-color: #00bfa6;
+}
+
+.about-divider1 {
+    background-color: #4f4f4f;
+}
+
+.card p,
+.card1 p {
+    margin: 0;
+    font-size: 28px;
+    line-height: 1.25;
+    font-family: 'League Gothic', sans-serif;
+    max-width: 500px;
+}
+
+.card p {
+    color: #4f4f4f;
+}
+
+.card1 p {
+    color: white;
+}
+
+.card-button {
+    display: inline-block;
+    align-self: flex-start;
+    margin-top: 40px;
+    padding: 12px 38px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-family: 'League Gothic', sans-serif;
+    font-size: 28px;
+    transition: 0.3s;
+}
+
+.card .card-button {
+    border: 3px solid #00bfa6;
+    color: #00bfa6;
+    background-color: transparent;
+}
+
+.card1 .card-button {
+    border: 3px solid #4f4f4f;
+    color: #4f4f4f;
+    background-color: transparent;
+}
+
+.card-button:hover {
+    transform: scale(1.15);
+}
