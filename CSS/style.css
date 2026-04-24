@@ -21,6 +21,7 @@
     padding : 0px 40px;
     background-color: black;
     z-index:1000;
+
 }
 
 .logo img{
@@ -40,7 +41,6 @@
     text-decoration: none;
     color: var(--text-main);
     font-size: 18px;
-    font-family: 'League Gothic', sans-serif;
     letter-spacing: 1px;
 
     transition: 0.3s;
@@ -55,10 +55,9 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 40px;
-    padding: 50px 10%;
+    padding: 15px 10%;
     background-color: black;
     border-top: 2px solid #4f4f4f;
-    font-family: 'League Gothic', sans-serif;
 }
 
 .footer-logo img {
