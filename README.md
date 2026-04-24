@@ -3,9 +3,9 @@
 ## Features
 
 **All users:**
-- [x] Register a new account.
+- [ ] Register a new account.
 - [ ] Log in and out.
-- [x] Edit their profile, including name, username, password, and profile photo.
+- [ ] Edit their profile, including name, username, password, and profile photo.
 
 **Members:**
 - [ ] Browse the schedule of available fitness classes, filtering by type, trainer, day, or time.
