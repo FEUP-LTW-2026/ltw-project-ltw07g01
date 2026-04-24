@@ -366,3 +366,138 @@ body {
     font-family: 'League Gothic', sans-serif;
     font-size: 20px;
 }
+
+/* responsive */
+@media (max-width: 768px) {
+
+    /* navbar */
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .logo img {
+        height: 65px;
+    }
+
+    .nav-links {
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* hero */
+    .hero {
+        min-height: 80vh;
+        padding: 60px 5%;
+    }
+
+    .hero-title h1 {
+        font-size: 90px;
+        text-align: center;
+    }
+
+    .hero-title h2 {
+        font-size: 45px;
+        margin: 0 0 100px 30px;
+    }
+
+    .hero-buttons {
+        gap: 35px;
+        font-size: 22px;
+    }
+
+    .hero-divider {
+        height: 100px;
+    }
+
+    /* stats */
+    .stats {
+        flex-direction: column;
+        gap: 35px;
+        align-items: center;
+        padding: 50px 5%;
+    }
+
+    .stat-card {
+        width: 220px;
+    }
+
+    /* about */
+    .about {
+        flex-direction: column;
+        padding: 70px 5%;
+        gap: 50px;
+        text-align: center;
+    }
+
+    .about-text {
+        max-width: 100%;
+    }
+
+    .about-text h2 {
+        font-size: 70px;
+    }
+
+    .about-text p {
+        font-size: 32px;
+    }
+
+    .about-divider {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .about-image img {
+        width: 100%;
+        border-width: 14px;
+    }
+
+    /* cards */
+    .cards {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0;
+    }
+
+    .card,
+    .card1 {
+        padding: 55px 35px;
+        min-height: auto;
+    }
+
+    .card h2,
+    .card1 h2 {
+        font-size: 55px;
+        max-width: 100%;
+    }
+
+    .card p,
+    .card1 p {
+        font-size: 24px;
+        max-width: 100%;
+    }
+
+    .card-button {
+        font-size: 24px;
+        margin-top: 30px;
+    }
+
+    /* footer */
+    .footer {
+        flex-direction: column;
+        gap: 25px;
+        text-align: center;
+        padding: 35px 5%;
+    }
+
+    .footer-left img {
+        height: 65px;
+    }
+
+    .footer-center {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
