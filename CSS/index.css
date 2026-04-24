@@ -1,0 +1,392 @@
+:root {
+    --accent: #00bfa6; 
+    --text-main: #ffffff;
+    --text-dim: #8f8f8f;
+    --bg-color: #000000;
+}
+
+body {
+    font-family: 'League Gothic', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+}
+
+/*hero*/
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 80px 10%;
+    background: linear-gradient( to bottom, var(--bg-color) 0%, #2a2a2a 40%, var(--bg-color) 100%);
+    min-height: 100vh;
+}
+
+
+.hero-title {
+    font-family: 'League Gothic', sans-serif;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.hero-title h1 {
+    font-size: 120px;
+    margin: 0;
+    color: var(--accent);
+    margin-bottom: -20px;
+}
+
+.hero-title h2 {
+    font-size: 60px;
+    margin: 0 0 170px 45px;
+    
+    
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+    font-size: 25px;
+    font-family: 'League Gothic', sans-serif;
+    align-items: center;
+    gap: 85px;
+}
+
+.hero-divider {
+    width: 1.5px;
+    height: 150px;
+    background-color: var(--accent);
+}
+
+.hero-buttons a {
+    padding: 10px 25px;
+    border: 2px solid white;
+    border-radius: 50px;
+    color: var(--text-main);
+    text-decoration: none;
+    transition: 0.3s;
+    align-items: center;
+}
+
+.hero-buttons a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.15);
+}
+
+/*stats*/
+.stats {
+    display: flex;
+    justify-content: space-around;
+    padding: 60px 8%;
+    background-color: var(--text-main);
+    font-family: 'League Gothic', sans-serif;
+    color: var(--text-dim);
+}
+
+.stat-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 15px;
+    align-items: center;
+}
+
+.stat-card img {
+    grid-row: 1 / 3;
+    height: 30px;
+    opacity: 0.2;
+}
+
+.stat-number {
+    font-size: 28px;
+    color: var(--accent);
+    margin: 0;
+}
+
+.stat-text {
+    font-size: 24px;
+    color: var(--bg-color);
+}
+
+/* about */
+.about {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 80px 0 80px 10%;
+    background-color: var(--bg-color);
+}
+
+.about-text {
+    max-width: 420px;
+    font-family: 'League Gothic', sans-serif;
+}
+
+.about-text h2 {
+    margin: 0;
+    font-size: 90px;
+    line-height: 0.95;
+    color: var(--text-main);
+    font-weight: normal;
+}
+
+.about-text h2 span {
+    color: var(--accent);
+}
+
+.about-divider {
+    width: 190px;
+    height: 2px;
+    background-color: var(--accent);
+    margin: 18px 0 35px 0;
+}
+
+.about-text p {
+    margin: 0;
+    color: var(--text-main);
+    font-size: 40px;
+    line-height: 1.2;
+}
+
+.about-text p + p {
+    margin-top: 6px;
+}
+
+.about-button {
+    display: inline-block;
+    margin-top: 45px;
+    padding: 12px 38px;
+
+    border: 3px solid var(--text-main);
+    border-radius: 999px;
+
+    color: var(--text-main);
+    text-decoration: none;
+    font-family: 'League Gothic', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+    transition: 0.3s;
+}
+
+.about-button:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.15);
+}
+
+.about-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 23px solid var(--accent);
+}
+
+/* cards */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    padding: 80px 0;
+}
+
+.card,
+.card1 {
+    padding: 70px 75px;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-sizing: border-box;
+}
+
+.card {
+    background-color: #d9d9d9;
+}
+
+.card1 {
+    background-color: var(--accent);
+}
+
+.card h2,
+.card1 h2 {
+    margin: 0;
+    font-size: 70px;
+    line-height: 0.9;
+    max-width: 320px;
+    font-family: 'League Gothic', sans-serif;
+    font-weight: normal;
+}
+
+.card h2 {
+    color: #4f4f4f;
+}
+
+.card1 h2 {
+    color: var(--text-main);
+}
+
+.about-divider,
+.about-divider1 {
+    width: 190px;
+    height: 3px;
+    margin: 25px 0 35px 0;
+}
+
+.about-divider {
+    background-color: var(--accent);
+}
+
+.about-divider1 {
+    background-color: #4f4f4f;
+}
+
+.card p,
+.card1 p {
+    margin: 0;
+    margin-bottom: 30px;
+    font-size: 28px;
+    line-height: 1.25;
+    font-family: 'League Gothic', sans-serif;
+    max-width: 500px;
+}
+
+.card p {
+    color: #4f4f4f;
+}
+
+.card1 p {
+    color: var(--text-main);
+}
+
+.card-button {
+    display: inline-block;
+    align-self: flex-start;
+    margin-top: auto;
+    margin-bottom: 20px;
+    padding: 12px 38px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-family: 'League Gothic', sans-serif;
+    font-size: 28px;
+    transition: 0.3s;
+}
+
+.card .card-button {
+    border: 3px solid var(--accent);
+    color: var(--accent);
+    background-color: transparent;
+}
+
+.card1 .card-button {
+    border: 3px solid #4f4f4f;
+    color: #4f4f4f;
+    background-color: transparent;
+}
+
+.card-button:hover {
+    transform: scale(1.15);
+}
+
+/* responsive */
+@media (max-width: 768px) {
+    /* hero */
+    .hero {
+        min-height: 80vh;
+        padding: 60px 5%;
+    }
+
+    .hero-title h1 {
+        font-size: 90px;
+        text-align: center;
+    }
+
+    .hero-title h2 {
+        font-size: 45px;
+        margin: 0 0 100px 30px;
+    }
+
+    .hero-buttons {
+        gap: 35px;
+        font-size: 22px;
+    }
+
+    .hero-divider {
+        height: 100px;
+    }
+
+    /* stats */
+    .stats {
+        flex-direction: column;
+        gap: 35px;
+        align-items: center;
+        padding: 50px 5%;
+    }
+
+    .stat-card {
+        width: 220px;
+    }
+
+    /* about */
+    .about {
+        flex-direction: column;
+        padding: 70px 5%;
+        gap: 50px;
+        text-align: center;
+    }
+
+    .about-text {
+        max-width: 100%;
+    }
+
+    .about-text h2 {
+        font-size: 70px;
+    }
+
+    .about-text p {
+        font-size: 32px;
+    }
+
+    .about-divider {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .about-image img {
+        width: 100%;
+        border-width: 14px;
+    }
+
+    /* cards */
+    .cards {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0;
+    }
+
+    .card,
+    .card1 {
+        padding: 55px 35px;
+        min-height: auto;
+    }
+
+    .card h2,
+    .card1 h2 {
+        font-size: 55px;
+        max-width: 100%;
+    }
+
+    .card p,
+    .card1 p {
+        font-size: 24px;
+        max-width: 100%;
+    }
+
+    .card-button {
+        font-size: 24px;
+        margin-top: 30px;
+    }
+}
+

@@ -1,24 +1,17 @@
 :root {
-    --bg-color: #2c2b2b;
-    --card-bg: #111111;
+    --bg-color: #242323;
+    --card-bg: #000000;
     --accent: #00bfa6; 
     --text-main: #ffffff;
     --text-dim: #888888;
     --border: 1px solid #222;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-}
 
 body {
     background-color: var(--bg-color);
     color: var(--text-main);
 }
-
 
 .logo-img { 
     height: 100px; 
@@ -41,6 +34,10 @@ body {
 }
 
 /* card principal*/
+
+.sidebar-container {
+    padding-top: 100px;
+}
 .profile-card {
     background: var(--card-bg);
     border: var(--border);
@@ -79,7 +76,7 @@ body {
 
 .member-tag {
     background: var(--accent);
-    color: #000;
+    color: var(--card-bg);
     font-weight: 800;
     padding: 4px 12px;
     font-size: 0.7rem;
@@ -134,7 +131,7 @@ body {
 }
 
 
-/* info */
+/* info*/
 .profile-details {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -144,7 +141,7 @@ body {
 }
 
 .detail-item {
-    background: #1a1a1a;
+    background: var(--card-bg);
     padding: 15px;
     border-radius: 12px;
     border-left: 3px solid var(--accent);
@@ -168,7 +165,7 @@ body {
 }
 
 .stat-box {
-    background: #1a1a1a;
+    background: var(--card-bg);
     padding: 20px;
     border-radius: 15px;
     text-align: center;
@@ -184,7 +181,7 @@ body {
 }
 
 
-/* badges */
+/* badges*/
 .badge-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
@@ -194,7 +191,7 @@ body {
 }
 
 .badge {
-    background: #1a1a1a;
+    background: var(--card-bg);
     border: var(--border);
     padding: 20px 10px;
     border-radius: 15px;
@@ -250,7 +247,7 @@ body {
 }
 
 .stats-filter option {
-    background: #1a1a1a; /*garante que a lista que desce também é escura*/
+    background: #1a1a1a; 
     color: white;
 }
 
@@ -285,7 +282,7 @@ body {
 
 .bar:hover { filter: brightness(1.1); transform: scaleX(1.1); }
 
-/* pop up que aparece no hover de uma barra */
+/* pop up que aparece no hover de uma barra*/
 .bar::after {
     content: attr(data-time);
     position: absolute;
