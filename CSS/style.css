@@ -149,12 +149,11 @@
     font-size: 16px;
 }
 
-/* esconder checkbox */
+
 #menu-toggle {
     display: none;
 }
 
-/* hamburger escondido por defeito */
 .menu-icon {
     display: none;
     flex-direction: column;
