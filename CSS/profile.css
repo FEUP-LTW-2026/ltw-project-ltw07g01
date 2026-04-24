@@ -9,7 +9,7 @@
 
 
 body {
-    background-color: var(--bg-color);
+    background: linear-gradient( to bottom, var(--bg-color) 0%, grey 40%, var(--bg-color) 100%);
     color: var(--text-main);
 }
 
@@ -329,6 +329,7 @@ body {
     font-size: 1.2rem;
     display: block;
     transition: 0.3s;
+    margin-bottom: 40px;
 }
 
 .btn-edit-profile:hover {
