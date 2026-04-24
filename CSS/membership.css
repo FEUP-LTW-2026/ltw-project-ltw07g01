@@ -71,7 +71,6 @@ body {
     border-radius: 0.9375rem;
 }
 
-/* Scroll suave ao clicar nas tabs */
 html {
     scroll-behavior: smooth;
 }
@@ -110,7 +109,6 @@ html {
     text-align: center;
 }
 
-/* Section titles */
 .Gym-title,
 .Pilatus-title,
 .Cycling-title {
@@ -134,7 +132,6 @@ html {
     margin: 0.4rem auto 0;
 }
 
-/* Plan cards */
 .plan {
     display: flex;
     flex-direction: column;
@@ -191,7 +188,6 @@ html {
     color: #00bfa6;
 }
 
-/* Plan list */
 .plan ul {
     list-style: none;
     padding: 0;
@@ -241,7 +237,6 @@ html {
     border-bottom-color: rgba(0,0,0,0.3);
 }
 
-/* Comparison table */
 .wrapper-perguntas {
     display: flex;
     flex-direction: column;
@@ -263,11 +258,6 @@ html {
     margin: 3.125rem auto;
     width: 80%;
     color: black;
-}
-
-.table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 .table-dark {
@@ -329,7 +319,12 @@ html {
     color: #333;
 }
 
-/* FAQ accordion */
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+
 .faq-item {
     width: 100%;
     max-width: 40rem;
