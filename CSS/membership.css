@@ -1,0 +1,458 @@
+body {
+    font-family: 'League Gothic', sans-serif;
+    color: black;
+    background: linear-gradient(
+            45deg,
+            #FFFFFF 0%,
+            #C3C3C3 24%,
+            #FFFFFF 52%,
+            #AFAFAF 75%,
+            #FFFFFF 100%
+    );
+}
+
+.main-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 2.5rem;
+    padding: 2.5rem;
+    flex-wrap: wrap;
+}
+
+.examples-img {
+    display: block;
+    width: 100%;
+    max-height: 31.25rem;
+    object-fit: cover;
+    scroll-margin-top: 5.5rem;
+}
+
+.types-membership-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem 0;
+}
+
+.types-memberships {
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    gap: 3.125rem;
+    color: white;
+}
+
+.memberships {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    padding: 2rem 3rem;
+    gap: 2rem;
+    color: white;
+    flex-wrap: wrap;
+}
+
+.types-memberships a {
+    padding: 0.625rem 1.25rem;
+    width: fit-content;
+    text-decoration: none;
+    color: white;
+    background-color: black;
+    border: 0.125rem solid black;
+    border-radius: 0.9375rem;
+    cursor: pointer;
+}
+
+.types-memberships a:hover {
+    background-color: #00bfa6;
+    border: 0.125rem solid white;
+    border-radius: 0.9375rem;
+}
+
+/* Scroll suave ao clicar nas tabs */
+html {
+    scroll-behavior: smooth;
+}
+
+.banner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 6.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.membership-title {
+    font-size: 3.125rem;
+    font-style: italic;
+    text-align: center;
+    padding: 1.5rem 2rem 0.5rem;
+    color: black;
+}
+
+.banner-subtitle {
+    font-size: 1.125rem;
+    color: #555;
+    letter-spacing: 0.04rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.slogan {
+    display: flex;
+    justify-content: center;
+    margin: 1.25rem;
+    font-style: inherit;
+    font-size: 2.5rem;
+    text-align: center;
+}
+
+/* Section titles */
+.Gym-title,
+.Pilatus-title,
+.Cycling-title {
+    font-size: 3rem;
+    font-style: italic;
+    text-transform: uppercase;
+    text-align: center;
+    color: black;
+    padding: 1.25rem 0 0.25rem;
+    letter-spacing: 0.15rem;
+}
+
+.Gym-title::after,
+.Pilatus-title::after,
+.Cycling-title::after {
+    content: '';
+    display: block;
+    width: 4rem;
+    height: 0.1875rem;
+    background: #00bfa6;
+    margin: 0.4rem auto 0;
+}
+
+/* Plan cards */
+.plan {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    position: relative;
+
+    text-align: justify;
+    border: 0.5rem solid #00bfa6;
+    border-radius: 1.25rem;
+    width: 22.5rem;
+    min-height: 28rem;
+    padding: 1.5rem 1rem;
+    gap: 0.75rem;
+
+    background-color: black;
+    transition: 0.4s;
+}
+
+.plan h2 {
+    width: 80%;
+    border-bottom: 0.125rem solid white;
+    padding-bottom: 0.625rem;
+    text-align: center;
+}
+
+.plan-popular {
+    transform: scale(1.05);
+    border-color: #00bfa6;
+    box-shadow: 0 0 1.5rem rgba(0, 191, 166, 0.35);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -1.1rem;
+    background: #00bfa6;
+    color: black;
+    padding: 0.2rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    letter-spacing: 0.08rem;
+    font-weight: bold;
+}
+
+.plan:hover {
+    background-color: #00bfa6;
+    border: 0.5rem solid azure;
+    transform: scale(1.1);
+    color: black;
+}
+
+.plan:hover .popular-badge {
+    background: black;
+    color: #00bfa6;
+}
+
+/* Plan list */
+.plan ul {
+    list-style: none;
+    padding: 0;
+    width: 80%;
+}
+
+.plan ul li {
+    padding: 0.3rem 0 0.3rem 1.6rem;
+    position: relative;
+    font-size: 1.0625rem;
+}
+
+.plan ul li::before {
+    content: '✓';
+    color: #00bfa6;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+    transition: color 0.4s;
+}
+
+.plan:hover ul li::before {
+    color: black;
+}
+
+
+.price {
+    display: flex;
+    justify-content: center;
+    font-size: 1.875rem;
+}
+
+.plan-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.125rem;
+    text-align: center;
+
+    width: 80%;
+    border-bottom: 0.125rem solid white;
+    padding-bottom: 0.75rem;
+    transition: border-color 0.4s;
+}
+
+.plan:hover .plan-info {
+    border-bottom-color: rgba(0,0,0,0.3);
+}
+
+/* Comparison table */
+.wrapper-perguntas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3.125rem 1.25rem;
+    background: #111;
+}
+
+.perguntas-title {
+    color: #00bfa6;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    letter-spacing: 0.05rem;
+}
+
+.comparison {
+    margin: 3.125rem auto;
+    width: 80%;
+    color: black;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-dark {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    color: white;
+    font-size: 1rem;
+}
+
+.table-dark th,
+.table-dark td {
+    padding: 0.9375rem 1.5rem;
+    text-align: center;
+}
+
+.table-dark td:first-child,
+.table-dark th:first-child {
+    text-align: left;
+}
+
+.table-dark thead tr {
+    background-color: black;
+    color: white;
+    font-size: 1.125rem;
+    letter-spacing: 0.05rem;
+}
+
+.table-dark tbody tr:nth-child(odd) {
+    background-color: #1a1a1a;
+}
+
+.table-dark tbody tr:nth-child(even) {
+    background-color: #2a2a2a;
+}
+
+.table-dark tbody tr:hover {
+    background-color: #00bfa6;
+    color: black;
+}
+
+.icon-check {
+    color: white;
+    font-size: 1.1rem;
+}
+
+.icon-xmark {
+    color: #ff4d4d;
+    font-size: 1.1rem;
+}
+
+.table-dark tbody tr:hover .icon-check {
+    color: white;
+}
+
+.table-dark tbody tr:hover .icon-xmark {
+    color: #333;
+}
+
+/* FAQ accordion */
+.faq-item {
+    width: 100%;
+    max-width: 40rem;
+    border: 0.125rem solid #00bfa6;
+    border-radius: 0.75rem;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+}
+
+.faq-item summary.faq-question {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: #1a1a1a;
+    color: white;
+    padding: 1.125rem 1.5rem;
+    font-size: 1.125rem;
+    letter-spacing: 0.03rem;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.faq-item summary.faq-question::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item summary.faq-question::after {
+    content: '+';
+    font-size: 1.4rem;
+    color: #00bfa6;
+    transition: transform 0.3s;
+    line-height: 1;
+}
+
+.faq-item[open] summary.faq-question::after {
+    content: '−';
+}
+
+.faq-item summary.faq-question:hover {
+    background: #252525;
+}
+
+.faq-answer {
+    background: #222;
+    color: #ddd;
+    font-size: 1rem;
+    padding: 1rem 1.5rem;
+}
+
+@media (max-width: 48rem) {
+    .membership-title {
+        font-size: 1.75rem;
+        padding: 1.25rem 0.9375rem 0.5rem;
+    }
+
+    .banner-subtitle {
+        font-size: 1rem;
+        padding: 0 1rem;
+    }
+
+    .slogan {
+        font-size: 1.375rem;
+        margin: 0.625rem;
+        text-align: center;
+    }
+
+    .main-wrapper {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .examples-img {
+        max-height: 15.625rem;
+    }
+
+    .Gym-title,
+    .Pilatus-title,
+    .Cycling-title {
+        font-size: 2rem;
+    }
+
+    .memberships {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        padding: 1rem;
+    }
+
+    .plan {
+        width: 85%;
+        min-height: auto;
+        padding: 1.5rem 1rem;
+    }
+
+    .plan-popular {
+        transform: scale(1.03);
+    }
+
+    .types-memberships {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    .comparison {
+        width: 95%;
+    }
+
+    .wrapper-perguntas {
+        padding: 1.5rem 0.75rem;
+    }
+
+    .faq-item {
+        max-width: 100%;
+    }
+
+    .faq-item summary.faq-question {
+        font-size: 1rem;
+        padding: 1rem 1.25rem;
+    }
+}
+
