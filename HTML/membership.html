@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> MEMBERSHIP </title>
-    <link rel="stylesheet" href="../CSS/tem.css">
+    <link rel="stylesheet" href="../CSS/membership.css">
     <link rel="stylesheet" href="../CSS/style.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 <nav class="navbar">
-    <a href="../index.html" class="logo">
+    <a href="index.html" class="logo">
         <img src="../images/logo.png" alt="CUBO GYM logo">
     </a>
-    
+
     <ul class="nav-links">
         <li><a href="membership.html">Membership</a></li>
         <li><a href="about.html">About Us</a></li>
@@ -24,15 +25,16 @@
 
 <div class="banner">
     <h2 class="membership-title">MEMBERSHIPS</h2>
+    <p class="banner-subtitle">Escolhe o plano certo para atingir os teus objetivos</p>
 </div>
 
-    <div class="types-membership-container">
-        <h3 class="types-memberships">
-            <span class="gym-title active-tab" data-tab="gym">GYM</span>
-            <span class="pilatus-title" data-tab="pilates">PILATES</span>
-            <span class="cycling-title" data-tab="cycling">CYCLING</span>
-        </h3>
-    </div>
+<div class="types-membership-container">
+    <h3 class="types-memberships">
+        <a href="#section-gym" class="gym-title">GYM</a>
+        <a href="#section-pilates" class="pilatus-title">PILATES</a>
+        <a href="#section-cycling" class="cycling-title">CYCLING</a>
+    </h3>
+</div>
 
 
 <div class="main-wrapper" id="section-gym">
@@ -47,8 +49,10 @@
                 <li>Acesso em horário livre</li>
                 <li>App de treino incluída</li>
             </ul>
+            <a href="register.html" class="plan-btn">Aderir Agora</a>
         </div>
-        <div class="plan">
+        <div class="plan plan-popular">
+            <span class="popular-badge">MAIS POPULAR</span>
             <h2>PRO</h2>
             <p class="price">39 €</p>
             <p class="plan-info">Equilíbrio perfeito entre treino intenso e recuperação.</p>
@@ -57,6 +61,7 @@
                 <li>Aulas Premium</li>
                 <li>Consultoria nutricional</li>
             </ul>
+            <a href="register.html" class="plan-btn">Aderir Agora</a>
         </div>
         <div class="plan">
             <h2>ULTRA</h2>
@@ -67,12 +72,13 @@
                 <li>Aulas de grupo ilimitadas</li>
                 <li>Avaliação física mensal</li>
             </ul>
+            <a href="register.html" class="plan-btn">Aderir Agora</a>
         </div>
     </div>
 </div>
 
 
-<div class="main-wrapper" id="section-pilates" style="display:none">
+<div class="main-wrapper" id="section-pilates">
 
     <div class="memberships">
         <div class="plan">
@@ -84,8 +90,10 @@
                 <li>Tapete incluído</li>
                 <li>Instrutores certificados</li>
             </ul>
+            <a href="register.html" class="plan-btn">Aderir Agora</a>
         </div>
-        <div class="plan">
+        <div class="plan plan-popular">
+            <span class="popular-badge">MAIS POPULAR</span>
             <h2>PRO</h2>
             <p class="price">35 €</p>
             <p class="plan-info">Evolui com aulas de reformer e acesso a todas as unidades.</p>
@@ -94,6 +102,7 @@
                 <li>Todas as localizações</li>
                 <li>Aulas de reformer</li>
             </ul>
+            <a href="register.html" class="plan-btn">Aderir Agora</a>
         </div>
         <div class="plan">
             <h2>ULTRA</h2>
@@ -104,12 +113,13 @@
                 <li>Sessões privadas mensais</li>
                 <li>Avaliação postural</li>
             </ul>
+            <a href="register.html" class="plan-btn">Aderir Agora</a>
         </div>
     </div>
 </div>
 
-<!-- CYCLING -->
-<div class="main-wrapper" id="section-cycling" style="display:none">
+
+<div class="main-wrapper" id="section-cycling">
     <img class="bigGuy" src="../images/bigGuy.jpg" alt="CYCLING">
     <div class="memberships">
         <div class="plan">
@@ -121,8 +131,10 @@
                 <li>Bicicleta reservada</li>
                 <li>App de treino incluída</li>
             </ul>
+            <a href="register.html" class="plan-btn">Aderir Agora</a>
         </div>
-        <div class="plan">
+        <div class="plan plan-popular">
+            <span class="popular-badge">MAIS POPULAR</span>
             <h2>PRO</h2>
             <p class="price">30 €</p>
             <p class="plan-info">Performance e métricas para levares o treino a outro nível.</p>
@@ -131,6 +143,7 @@
                 <li>Todas as localizações</li>
                 <li>Métricas de performance</li>
             </ul>
+            <a href="register.html" class="plan-btn">Aderir Agora</a>
         </div>
         <div class="plan">
             <h2>ULTRA</h2>
@@ -141,11 +154,13 @@
                 <li>Treino personalizado</li>
                 <li>Análise de pedalada mensal</li>
             </ul>
+            <a href="register.html" class="plan-btn">Aderir Agora</a>
         </div>
     </div>
 </div>
 
 <span class="slogan">Define as tuas metas. Supera os teus limites. Junta-te ao CUBO.</span>
+
 <section class="comparison">
     <h2>Comparativo de Planos</h2>
     <div class="table-wrapper">
@@ -158,21 +173,21 @@
             </tr>
             <tr>
                 <td>Acesso 24/7</td>
-                <td>❌</td>
-                <td>❌</td>
-                <td>✅</td>
+                <td><i class="fa-solid fa-xmark icon-xmark"></i></td>
+                <td><i class="fa-solid fa-xmark icon-xmark"></i></td>
+                <td><i class="fa-solid fa-check icon-check"></i></td>
             </tr>
             <tr>
                 <td>Aulas Premium</td>
-                <td>❌</td>
-                <td>✅</td>
-                <td>✅</td>
+                <td><i class="fa-solid fa-xmark icon-xmark"></i></td>
+                <td><i class="fa-solid fa-check icon-check"></i></td>
+                <td><i class="fa-solid fa-check icon-check"></i></td>
             </tr>
             <tr>
                 <td>Consultoria</td>
-                <td>❌</td>
-                <td>✅</td>
-                <td>✅</td>
+                <td><i class="fa-solid fa-xmark icon-xmark"></i></td>
+                <td><i class="fa-solid fa-check icon-check"></i></td>
+                <td><i class="fa-solid fa-check icon-check"></i></td>
             </tr>
         </table>
     </div>
@@ -181,89 +196,75 @@
 <section class="wrapper-perguntas">
     <h2 class="perguntas-title">Perguntas Frequentes</h2>
 
-    <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">
-            Posso cancelar a qualquer momento?
-            <span class="faq-icon">+</span>
-        </button>
+    <details class="faq-item">
+        <summary class="faq-question">Posso cancelar a qualquer momento?</summary>
         <div class="faq-answer">
             <p>Sim, podes cancelar a tua subscrição com 30 dias de antecedência.</p>
         </div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">
-            Existem taxas de inscrição?
-            <span class="faq-icon">+</span>
-        </button>
+    <details class="faq-item">
+        <summary class="faq-question">Existem taxas de inscrição?</summary>
         <div class="faq-answer">
             <p>Apenas uma taxa única inicial de 10€ no momento da adesão.</p>
         </div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">
-            Posso mudar de plano?
-            <span class="faq-icon">+</span>
-        </button>
+    <details class="faq-item">
+        <summary class="faq-question">Posso mudar de plano?</summary>
         <div class="faq-answer">
             <p>Sim, podes fazer upgrade ou downgrade do teu plano a qualquer momento na área de cliente.</p>
         </div>
-    </div>
+    </details>
 
-    <div class="faq-item">
-        <button class="faq-question" aria-expanded="false">
-            As aulas estão incluídas em todos os planos?
-            <span class="faq-icon">+</span>
-        </button>
+    <details class="faq-item">
+        <summary class="faq-question">As aulas estão incluídas em todos os planos?</summary>
         <div class="faq-answer">
             <p>As aulas de grupo básicas estão incluídas no plano Basic. Aulas Premium e especializadas estão disponíveis nos planos Pro e Ultra.</p>
         </div>
-    </div>
+    </details>
+
 </section>
 
-<footer class="footer">
-    <p>&copy; 2026 CUBO GYM. Todos os direitos reservados.</p>
-    <div class="social-links">
-        <a href="#">Instagram</a> | <a href="#">Facebook</a>
-    </div>
-</footer>
+    <footer class="footer">
+        <div class="footer-logo">
+            <a href="index.html" class="footer-logo">
+                <img src="../images/logo.png" alt="CUBO GYM logo">
+             </a>
+        </div>
+        <div class="footer-links">
+            <a href="membership.html">Membership</a>
+            <a href="about.html">About Us</a>
+            <a href="locations.html">Locations</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-info">
+            <h3>INFO</h3>
+            <p>MON-FRI — 6:00 - 22:30</p>
+            <p>SAT — 9:00 - 20:00</p>
+            <p>SUN — 10:00 - 18:00</p>
+            <br>
+            <p>RUA ANA CACHO PAULO 67, 4400-069</p>
+            <br>
+            <p>GERAL@CUBOGYM.COM</p>
+            <p>+351 211 317 632</p>
+        </div>
+        <div class="footer-socials">
+            <h3>FOLLOW US</h3>
+            <div class="social-icons">
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+            </div>
+        </div>
+        <div class="footer-right">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="complaints.html">Complaint Book</a>
+            <p>&copy;All rights reserved.</p>
+        </div>
+        </footer>
 
-<script>
-    document.querySelector('.hamburger').addEventListener('click', function () {
-        document.querySelector('.nav-links').classList.toggle('open');
-    });
-
-    document.querySelectorAll('.types-memberships span').forEach(function (tab) {
-        tab.addEventListener('click', function () {
-            document.querySelectorAll('.types-memberships span').forEach(function (t) {
-                t.classList.remove('active-tab');
-            });
-            this.classList.add('active-tab');
-
-            var target = this.getAttribute('data-tab');
-            ['gym', 'pilates', 'cycling'].forEach(function (id) {
-                document.getElementById('section-' + id).style.display = id === target ? 'flex' : 'none';
-            });
-        });
-    });
-
-    document.querySelectorAll('.faq-question').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            var item = this.closest('.faq-item');
-            var isOpen = item.classList.contains('open');
-
-            document.querySelectorAll('.faq-item.open').forEach(function (el) {
-                el.classList.remove('open');
-                el.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
-            });
-
-            if (!isOpen) {
-                item.classList.add('open');
-                this.setAttribute('aria-expanded', 'true');
-            }
-        });
-    });
-</script>
 </body>
 </html>

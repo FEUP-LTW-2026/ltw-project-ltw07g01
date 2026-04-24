@@ -6,24 +6,24 @@
 }
 
 :root {
-    --accent: #00bfa6;
+    --accent: #00bfa6; 
     --text-main: #ffffff;
     --text-dim: #8f8f8f;
-    --bg-color: #000000;
 }
 
 /*navbar*/
 .navbar {
-    display: flex;
+    display:flex;
     align-items: center;
     justify-content: space-between;
-    position: fixed;
+    position:fixed;
     width: 100%;
-    padding: 0px 40px;
-    background-color: var(--bg-color);
+    padding : 0px 40px;
+    background-color: black;
+    z-index: 1000;
 }
 
-.logo img {
+.logo img{
     height: 85px;
 }
 
@@ -55,8 +55,8 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 40px;
-    padding: 50px 10%;
-    background-color: var(--bg-color);
+    padding: 15px 10%;
+    background-color: black;
     border-top: 2px solid #4f4f4f;
     font-family: 'League Gothic', sans-serif;
 }
@@ -129,7 +129,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-top: 45px;
+    margin-top:45px;
 }
 
 .footer-right a {
@@ -150,6 +150,27 @@
     font-size: 16px;
 }
 
+/* esconder checkbox */
+#menu-toggle {
+    display: none;
+}
+
+/* hamburger escondido por defeito */
+.menu-icon {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.menu-icon span {
+    width: 30px;
+    height: 3px;
+    background-color: white;
+    display: block;
+    transition: 0.3s;
+}
+
 /* responsive */
 @media (max-width: 768px) {
 
@@ -162,12 +183,6 @@
 
     .logo img {
         height: 65px;
-    }
-
-    .nav-links {
-        gap: 30px;
-        flex-wrap: wrap;
-        justify-content: center;
     }
 
     /* footer */
@@ -198,6 +213,26 @@
         justify-content: center;
     }
 
+    .menu-icon {
+        display: flex;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background-color: black;
+        padding: 30px 0;
+    }
+
+    #menu-toggle:checked + .menu-icon + .nav-links {
+        display: flex;
+    }
 }
 
 @media (max-width: 1100px) {
@@ -219,27 +254,4 @@
     .social-icons {
         flex-wrap: wrap;
     }
-}
-
-.navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: fixed;
-    width: 100%;
-    padding: 0 2.5rem;
-    background-color: black;
-}
-
-.logo img {
-    height: 5.3125rem;
-}
-
-.nav-links {
-    display: flex;
-    gap: 7.1875rem;
-
-    list-style: none;
-    margin: 0;
-    padding: 0;
 }

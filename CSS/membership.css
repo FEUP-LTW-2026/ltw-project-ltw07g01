@@ -18,10 +18,12 @@ body {
 
     gap: 2.5rem;
     padding: 2.5rem;
-    flex-wrap: wrap; /* ajuste a ecras pequenos*/
+    flex-wrap: wrap;
 }
 
 .bigGuy {
+    display: grid;
+    justify-content: left;
     height: auto;
     max-height: 31.25rem;
     border-radius: 1rem;
@@ -31,7 +33,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2.5rem 0;
+    padding: 1.5rem 0;
 }
 
 .types-memberships {
@@ -44,46 +46,86 @@ body {
 
 .memberships {
     display: flex;
-    justify-content: center; /*hor */
-    align-items: center; /* ver */
-    padding: 4.688rem;
-    gap: 4.688rem;
+    justify-content: center;
+    align-items: stretch;
+    padding: 2rem 3rem;
+    gap: 2rem;
     color: white;
+    flex-wrap: wrap;
 }
 
-.types-memberships span {
+.types-memberships a {
     padding: 0.625rem 1.25rem;
     width: fit-content;
+    text-decoration: none;
+    color: white;
     background-color: black;
     border: 0.125rem solid black;
     border-radius: 0.9375rem;
     cursor: pointer;
 }
 
-.types-memberships span:hover,
-.types-memberships span.active-tab {
+.types-memberships a:hover {
     background-color: #00bfa6;
     border: 0.125rem solid white;
     border-radius: 0.9375rem;
 }
 
-/*
-.types-memberships span:active {
-    background-color: #00bfa6;
+/* Tabs: esconde todas as secções por defeito */
+#section-gym,
+#section-pilates,
+#section-cycling {
+    display: none;
 }
-*/
+
+/* Mostra a secção cujo ID está no URL */
+#section-gym:target,
+#section-pilates:target,
+#section-cycling:target {
+    display: flex;
+}
+
+body:not(:has(:target)) #section-gym {
+    display: flex;
+}
+
+/* Destaca a tab ativa consoante o :target */
+body:has(#section-gym:target) .types-memberships a[href="#section-gym"],
+body:has(#section-pilates:target) .types-memberships a[href="#section-pilates"],
+body:has(#section-cycling:target) .types-memberships a[href="#section-cycling"] {
+    background-color: #00bfa6;
+    border: 0.125rem solid white;
+}
+
+/* Tab GYM destacada por defeito (sem target no URL) */
+body:not(:has(:target)) .types-memberships a[href="#section-gym"] {
+    background-color: #00bfa6;
+    border: 0.125rem solid white;
+}
+
 .banner {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    padding-top: 6.5rem;
+    padding-bottom: 0.5rem;
 }
 
 .membership-title {
-    display: inline-block;
     font-size: 3.125rem;
     font-style: italic;
     text-align: center;
-    padding: 3.125rem;
+    padding: 1.5rem 2rem 0.5rem;
     color: black;
+}
+
+.banner-subtitle {
+    font-size: 1.125rem;
+    color: #555;
+    letter-spacing: 0.04rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
 }
 
 .slogan {
@@ -92,22 +134,27 @@ body {
     margin: 1.25rem;
     font-style: inherit;
     font-size: 2.5rem;
+    text-align: center;
 }
 
+/* Plan cards */
 .plan {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
+    position: relative;
 
     text-align: justify;
     border: 0.5rem solid #00bfa6;
     border-radius: 1.25rem;
-    width: 12.5rem;
-    height: 21.875rem;
+    width: 22.5rem;
+    min-height: 28rem;
+    padding: 1.5rem 1rem;
+    gap: 0.75rem;
 
     background-color: black;
-    transition: 0.5s;
+    transition: 0.4s;
 }
 
 .plan h2 {
@@ -117,6 +164,24 @@ body {
     text-align: center;
 }
 
+.plan-popular {
+    transform: scale(1.05);
+    border-color: #00bfa6;
+    box-shadow: 0 0 24px rgba(0, 191, 166, 0.35);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -1.1rem;
+    background: #00bfa6;
+    color: black;
+    padding: 0.2rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    letter-spacing: 0.08rem;
+    font-weight: bold;
+}
+
 .plan:hover {
     background-color: #00bfa6;
     border: 0.5rem solid azure;
@@ -124,6 +189,59 @@ body {
     color: black;
 }
 
+.plan:hover .popular-badge {
+    background: black;
+    color: #00bfa6;
+}
+
+/* Plan list */
+.plan ul {
+    list-style: none;
+    padding: 0;
+    width: 80%;
+}
+
+.plan ul li {
+    padding: 0.3rem 0 0.3rem 1.6rem;
+    position: relative;
+    font-size: 1.0625rem;
+}
+
+.plan ul li::before {
+    content: '✓';
+    color: #00bfa6;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+    transition: color 0.4s;
+}
+
+.plan:hover ul li::before {
+    color: black;
+}
+
+/* CTA button */
+.plan-btn {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.55rem 1.75rem;
+    background: #00bfa6;
+    color: black;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    font-size: 1rem;
+    letter-spacing: 0.05rem;
+    transition: background 0.3s, color 0.3s, transform 0.2s;
+}
+
+.plan-btn:hover {
+    transform: scale(1.05);
+}
+
+.plan:hover .plan-btn {
+    background: black;
+    color: white;
+}
 
 .price {
     display: flex;
@@ -135,14 +253,20 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     text-align: center;
 
     width: 80%;
     border-bottom: 0.125rem solid white;
-    padding-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    transition: border-color 0.4s;
 }
 
+.plan:hover .plan-info {
+    border-bottom-color: rgba(0,0,0,0.3);
+}
+
+/* Comparison table */
 .wrapper-perguntas {
     display: flex;
     flex-direction: column;
@@ -212,6 +336,25 @@ body {
     color: black;
 }
 
+.icon-check {
+    color: #00bfa6;
+    font-size: 1.1rem;
+}
+
+.icon-xmark {
+    color: #ff4d4d;
+    font-size: 1.1rem;
+}
+
+.table-dark tbody tr:hover .icon-check {
+    color: black;
+}
+
+.table-dark tbody tr:hover .icon-xmark {
+    color: #333;
+}
+
+/* FAQ accordion */
 .faq-item {
     width: 100%;
     max-width: 40rem;
@@ -219,65 +362,60 @@ body {
     border-radius: 0.75rem;
     margin-bottom: 0.75rem;
     overflow: hidden;
-    transition: border-color 0.3s;
 }
 
-.faq-item.open {
-    border-color: white;
-}
-
-.faq-question {
-    width: 100%;
-    background: #1a1a1a;
-    color: white;
-    border: none;
-    padding: 1.125rem 1.5rem;
-    text-align: left;
-    font-family: 'League Gothic', sans-serif;
-    font-size: 1.125rem;
-    letter-spacing: 0.03rem;
+.faq-item summary.faq-question {
+    list-style: none;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background 0.3s, color 0.3s;
+    width: 100%;
+    background: #1a1a1a;
+    color: white;
+    padding: 1.125rem 1.5rem;
+    font-size: 1.125rem;
+    letter-spacing: 0.03rem;
+    user-select: none;
+    transition: background 0.2s;
 }
 
-.faq-question:hover,
-.faq-item.open .faq-question {
-    background: #00bfa6;
-    color: black;
+.faq-item summary.faq-question::-webkit-details-marker {
+    display: none;
 }
 
-.faq-icon {
-    font-size: 1.5rem;
-    line-height: 1;
+.faq-item summary.faq-question::after {
+    content: '+';
+    font-size: 1.4rem;
+    color: #00bfa6;
     transition: transform 0.3s;
+    line-height: 1;
 }
 
-.faq-item.open .faq-icon {
-    transform: rotate(45deg);
+.faq-item[open] summary.faq-question::after {
+    content: '−';
+}
+
+.faq-item summary.faq-question:hover {
+    background: #252525;
 }
 
 .faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease, padding 0.3s;
     background: #222;
     color: #ddd;
     font-size: 1rem;
-    padding: 0 1.5rem;
-}
-
-.faq-item.open .faq-answer {
-    max-height: 12rem;
     padding: 1rem 1.5rem;
 }
 
 @media (max-width: 768px) {
     .membership-title {
         font-size: 1.75rem;
-        padding: 1.875rem 0.9375rem;
+        padding: 1.25rem 0.9375rem 0.5rem;
+    }
+
+    .banner-subtitle {
+        font-size: 1rem;
+        padding: 0 1rem;
     }
 
     .slogan {
@@ -301,15 +439,18 @@ body {
     .memberships {
         flex-direction: column;
         align-items: center;
-        gap: 1.5rem;
+        gap: 2rem;
         padding: 1rem;
     }
 
     .plan {
         width: 85%;
-        height: auto;
-        min-height: 17.5rem;
-        padding: 1rem;
+        min-height: auto;
+        padding: 1.5rem 1rem;
+    }
+
+    .plan-popular {
+        transform: scale(1.03);
     }
 
     .types-memberships {
@@ -330,7 +471,7 @@ body {
         max-width: 100%;
     }
 
-    .faq-question {
+    .faq-item summary.faq-question {
         font-size: 1rem;
         padding: 1rem 1.25rem;
     }
