@@ -9,7 +9,6 @@
     --accent: #00bfa6; 
     --text-main: #ffffff;
     --text-dim: #8f8f8f;
-    --bg-color: #000000;
 }
 
 /*navbar*/
@@ -20,7 +19,8 @@
     position:fixed;
     width: 100%;
     padding : 0px 40px;
-    background-color: var(--bg-color);
+    background-color: black;
+    z-index: 1000;
 }
 
 .logo img{
@@ -55,8 +55,8 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 40px;
-    padding: 50px 10%;
-    background-color: var(--bg-color);
+    padding: 15px 10%;
+    background-color: black;
     border-top: 2px solid #4f4f4f;
     font-family: 'League Gothic', sans-serif;
 }
