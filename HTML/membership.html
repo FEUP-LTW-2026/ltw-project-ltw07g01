@@ -14,7 +14,7 @@
     <a href="../index.html" class="logo">
         <img src="../images/logo.png" alt="CUBO GYM logo">
     </a>
-
+    
     <ul class="nav-links">
         <li><a href="membership.html">Membership</a></li>
         <li><a href="about.html">About Us</a></li>
@@ -28,26 +28,16 @@
 
     <div class="types-membership-container">
         <h3 class="types-memberships">
-            <span class="gym-title">GYM</span>
-            <span class="pilatus-title">PILATES</span>
-            <span class="cycling-title">CYCLING</span>
+            <span class="gym-title active-tab" data-tab="gym">GYM</span>
+            <span class="pilatus-title" data-tab="pilates">PILATES</span>
+            <span class="cycling-title" data-tab="cycling">CYCLING</span>
         </h3>
     </div>
 
-<div class="main-wrapper">
-    <img class="bigGuy" src="../images/bigGuy.jpg" alt="">
-    <div class="memberships">
-        <div class="plan">
-            <h2>ULTRA</h2>
-            <p class="price">49 €</p>
-            <p class="plan-info">Performance de elite e acesso total. O teu limite é o céu.</p>
-            <ul>
-                <li>Acesso 24/7</li>
-                <li>Aulas de grupo ilimitadas</li>
-                <li>Avaliação física mensal</li>
-            </ul>
-        </div>
 
+<div class="main-wrapper" id="section-gym">
+
+    <div class="memberships">
         <div class="plan">
             <h2>BASIC</h2>
             <p class="price">29 €</p>
@@ -58,7 +48,6 @@
                 <li>App de treino incluída</li>
             </ul>
         </div>
-
         <div class="plan">
             <h2>PRO</h2>
             <p class="price">39 €</p>
@@ -69,122 +58,167 @@
                 <li>Consultoria nutricional</li>
             </ul>
         </div>
+        <div class="plan">
+            <h2>ULTRA</h2>
+            <p class="price">49 €</p>
+            <p class="plan-info">Performance de elite e acesso total. O teu limite é o céu.</p>
+            <ul>
+                <li>Acesso 24/7</li>
+                <li>Aulas de grupo ilimitadas</li>
+                <li>Avaliação física mensal</li>
+            </ul>
+        </div>
     </div>
 </div>
+
+
+<div class="main-wrapper" id="section-pilates" style="display:none">
+
+    <div class="memberships">
+        <div class="plan">
+            <h2>BASIC</h2>
+            <p class="price">25 €</p>
+            <p class="plan-info">Introdução ao pilates com instrutores certificados.</p>
+            <ul>
+                <li>2 aulas por semana</li>
+                <li>Tapete incluído</li>
+                <li>Instrutores certificados</li>
+            </ul>
+        </div>
+        <div class="plan">
+            <h2>PRO</h2>
+            <p class="price">35 €</p>
+            <p class="plan-info">Evolui com aulas de reformer e acesso a todas as unidades.</p>
+            <ul>
+                <li>4 aulas por semana</li>
+                <li>Todas as localizações</li>
+                <li>Aulas de reformer</li>
+            </ul>
+        </div>
+        <div class="plan">
+            <h2>ULTRA</h2>
+            <p class="price">45 €</p>
+            <p class="plan-info">Aulas ilimitadas e acompanhamento personalizado.</p>
+            <ul>
+                <li>Aulas ilimitadas</li>
+                <li>Sessões privadas mensais</li>
+                <li>Avaliação postural</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- CYCLING -->
+<div class="main-wrapper" id="section-cycling" style="display:none">
+    <img class="bigGuy" src="../images/bigGuy.jpg" alt="CYCLING">
+    <div class="memberships">
+        <div class="plan">
+            <h2>BASIC</h2>
+            <p class="price">20 €</p>
+            <p class="plan-info">Começa a pedalar com energia e consistência.</p>
+            <ul>
+                <li>3 aulas por semana</li>
+                <li>Bicicleta reservada</li>
+                <li>App de treino incluída</li>
+            </ul>
+        </div>
+        <div class="plan">
+            <h2>PRO</h2>
+            <p class="price">30 €</p>
+            <p class="plan-info">Performance e métricas para levares o treino a outro nível.</p>
+            <ul>
+                <li>Aulas ilimitadas</li>
+                <li>Todas as localizações</li>
+                <li>Métricas de performance</li>
+            </ul>
+        </div>
+        <div class="plan">
+            <h2>ULTRA</h2>
+            <p class="price">40 €</p>
+            <p class="plan-info">Treino de elite com análise e acompanhamento completo.</p>
+            <ul>
+                <li>Aulas ilimitadas</li>
+                <li>Treino personalizado</li>
+                <li>Análise de pedalada mensal</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <span class="slogan">Define as tuas metas. Supera os teus limites. Junta-te ao CUBO.</span>
 <section class="comparison">
     <h2>Comparativo de Planos</h2>
-    <table>
-        <tr>
-            <th>Benefício</th>
-            <th>Basic</th>
-            <th>Pro</th>
-            <th>Ultra</th>
-        </tr>
-        <tr>
-            <td>Acesso 24/7</td>
-            <td>❌</td>
-            <td>❌</td>
-            <td>✅</td>
-        </tr>
-        <tr>
-            <td>Aulas Premium</td>
-            <td>❌</td>
-            <td>✅</td>
-            <td>✅</td>
-        </tr>
-        <tr>
-            <td>Consultoria</td>
-            <td>❌</td>
-            <td>✅</td>
-            <td>✅</td>
-        </tr>
-    </table>
+    <div class="table-wrapper">
+        <table class="table-dark">
+            <tr>
+                <th>Benefício</th>
+                <th>Basic</th>
+                <th>Pro</th>
+                <th>Ultra</th>
+            </tr>
+            <tr>
+                <td>Acesso 24/7</td>
+                <td>❌</td>
+                <td>❌</td>
+                <td>✅</td>
+            </tr>
+            <tr>
+                <td>Aulas Premium</td>
+                <td>❌</td>
+                <td>✅</td>
+                <td>✅</td>
+            </tr>
+            <tr>
+                <td>Consultoria</td>
+                <td>❌</td>
+                <td>✅</td>
+                <td>✅</td>
+            </tr>
+        </table>
+    </div>
 </section>
-<div class="main-wrapper">
-    <img class="bigGuy" src="../images/bigGuy.jpg" alt="">
-    <div class="memberships">
-        <div class="plan">
-            <h2>ULTRA</h2>
-            <p class="price">49 €</p>
-            <p class="plan-info">Performance de elite e acesso total. O teu limite é o céu.</p>
-            <ul>
-                <li>Acesso 24/7</li>
-                <li>Aulas de grupo ilimitadas</li>
-                <li>Avaliação física mensal</li>
-            </ul>
-        </div>
-
-        <div class="plan">
-            <h2>BASIC</h2>
-            <p class="price">29 €</p>
-            <p class="plan-info">A base sólida para a tua transformação. Resultados reais.</p>
-            <ul>
-                <li>Sala de musculação</li>
-                <li>Acesso em horário livre</li>
-                <li>App de treino incluída</li>
-            </ul>
-        </div>
-
-        <div class="plan">
-            <h2>PRO</h2>
-            <p class="price">39 €</p>
-            <p class="plan-info">Equilíbrio perfeito entre treino intenso e recuperação.</p>
-            <ul>
-                <li>Todas as localizações</li>
-                <li>Aulas Premium</li>
-                <li>Consultoria nutricional</li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div class="main-wrapper">
-    <img class="bigGuy" src="../images/bigGuy.jpg" alt="">
-    <div class="memberships">
-        <div class="plan">
-            <h2>ULTRA</h2>
-            <p class="price">49 €</p>
-            <p class="plan-info">Performance de elite e acesso total. O teu limite é o céu.</p>
-            <ul>
-                <li>Acesso 24/7</li>
-                <li>Aulas de grupo ilimitadas</li>
-                <li>Avaliação física mensal</li>
-            </ul>
-        </div>
-
-        <div class="plan">
-            <h2>BASIC</h2>
-            <p class="price">29 €</p>
-            <p class="plan-info">A base sólida para a tua transformação. Resultados reais.</p>
-            <ul>
-                <li>Sala de musculação</li>
-                <li>Acesso em horário livre</li>
-                <li>App de treino incluída</li>
-            </ul>
-        </div>
-
-        <div class="plan">
-            <h2>PRO</h2>
-            <p class="price">39 €</p>
-            <p class="plan-info">Equilíbrio perfeito entre treino intenso e recuperação.</p>
-            <ul>
-                <li>Todas as localizações</li>
-                <li>Aulas Premium</li>
-                <li>Consultoria nutricional</li>
-            </ul>
-        </div>
-    </div>
-</div>
 
 <section class="wrapper-perguntas">
     <h2 class="perguntas-title">Perguntas Frequentes</h2>
+
     <div class="faq-item">
-        <p><strong>Posso cancelar a qualquer momento?</strong><br>Sim, podes cancelar a tua subscrição com 30 dias de
-            antecedência.</p>
+        <button class="faq-question" aria-expanded="false">
+            Posso cancelar a qualquer momento?
+            <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+            <p>Sim, podes cancelar a tua subscrição com 30 dias de antecedência.</p>
+        </div>
     </div>
+
     <div class="faq-item">
-        <p>Existem taxas de inscrição?<br>Apenas uma taxa única inicial de 10€ no momento da adesão.
-        </p>
+        <button class="faq-question" aria-expanded="false">
+            Existem taxas de inscrição?
+            <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+            <p>Apenas uma taxa única inicial de 10€ no momento da adesão.</p>
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+            Posso mudar de plano?
+            <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+            <p>Sim, podes fazer upgrade ou downgrade do teu plano a qualquer momento na área de cliente.</p>
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+            As aulas estão incluídas em todos os planos?
+            <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+            <p>As aulas de grupo básicas estão incluídas no plano Basic. Aulas Premium e especializadas estão disponíveis nos planos Pro e Ultra.</p>
+        </div>
     </div>
 </section>
 
@@ -195,5 +229,41 @@
     </div>
 </footer>
 
+<script>
+    document.querySelector('.hamburger').addEventListener('click', function () {
+        document.querySelector('.nav-links').classList.toggle('open');
+    });
+
+    document.querySelectorAll('.types-memberships span').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            document.querySelectorAll('.types-memberships span').forEach(function (t) {
+                t.classList.remove('active-tab');
+            });
+            this.classList.add('active-tab');
+
+            var target = this.getAttribute('data-tab');
+            ['gym', 'pilates', 'cycling'].forEach(function (id) {
+                document.getElementById('section-' + id).style.display = id === target ? 'flex' : 'none';
+            });
+        });
+    });
+
+    document.querySelectorAll('.faq-question').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var item = this.closest('.faq-item');
+            var isOpen = item.classList.contains('open');
+
+            document.querySelectorAll('.faq-item.open').forEach(function (el) {
+                el.classList.remove('open');
+                el.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+            });
+
+            if (!isOpen) {
+                item.classList.add('open');
+                this.setAttribute('aria-expanded', 'true');
+            }
+        });
+    });
+</script>
 </body>
 </html>

@@ -1,3 +1,16 @@
+body {
+    font-family: 'League Gothic', sans-serif;
+    color: black;
+    background: linear-gradient(
+            45deg,
+            #FFFFFF 0%,
+            #C3C3C3 24%,
+            #FFFFFF 52%,
+            #AFAFAF 75%,
+            #FFFFFF 100%
+    );
+}
+
 .main-wrapper {
     display: flex;
     justify-content: center;
@@ -10,7 +23,7 @@
 
 .bigGuy {
     height: auto;
-    max-height: 31.25px;
+    max-height: 31.25rem;
     border-radius: 1rem;
 }
 
@@ -25,7 +38,7 @@
     text-decoration: none;
     display: flex;
     justify-content: center;
-    gap: 3.125px;
+    gap: 3.125rem;
     color: white;
 }
 
@@ -42,15 +55,16 @@
     padding: 0.625rem 1.25rem;
     width: fit-content;
     background-color: black;
-    border: 2px solid black;
-    border-radius: 15px;
+    border: 0.125rem solid black;
+    border-radius: 0.9375rem;
     cursor: pointer;
 }
 
-.types-memberships span:hover {
+.types-memberships span:hover,
+.types-memberships span.active-tab {
     background-color: #00bfa6;
-    border: 2px solid white;
-    border-radius: 15px;
+    border: 0.125rem solid white;
+    border-radius: 0.9375rem;
 }
 
 /*
@@ -65,19 +79,19 @@
 
 .membership-title {
     display: inline-block;
-    font-size: 50px;
+    font-size: 3.125rem;
     font-style: italic;
     text-align: center;
-    padding: 50px;
+    padding: 3.125rem;
     color: black;
 }
 
 .slogan {
     display: flex;
     justify-content: center;
-    margin: 20px;
+    margin: 1.25rem;
     font-style: inherit;
-    font-size: 40px;
+    font-size: 2.5rem;
 }
 
 .plan {
@@ -86,12 +100,11 @@
     align-items: center;
     justify-content: space-evenly;
 
-
     text-align: justify;
-    border: 8px solid #00bfa6;
-    border-radius: 20px;
-    width: 200px;
-    height: 350px;
+    border: 0.5rem solid #00bfa6;
+    border-radius: 1.25rem;
+    width: 12.5rem;
+    height: 21.875rem;
 
     background-color: black;
     transition: 0.5s;
@@ -99,76 +112,240 @@
 
 .plan h2 {
     width: 80%;
-    border-bottom: 2px solid white;
-    padding-bottom: 10px;
+    border-bottom: 0.125rem solid white;
+    padding-bottom: 0.625rem;
     text-align: center;
 }
 
 .plan:hover {
     background-color: #00bfa6;
-    border: 8px solid azure;
+    border: 0.5rem solid azure;
     transform: scale(1.1);
     color: black;
-
 }
 
 
 .price {
     display: flex;
     justify-content: center;
-    font-size: 30px;
+    font-size: 1.875rem;
 }
 
 .plan-info {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 20px;
+    font-size: 1.25rem;
     text-align: center;
 
     width: 80%;
-    border-bottom: 2px solid white;
-    padding-bottom: 20px;
+    border-bottom: 0.125rem solid white;
+    padding-bottom: 1.25rem;
 }
 
 .wrapper-perguntas {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 3.125rem 1.25rem;
+    background: #111;
+}
+
+.perguntas-title {
+    color: #00bfa6;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    letter-spacing: 0.05rem;
 }
 
 .comparison {
-    margin: 50px auto;
+    margin: 3.125rem auto;
     width: 80%;
     color: black;
 }
 
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 .table-dark {
     width: 100%;
-    background-color: #2c3e50;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 0.75rem;
+    overflow: hidden;
     color: white;
-    border-radius: 10px;
-    border-collapse: collapse;
+    font-size: 1rem;
 }
 
-.table-dark th {
-    background-color: #1a252f;
-    padding: 15px;
+.table-dark th,
+.table-dark td {
+    padding: 0.9375rem 1.5rem;
+    text-align: center;
 }
 
-.table-dark tr:hover {
-    background-color: #34495e; /* Feedback ao passar o mouse */
+.table-dark td:first-child,
+.table-dark th:first-child {
+    text-align: left;
 }
 
-.wrapper-perguntas {
-    flex-direction: column;
-    padding: 50px;
-    font-size: 20px;
-    background: #00bfa6;
+.table-dark thead tr {
+    background-color: black;
+    color: #00bfa6;
+    font-size: 1.125rem;
+    letter-spacing: 0.05rem;
+}
+
+.table-dark tbody tr:nth-child(odd) {
+    background-color: #1a1a1a;
+}
+
+.table-dark tbody tr:nth-child(even) {
+    background-color: #2a2a2a;
+}
+
+.table-dark tbody tr:hover {
+    background-color: #00bfa6;
+    color: black;
 }
 
 .faq-item {
-    margin: 15px 0;
-    max-width: 600px;
+    width: 100%;
+    max-width: 40rem;
+    border: 0.125rem solid #00bfa6;
+    border-radius: 0.75rem;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    transition: border-color 0.3s;
+}
+
+.faq-item.open {
+    border-color: white;
+}
+
+.faq-question {
+    width: 100%;
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    padding: 1.125rem 1.5rem;
     text-align: left;
+    font-family: 'League Gothic', sans-serif;
+    font-size: 1.125rem;
+    letter-spacing: 0.03rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s, color 0.3s;
+}
+
+.faq-question:hover,
+.faq-item.open .faq-question {
+    background: #00bfa6;
+    color: black;
+}
+
+.faq-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    transition: transform 0.3s;
+}
+
+.faq-item.open .faq-icon {
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s;
+    background: #222;
+    color: #ddd;
+    font-size: 1rem;
+    padding: 0 1.5rem;
+}
+
+.faq-item.open .faq-answer {
+    max-height: 12rem;
+    padding: 1rem 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .membership-title {
+        font-size: 1.75rem;
+        padding: 1.875rem 0.9375rem;
+    }
+
+    .slogan {
+        font-size: 1.375rem;
+        margin: 0.625rem;
+        text-align: center;
+    }
+
+    .main-wrapper {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .bigGuy {
+        width: 100%;
+        max-height: 15.625rem;
+        object-fit: cover;
+    }
+
+    .memberships {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1rem;
+    }
+
+    .plan {
+        width: 85%;
+        height: auto;
+        min-height: 17.5rem;
+        padding: 1rem;
+    }
+
+    .types-memberships {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    .comparison {
+        width: 95%;
+    }
+
+    .wrapper-perguntas {
+        padding: 1.5rem 0.75rem;
+    }
+
+    .faq-item {
+        max-width: 100%;
+    }
+
+    .faq-question {
+        font-size: 1rem;
+        padding: 1rem 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .membership-title {
+        font-size: 1.375rem;
+    }
+
+    .slogan {
+        font-size: 1.125rem;
+    }
+
+    .plan {
+        width: 95%;
+    }
 }

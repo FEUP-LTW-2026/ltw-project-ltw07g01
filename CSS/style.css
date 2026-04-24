@@ -6,7 +6,7 @@
 }
 
 :root {
-    --accent: #00bfa6; 
+    --accent: #00bfa6;
     --text-main: #ffffff;
     --text-dim: #8f8f8f;
     --bg-color: #000000;
@@ -14,16 +14,16 @@
 
 /*navbar*/
 .navbar {
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: space-between;
-    position:fixed;
+    position: fixed;
     width: 100%;
-    padding : 0px 40px;
+    padding: 0px 40px;
     background-color: var(--bg-color);
 }
 
-.logo img{
+.logo img {
     height: 85px;
 }
 
@@ -129,7 +129,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-top:45px;
+    margin-top: 45px;
 }
 
 .footer-right a {
@@ -219,4 +219,27 @@
     .social-icons {
         flex-wrap: wrap;
     }
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    width: 100%;
+    padding: 0 2.5rem;
+    background-color: black;
+}
+
+.logo img {
+    height: 5.3125rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 7.1875rem;
+
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
