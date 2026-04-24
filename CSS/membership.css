@@ -21,12 +21,12 @@ body {
     flex-wrap: wrap;
 }
 
-.bigGuy {
-    display: grid;
-    justify-content: left;
-    height: auto;
+.examples-img {
+    display: block;
+    width: 100%;
     max-height: 31.25rem;
-    border-radius: 1rem;
+    object-fit: cover;
+    scroll-margin-top: 5.5rem;
 }
 
 .types-membership-container {
@@ -71,36 +71,9 @@ body {
     border-radius: 0.9375rem;
 }
 
-/* Tabs: esconde todas as secções por defeito */
-#section-gym,
-#section-pilates,
-#section-cycling {
-    display: none;
-}
-
-/* Mostra a secção cujo ID está no URL */
-#section-gym:target,
-#section-pilates:target,
-#section-cycling:target {
-    display: flex;
-}
-
-body:not(:has(:target)) #section-gym {
-    display: flex;
-}
-
-/* Destaca a tab ativa consoante o :target */
-body:has(#section-gym:target) .types-memberships a[href="#section-gym"],
-body:has(#section-pilates:target) .types-memberships a[href="#section-pilates"],
-body:has(#section-cycling:target) .types-memberships a[href="#section-cycling"] {
-    background-color: #00bfa6;
-    border: 0.125rem solid white;
-}
-
-/* Tab GYM destacada por defeito (sem target no URL) */
-body:not(:has(:target)) .types-memberships a[href="#section-gym"] {
-    background-color: #00bfa6;
-    border: 0.125rem solid white;
+/* Scroll suave ao clicar nas tabs */
+html {
+    scroll-behavior: smooth;
 }
 
 .banner {
@@ -137,6 +110,30 @@ body:not(:has(:target)) .types-memberships a[href="#section-gym"] {
     text-align: center;
 }
 
+/* Section titles */
+.Gym-title,
+.Pilatus-title,
+.Cycling-title {
+    font-size: 3rem;
+    font-style: italic;
+    text-transform: uppercase;
+    text-align: center;
+    color: black;
+    padding: 1.25rem 0 0.25rem;
+    letter-spacing: 0.15rem;
+}
+
+.Gym-title::after,
+.Pilatus-title::after,
+.Cycling-title::after {
+    content: '';
+    display: block;
+    width: 4rem;
+    height: 0.1875rem;
+    background: #00bfa6;
+    margin: 0.4rem auto 0;
+}
+
 /* Plan cards */
 .plan {
     display: flex;
@@ -167,7 +164,7 @@ body:not(:has(:target)) .types-memberships a[href="#section-gym"] {
 .plan-popular {
     transform: scale(1.05);
     border-color: #00bfa6;
-    box-shadow: 0 0 24px rgba(0, 191, 166, 0.35);
+    box-shadow: 0 0 1.5rem rgba(0, 191, 166, 0.35);
 }
 
 .popular-badge {
@@ -220,28 +217,6 @@ body:not(:has(:target)) .types-memberships a[href="#section-gym"] {
     color: black;
 }
 
-/* CTA button */
-.plan-btn {
-    display: inline-block;
-    margin-top: 0.5rem;
-    padding: 0.55rem 1.75rem;
-    background: #00bfa6;
-    color: black;
-    border-radius: 0.75rem;
-    text-decoration: none;
-    font-size: 1rem;
-    letter-spacing: 0.05rem;
-    transition: background 0.3s, color 0.3s, transform 0.2s;
-}
-
-.plan-btn:hover {
-    transform: scale(1.05);
-}
-
-.plan:hover .plan-btn {
-    background: black;
-    color: white;
-}
 
 .price {
     display: flex;
@@ -318,7 +293,7 @@ body:not(:has(:target)) .types-memberships a[href="#section-gym"] {
 
 .table-dark thead tr {
     background-color: black;
-    color: #00bfa6;
+    color: white;
     font-size: 1.125rem;
     letter-spacing: 0.05rem;
 }
@@ -337,7 +312,7 @@ body:not(:has(:target)) .types-memberships a[href="#section-gym"] {
 }
 
 .icon-check {
-    color: #00bfa6;
+    color: white;
     font-size: 1.1rem;
 }
 
@@ -347,7 +322,7 @@ body:not(:has(:target)) .types-memberships a[href="#section-gym"] {
 }
 
 .table-dark tbody tr:hover .icon-check {
-    color: black;
+    color: white;
 }
 
 .table-dark tbody tr:hover .icon-xmark {
@@ -407,7 +382,7 @@ body:not(:has(:target)) .types-memberships a[href="#section-gym"] {
     padding: 1rem 1.5rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
     .membership-title {
         font-size: 1.75rem;
         padding: 1.25rem 0.9375rem 0.5rem;
@@ -430,10 +405,14 @@ body:not(:has(:target)) .types-memberships a[href="#section-gym"] {
         gap: 1rem;
     }
 
-    .bigGuy {
-        width: 100%;
+    .examples-img {
         max-height: 15.625rem;
-        object-fit: cover;
+    }
+
+    .Gym-title,
+    .Pilatus-title,
+    .Cycling-title {
+        font-size: 2rem;
     }
 
     .memberships {
@@ -477,16 +456,3 @@ body:not(:has(:target)) .types-memberships a[href="#section-gym"] {
     }
 }
 
-@media (max-width: 480px) {
-    .membership-title {
-        font-size: 1.375rem;
-    }
-
-    .slogan {
-        font-size: 1.125rem;
-    }
-
-    .plan {
-        width: 95%;
-    }
-}
