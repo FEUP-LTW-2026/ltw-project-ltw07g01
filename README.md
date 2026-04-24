@@ -1,5 +1,7 @@
 # ltw07g01
 
+CUBO GYM is a modern fitness club offering gym, pilates, and cycling memberships across multiple locations, with flexible plans ranging from basic to ultra
+---
 ## Features
 
 **All users:**
