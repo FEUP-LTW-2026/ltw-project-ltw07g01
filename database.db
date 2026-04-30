@@ -1,0 +1,76 @@
+CREATE TABLE IF NOT EXISTS gym_locations (
+    id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name    VARCHAR NOT NULL,
+    city    VARCHAR NOT NULL,
+    address VARCHAR          
+);
+
+CREATE TABLE IF NOT EXISTS class_types (
+    id   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR UNIQUE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS trainers (
+    id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    first_name VARCHAR NOT NULL,
+    last_name  VARCHAR NOT NULL,
+    email      VARCHAR UNIQUE NOT NULL,
+    gym_id     UUID REFERENCES gym_locations(id)
+);
+
+CREATE TABLE IF NOT EXISTS trainer_locations (
+    trainer_id  UUID REFERENCES trainers(id),
+    gym_id      UUID REFERENCES gym_locations(id),
+    PRIMARY KEY (trainer_id, gym_id)
+);
+
+CREATE TABLE IF NOT EXISTS trainer_specializations (
+    trainer_id    UUID REFERENCES trainers(id),
+    class_type_id UUID REFERENCES class_types(id),
+    PRIMARY KEY (trainer_id, class_type_id)
+);
+
+CREATE TABLE IF NOT EXISTS classes (
+    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    class_type_id UUID REFERENCES class_types(id),
+    gym_id        UUID REFERENCES gym_locations(id),
+    trainer_id    UUID REFERENCES trainers(id),
+    schedule      TIMESTAMP NOT NULL,
+    duration_min  INT NOT NULL,
+    capacity      INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS clients (
+    client_id        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    username         VARCHAR UNIQUE NOT NULL,
+    first_name       VARCHAR NOT NULL,
+    last_name        VARCHAR NOT NULL,
+    email            VARCHAR UNIQUE NOT NULL,
+    enroll_date      TIMESTAMP DEFAULT now(),  
+    gym_token        UUID UNIQUE DEFAULT gen_random_uuid(),
+    token_expire_at  TIMESTAMP,
+    preferred_gym_id UUID REFERENCES gym_locations(id)
+);
+
+CREATE TABLE IF NOT EXISTS memberships (
+    id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    client_id          UUID REFERENCES clients(client_id),
+    is_classes_enabled BOOLEAN NOT NULL DEFAULT false,
+    start_date         TIMESTAMP DEFAULT now(),
+    end_date           TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS client_classes (
+    client_id   UUID REFERENCES clients(client_id),
+    class_id    UUID REFERENCES classes(id),
+    enrolled_at TIMESTAMP DEFAULT now(),
+    PRIMARY KEY (client_id, class_id)
+);
+
+CREATE TABLE IF NOT EXISTS gym_visits (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    client_id   UUID REFERENCES clients(client_id),
+    gym_id      UUID REFERENCES gym_locations(id),
+    checked_in  TIMESTAMP DEFAULT now(),
+    checked_out TIMESTAMP
+);
