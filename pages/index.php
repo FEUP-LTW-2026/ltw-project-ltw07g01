@@ -1,33 +1,24 @@
+<?php
+    declare(strict_types=1);
+    require_once('../utils/session.php');
+    $session = new Session();
+    require_once('../templates/common.tmp.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CUBO GYM</title>
-    <link rel="stylesheet" href="../CSS/index.css">
-    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <a href="index.html" class="logo">
-                <img src="../images/logo.png" alt="CUBO GYM logo">
-            </a>
-            <input type="checkbox" id="menu-toggle">
-            <label for="menu-toggle" class="menu-icon">
-                <span></span>
-                <span></span>
-                <span></span>
-            </label>
-            <ul class="nav-links">
-                <li><a href="membership.html">Membership</a></li>
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="locations.html">Locations</a></li>
-            </ul>
-        </nav>
-    </header>
+
+<?php drawHeader($session); ?>
 
     <main>
         <section class="hero">
@@ -37,9 +28,13 @@
             </div>
 
             <div class="hero-buttons">
-                <a href="login.html">LOG IN</a>
-                <div class = "hero-divider"></div>
-                <a href="register.html">SIGN UP</a>
+                <?php if ($session->isLoggedIn()): ?>
+                    <a href="profile.php"><?= htmlspecialchars($session->getName()) ?></a>
+                <?php else: ?>
+                    <a href="login.php">LOG IN</a>
+                    <div class="hero-divider"></div>
+                    <a href="register.php">SIGN UP</a>
+                <?php endif; ?>
             </div>
         </section>
 
@@ -56,7 +51,7 @@
                 <p class="stat-text">average rating</p>
             </div>
 
-            <div class="stat-card"> 
+            <div class="stat-card">
                 <img src="../images/calendar.png" alt="logo">
                 <p class="stat-number">+200</p>
                 <p class="stat-text">weekly classes</p>
@@ -77,7 +72,7 @@
                 <p>Your journey starts here.</p>
                 <p>No limits. No judgments.</p>
 
-                <a href="about.html" class="about-button">Our Story</a>
+                <a href="about.php" class="about-button">Our Story</a>
             </div>
 
             <div class="about-image">
@@ -85,76 +80,39 @@
             </div>
         </section>
 
-        <section class = "cards">
-            <div class = "card1">
+        <section class="cards">
+            <div class="card1">
                 <h2>Amazing Group Classes</h2>
                 <div class="about-divider1"></div>
                 <p>Join our group classes and train in a motivating and energetic environment. Our sessions are designed for all fitness levels, helping you stay consistent while improving strength, endurance, and overall performance.</p>
 
-                <a href="classes.html" class="card-button">View Classes</a>
+                <a href="classes.php" class="card-button">View Classes</a>
             </div>
-            <div class = "card">
+            <div class="card">
                 <h2>Running Community</h2>
                 <div class="about-divider"></div>
                 <p>Take your workouts outside with our runs. Explore new routes, improve your stamina, and enjoy the energy of training in a dynamic group environment.</p>
 
-                <a href="runs.html" class="card-button">View Runs</a>
+                <a href="runs.php" class="card-button">View Runs</a>
             </div>
-            <div class = "card">
+            <div class="card">
                 <h2>Membership Plans</h2>
                 <div class="about-divider"></div>
                 <p>Choose the perfect plan for your fitness journey. Flexible options to suit your lifestyle and goals.</p>
 
-                <a href="membership.html" class="card-button">Membership Plans</a>
+                <a href="membership.php" class="card-button">Membership Plans</a>
             </div>
-            <div class = "card1">
+            <div class="card1">
                 <h2>Certified Personal Trainers</h2>
                 <div class="about-divider1"></div>
                 <p>Work with our certified personal trainers to achieve your fitness goals. Get personalized attention and guidance tailored to your needs.</p>
 
-                <a href="trainers.html" class="card-button">View Trainers</a>
+                <a href="trainers.php" class="card-button">View Trainers</a>
             </div>
         </section>
     </main>
-    
-    <footer class="footer">
-        <div class="footer-logo">
-            <a href="index.html" class="footer-logo">
-                <img src="../images/logo.png" alt="CUBO GYM logo">
-             </a>
-        </div>
-        <div class="footer-links">
-            <a href="membership.html">Membership</a>
-            <a href="about.html">About Us</a>
-            <a href="locations.html">Locations</a>
-            <a href="contact.html">Contact</a>
-        </div>
-        <div class="footer-info">
-            <h3>INFO</h3>
-            <p>MON-FRI — 6:00 - 22:30</p>
-            <p>SAT — 9:00 - 20:00</p>
-            <p>SUN — 10:00 - 18:00</p>
-            <br>
-            <p>RUA DAS MARAVILHAS 67, 4400-069</p>
-            <br>
-            <p>GERAL@CUBOGYM.COM</p>
-            <p>+351 211 317 632</p>
-        </div>
-        <div class="footer-socials">
-            <h3>FOLLOW US</h3>
-            <div class="social-icons">
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="#"><i class="fa-brands fa-tiktok"></i></a>
-            </div>
-        </div>
-        <div class="footer-right">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="complaints.html">Complaint Book</a>
-            <p>&copy;All rights reserved.</p>
-        </div>
-        </footer>
-    </body>
+
+<?php drawFooter(); ?>
+
+</body>
 </html>

@@ -33,11 +33,12 @@ CUBO GYM is a modern fitness club offering gym, pilates, and cycling memberships
 
 ## Running
 
-    sqlite3 database/database.db < database/database.sql
+    sqlite3 database.db < database/schema.sql
     php -S localhost:9000
+
 
 ## Credentials
 
-- admin/p4s5w0rd
-- member/1234
-- trainer/1234
+- admin / password123 (admin)
+- ana.silva / password123 (trainer)
+- joao.costa / password123 (member)

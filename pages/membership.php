@@ -1,36 +1,23 @@
+<?php
+    declare(strict_types=1);
+    require_once('../utils/session.php');
+    $session = new Session();
+    require_once('../templates/common.tmp.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> MEMBERSHIP </title>
-    <link rel="stylesheet" href="../CSS/membership.css">
-    <link rel="stylesheet" href="../CSS/style.css">
+    <title>MEMBERSHIP</title>
+    <link rel="stylesheet" href="../css/membership.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-
 <body>
-<nav class="navbar">
-    <a href="index.html" class="logo">
-        <img src="../images/logo.png" alt="CUBO GYM logo">
-    </a>
 
-    <input type="checkbox" id="menu-toggle">
-    <label class="menu-icon" for="menu-toggle">
-        <span></span>
-        <span></span>
-        <span></span>
-    </label>
-
-    <ul class="nav-links">
-        <li><a href="membership.html">Membership</a></li>
-        <li><a href="about.html">About Us</a></li>
-        <li><a href="locations.html">Locations</a></li>
-    </ul>
-</nav>
-    </header>
+<?php drawHeader($session); ?>
 
 <div class="banner">
     <h2 class="membership-title">MEMBERSHIPS</h2>
@@ -45,11 +32,9 @@
     </h3>
 </div>
 
-
 <img class="examples-img" id="section-gym" src="../images/bigGuy.jpg" alt="Gym section">
 <h3 class="Gym-title">Gym</h3>
 <div class="main-wrapper">
-
     <div class="memberships">
         <div class="plan">
             <h2>BASIC</h2>
@@ -60,6 +45,7 @@
                 <li>Free schedule access</li>
                 <li>Training app included</li>
             </ul>
+            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=gym-basic' : 'login.php' ?>" class="plan-btn">GET STARTED</a>
         </div>
         <div class="plan plan-popular">
             <span class="popular-badge">MOST POPULAR</span>
@@ -71,6 +57,7 @@
                 <li>Premium classes</li>
                 <li>Nutritional consulting</li>
             </ul>
+            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=gym-pro' : 'login.php' ?>" class="plan-btn">GET STARTED</a>
         </div>
         <div class="plan">
             <h2>ULTRA</h2>
@@ -81,6 +68,7 @@
                 <li>Unlimited group classes</li>
                 <li>Monthly physical assessment</li>
             </ul>
+            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=gym-ultra' : 'login.php' ?>" class="plan-btn">GET STARTED</a>
         </div>
     </div>
 </div>
@@ -88,7 +76,6 @@
 <img class="examples-img" id="section-pilates" src="../images/pilatu.jpg" alt="Pilates section">
 <h3 class="Pilatus-title">Pilates</h3>
 <div class="main-wrapper">
-
     <div class="memberships">
         <div class="plan">
             <h2>BASIC</h2>
@@ -99,6 +86,7 @@
                 <li>Mat included</li>
                 <li>Certified instructors</li>
             </ul>
+            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=pilates-basic' : 'login.php' ?>" class="plan-btn">GET STARTED</a>
         </div>
         <div class="plan plan-popular">
             <span class="popular-badge">MOST POPULAR</span>
@@ -110,6 +98,7 @@
                 <li>All locations</li>
                 <li>Reformer classes</li>
             </ul>
+            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=pilates-pro' : 'login.php' ?>" class="plan-btn">GET STARTED</a>
         </div>
         <div class="plan">
             <h2>ULTRA</h2>
@@ -120,10 +109,10 @@
                 <li>Monthly private sessions</li>
                 <li>Postural assessment</li>
             </ul>
+            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=pilates-ultra' : 'login.php' ?>" class="plan-btn">GET STARTED</a>
         </div>
     </div>
 </div>
-
 
 <img class="examples-img" id="section-cycling" src="../images/cycling.jpg" alt="Cycling section">
 <h3 class="Cycling-title">Cycling</h3>
@@ -138,6 +127,7 @@
                 <li>Reserved bike</li>
                 <li>Training app included</li>
             </ul>
+            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=cycling-basic' : 'login.php' ?>" class="plan-btn">GET STARTED</a>
         </div>
         <div class="plan plan-popular">
             <span class="popular-badge">MOST POPULAR</span>
@@ -149,6 +139,7 @@
                 <li>All locations</li>
                 <li>Performance metrics</li>
             </ul>
+            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=cycling-pro' : 'login.php' ?>" class="plan-btn">GET STARTED</a>
         </div>
         <div class="plan">
             <h2>ULTRA</h2>
@@ -159,6 +150,7 @@
                 <li>Personalized training</li>
                 <li>Monthly pedaling analysis</li>
             </ul>
+            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=cycling-ultra' : 'login.php' ?>" class="plan-btn">GET STARTED</a>
         </div>
     </div>
 </div>
@@ -227,49 +219,9 @@
             <p>Basic group classes are included in the Basic plan. Premium and specialized classes are available in Pro and Ultra plans.</p>
         </div>
     </details>
-
 </section>
 
-    <footer class="footer">
-        <div class="footer-logo">
-            <a href="index.html" class="footer-logo">
-                <img src="../images/logo.png" alt="CUBO GYM logo">
-             </a>
-        </div>
-        <div class="footer-links">
-            <a href="membership.html">Membership</a>
-            <a href="about.html">About Us</a>
-            <a href="locations.html">Locations</a>
-            <a href="contact.html">Contact</a>
-        </div>
-        <div class="footer-info">
-            <h3>INFO</h3>
-            <p>MON-FRI — 6:00 - 22:30</p>
-            <p>SAT — 9:00 - 20:00</p>
-            <p>SUN — 10:00 - 18:00</p>
-            <br>
-            <p>RUA ANA CACHO PAULO 67, 4400-069</p>
-            <br>
-            <p>GERAL@CUBOGYM.COM</p>
-            <p>+351 211 317 632</p>
-        </div>
-        <div class="footer-socials">
-            <h3>FOLLOW US</h3>
-            <div class="social-icons">
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="#"><i class="fa-brands fa-tiktok"></i></a>
-            </div>
-        </div>
-        <div class="footer-right">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="complaints.html">Complaint Book</a>
-            <p>&copy;All rights reserved.</p>
-        </div>
-        </footer>
+<?php drawFooter(); ?>
 
 </body>
-
 </html>

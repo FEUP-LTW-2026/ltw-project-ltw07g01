@@ -1,34 +1,23 @@
+<?php
+    declare(strict_types=1);
+    require_once('../utils/session.php');
+    $session = new Session();
+    require_once('../templates/common.tmp.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | Cubo Gym</title>
-    <link rel="stylesheet" href="../CSS/profile.css">
-    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <a href="index.html" class="logo">
-                <img src="../images/logo.png" alt="CUBO GYM logo">
-            </a>
-            <input type="checkbox" id="menu-toggle">
-            <label for="menu-toggle" class="menu-icon">
-                <span></span>
-                <span></span>
-                <span></span>
-            </label>
-            <ul class="nav-links">
-                <li><a href="membership.html">Membership</a></li>
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="dashboard.html">Dashboard</a></li>
-            </ul>
-        </nav>
-    </header>
 
+<?php drawHeader($session); ?>
 
     <main class="profile-page">
         <aside class="sidebar-container">
@@ -48,7 +37,7 @@
                     <button class="btn-qr" id="entry-key">
                         <span class="icon"></span> Digital Entry Key
                     </button>
-                    
+
                     <div class="qr-display-area">
                         <img src="../images/random_qr.png" alt="User Access QR Code" class="qr-image">
                         <p class="qr-status">Ready to Scan</p>
@@ -99,7 +88,7 @@
                         <span class="stat-label">EARNED BADGES</span>
                     </div>
                 </div>
-                
+
                 <div class="badge-container">
                     <span class="badge" title="Early Bird: 50 morning sessions"></span>
                     <span class="badge" title="A+ Student: 20 classes completed"></span>
@@ -163,55 +152,14 @@
                     </div>
                 </div>
             </div>
-            
-            
 
-            
             <div class="profile-actions">
-                <a href="edit-profile.html" class="btn-edit-profile">Edit Profile</a>
+                <a href="edit-profile.php" class="btn-edit-profile">Edit Profile</a>
             </div>
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="footer-logo">
-            <a href="index.html" class="footer-logo">
-                <img src="../images/logo.png" alt="CUBO GYM logo">
-             </a>
-        </div>
-        <div class="footer-links">
-            <a href="membership.html">Membership</a>
-            <a href="about.html">About Us</a>
-            <a href="locations.html">Locations</a>
-            <a href="contact.html">Contact</a>
-        </div>
-        <div class="footer-info">
-            <h3>INFO</h3>
-            <p>MON-FRI — 6:00 - 22:30</p>
-            <p>SAT — 9:00 - 20:00</p>
-            <p>SUN — 10:00 - 18:00</p>
-            <br>
-            <p>RUA ANA CACHO PAULO 67, 4400-069</p>
-            <br>
-            <p>GERAL@CUBOGYM.COM</p>
-            <p>+351 211 317 632</p>
-        </div>
-        <div class="footer-socials">
-            <h3>FOLLOW US</h3>
-            <div class="social-icons">
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="#"><i class="fa-brands fa-tiktok"></i></a>
-            </div>
-        </div>
-        <div class="footer-right">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="complaints.html">Complaint Book</a>
-            <p>&copy;All rights reserved.</p>
-        </div>
-    </footer>
-</body>
+<?php drawFooter(); ?>
 
+</body>
 </html>
