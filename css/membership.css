@@ -319,6 +319,36 @@ html {
     color: #333;
 }
 
+.plan-btn {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.6rem 1.8rem;
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+    border-radius: 50px;
+    font-family: 'League Gothic', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.05rem;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.plan-btn:hover {
+    background-color: white;
+    color: black;
+}
+
+.plan:hover .plan-btn {
+    border-color: black;
+    color: black;
+}
+
+.plan:hover .plan-btn:hover {
+    background-color: black;
+    color: white;
+}
+
 .table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
