@@ -1,7 +1,7 @@
 <?php function drawHeader(object $session) { ?>
     <header>
         <nav class="navbar">
-            <a href="/pages/main.php" class="logo">
+            <a href="/pages/index.php" class="logo">
                 <img src="/images/logo.png" alt="CUBO GYM logo">
             </a>
             <input type="checkbox" id="menu-toggle">
@@ -27,7 +27,7 @@
 <?php function drawFooter() { ?>
     <footer class="footer">
         <div class="footer-logo">
-            <a href="/pages/main.php">
+            <a href="/pages/index.php">
                 <img src="/images/logo.png" alt="CUBO GYM logo">
             </a>
         </div>
