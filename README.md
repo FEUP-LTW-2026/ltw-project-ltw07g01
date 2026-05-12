@@ -42,3 +42,4 @@ CUBO GYM is a modern fitness club offering gym, pilates, and cycling memberships
 - admin / password123 (admin)
 - ana.silva / password123 (trainer)
 - joao.costa / password123 (member)
+

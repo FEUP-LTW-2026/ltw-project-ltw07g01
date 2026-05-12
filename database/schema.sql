@@ -56,6 +56,15 @@ CREATE TABLE clients
     gym_token        TEXT UNIQUE,
     token_expire_at  TIMESTAMP,
     preferred_gym_id INTEGER,
+    archetype TEXT DEFAULT NULL,
+    body_weight REAL,
+    height REAL,
+          CHECK (archetype IS NULL OR archetype IN (
+              'SPINNER',
+              'POWERLIFTER',
+              'YOGI',
+              'PILATES PRACTITIONER'
+          )),
     FOREIGN KEY (user_id)
         REFERENCES users(id)
         ON DELETE CASCADE ON UPDATE NO ACTION,
@@ -242,4 +251,20 @@ INSERT INTO users (username, email, password_hash, first_name, last_name)
 VALUES ('joao.costa', 'joao@cubogym.com',
         '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
         'João', 'Costa');
-INSERT INTO clients (user_id, preferred_gym_id) VALUES (3, 1);
+INSERT INTO clients (user_id, preferred_gym_id, archetype, body_weight, height) VALUES (3, 1, 'POWERLIFTER', 70, 175);
+
+-- Membership para joao.costa
+INSERT INTO memberships (client_id, is_classes_enabled, start_date)
+VALUES (3, 1, '2024-01-15');
+
+-- Visitas ao ginásio
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-1 day', '+8 hours'), datetime('now', '-1 day', '+9 hours', '+30 minutes'));
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-3 days', '+7 hours'), datetime('now', '-3 days', '+8 hours', '+45 minutes'));
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-5 days', '+9 hours'), datetime('now', '-5 days', '+11 hours'));
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); //para testar os badges
+
+   
