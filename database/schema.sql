@@ -227,19 +227,19 @@ INSERT INTO class_types (name) VALUES ('HIIT');
 -- Password for all seed users: 'password123'
 INSERT INTO users (username, email, password_hash, first_name, last_name)
 VALUES ('admin', 'admin@cubogym.com',
-        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-        'Admin', 'CUBO');
+'$2y$12$RLrV1W7DVRUuO64nGrcxKeM9yl8qIE7V86o3zswBXQyLg96ASGA26',
+'Admin', 'CUBO');
 INSERT INTO admins (user_id) VALUES (1);
 
 INSERT INTO users (username, email, password_hash, first_name, last_name)
 VALUES ('ana.silva', 'ana@cubogym.com',
-        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+        '$2y$12$RLrV1W7DVRUuO64nGrcxKeM9yl8qIE7V86o3zswBXQyLg96ASGA26',
         'Ana', 'Silva');
 INSERT INTO trainers (user_id, bio, certifications)
 VALUES (2, 'Yoga instructor with 10 years experience.', 'ACE, RYT-200');
 
 INSERT INTO users (username, email, password_hash, first_name, last_name)
 VALUES ('joao.costa', 'joao@cubogym.com',
-        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+        '$2y$12$RLrV1W7DVRUuO64nGrcxKeM9yl8qIE7V86o3zswBXQyLg96ASGA26',
         'João', 'Costa');
 INSERT INTO clients (user_id, preferred_gym_id) VALUES (3, 1);

@@ -16,8 +16,6 @@
                 <li><a href="/pages/locations.php">Locations</a></li>
                 <?php if ($session->isLoggedIn()): ?>
                     <li><a href="/pages/profile.php"><?= htmlspecialchars($session->getName()) ?></a></li>
-                <?php else: ?>
-                    <li><a href="/pages/login.php">Login</a></li>
                 <?php endif; ?>
             </ul>
         </nav>

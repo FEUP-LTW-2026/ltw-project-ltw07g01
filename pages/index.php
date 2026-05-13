@@ -2,7 +2,7 @@
     declare(strict_types=1);
     require_once('../utils/session.php');
     $session = new Session();
-    require_once('../templates/common.tmp.php');
+    require_once('../templates/common.tpl.php');
 ?>
 
 <!DOCTYPE html>
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="../js/index.js" defer></script>
 </head>
 <body>
 
@@ -29,11 +30,13 @@
 
             <div class="hero-buttons">
                 <?php if ($session->isLoggedIn()): ?>
-                    <a href="profile.php"><?= htmlspecialchars($session->getName()) ?></a>
+                    <p class="hero-slogan">ALL LEVELS. ALL GOALS. ONE GYM.</p>
+                
                 <?php else: ?>
                     <a href="login.php">LOG IN</a>
                     <div class="hero-divider"></div>
                     <a href="register.php">SIGN UP</a>
+                
                 <?php endif; ?>
             </div>
         </section>
@@ -41,25 +44,25 @@
         <section class="stats">
             <div class="stat-card">
                 <img src="../images/membros.png" alt="logo">
-                <p class="stat-number">+10000</p>
+                <p class="stat-number">+<span class = "counter" data-target="10000">0</span></p>
                 <p class="stat-text">members</p>
             </div>
 
             <div class="stat-card">
                 <img src="../images/star.png" alt="logo">
-                <p class="stat-number">4.7</p>
+                <p class="stat-number"><span class="counter" data-target="4.7">0</span>/5</p>
                 <p class="stat-text">average rating</p>
             </div>
 
             <div class="stat-card">
                 <img src="../images/calendar.png" alt="logo">
-                <p class="stat-number">+200</p>
+                <p class="stat-number">+<span class="counter" data-target="200">0</span></p>
                 <p class="stat-text">weekly classes</p>
             </div>
 
             <div class="stat-card">
                 <img src="../images/halter.png" alt="logo">
-                <p class="stat-number">+25 certified</p>
+                <p class="stat-number">+<span class="counter" data-target="25">0</span> certified</p>
                 <p class="stat-text">personal trainers</p>
             </div>
         </section>
