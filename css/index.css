@@ -77,6 +77,13 @@ body {
     transform: scale(1.15);
 }
 
+.hero-slogan {
+    color: white;
+    font-size: 42px;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
 /*stats*/
 .stats {
     display: flex;

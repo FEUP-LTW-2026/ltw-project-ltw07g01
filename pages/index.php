@@ -2,7 +2,7 @@
     declare(strict_types=1);
     require_once('../utils/session.php');
     $session = new Session();
-    require_once('../templates/common.tmp.php');
+    require_once('../templates/common.tpl.php');
 ?>
 
 <!DOCTYPE html>
@@ -30,11 +30,13 @@
 
             <div class="hero-buttons">
                 <?php if ($session->isLoggedIn()): ?>
-                    <a href="profile.php"><?= htmlspecialchars($session->getName()) ?></a>
+                    <p class="hero-slogan">ALL LEVELS. ALL GOALS. ONE GYM.</p>
+                
                 <?php else: ?>
                     <a href="login.php">LOG IN</a>
                     <div class="hero-divider"></div>
                     <a href="register.php">SIGN UP</a>
+                
                 <?php endif; ?>
             </div>
         </section>
