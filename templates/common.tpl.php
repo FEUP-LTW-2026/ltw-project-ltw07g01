@@ -15,10 +15,17 @@
                 <li><a href="/pages/about.php">About Us</a></li>
                 <li><a href="/pages/locations.php">Locations</a></li>
                 <?php if ($session->isLoggedIn()): ?>
-                    <li><a href="/pages/profile.php"><?= htmlspecialchars($session->getName()) ?></a></li>
-                <?php else: ?>
-                    <li><a href="/pages/login.php">Login</a></li>
-                <?php endif; ?>
+                    <li class="profile-dropdown">
+                        <a href="/pages/profile.php">
+                            <?= htmlspecialchars($session->getName()) ?>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </a>
+
+                        <div class="dropdown-menu">
+                            <a href="/pages/logout.php">Logout</a>
+                        </div>
+                    </li>
+              <?php endif; ?>
             </ul>
         </nav>
     </header>

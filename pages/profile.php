@@ -363,7 +363,6 @@ if ($totalGymMinutes >= 6000) {
     </div>
 </main>
 
-<?php drawFooter(); ?>
-
+<php drawFooter(); ?>
 </body>
 </html>

@@ -74,6 +74,54 @@ body {
     transition: 0.3s;
 }
 
+.profile-dropdown {
+    position: relative;}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: -16px;
+    background-color: black;
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    margin-top: 10px;
+    min-width: 110px;
+    text-align: center;
+    z-index: 2000;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.profile-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.profile-dropdown i {
+    font-size: 12px;
+    margin-left: 6px;
+    transition: 0.3s;
+}
+
+.profile-dropdown:hover i {
+    transform: rotate(180deg);
+}
+
+.profile-dropdown::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    height: 12px;
+}
+
 /* footer */
 .footer {
     display: grid;
