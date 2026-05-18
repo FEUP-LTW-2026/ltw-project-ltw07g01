@@ -18,11 +18,13 @@ $db = getDatabaseConnection();
 
 // --- Utilizador e gym ---
 $stmt = $db->prepare(
-    'SELECT u.username, u.email, u.first_name, u.last_name, u.profile_photo, u.created_at, c.preferred_gym_id, c.archetype,
-            gl.name AS gym_name, gl.city AS gym_city
+    'SELECT u.username, u.email, u.first_name, u.last_name, u.profile_photo, u.created_at, c.preferred_gym_id, c.archetype_id, c.selected_badges, c.body_weight, c.height,
+            gl.name AS gym_name, gl.city AS gym_city,
+            a.name AS archetype
      FROM users u
      JOIN clients c ON c.user_id = u.id
      LEFT JOIN gym_locations gl ON gl.id = c.preferred_gym_id
+     LEFT JOIN archetypes a ON a.id = c.archetype_id
      WHERE u.id = :id'
 );
 $stmt->execute([':id' => $userId]);
@@ -62,6 +64,55 @@ $stmt = $db->prepare(
 );
 $stmt->execute([':id' => $userId]);
 $totalGymMinutes = (int)round($stmt->fetchColumn() ?? 0);
+
+$selectedBadgeCodes = array_filter(array_map('trim', explode(',', $user['selected_badges'] ?? '')));
+
+$badgeDefinitions = [
+    'classes' => [
+        ['code' => 'A_PLUS_STUDENT', 'threshold' => 20, 'icon' => '📚', 'title' => 'A+ Student: 20 classes attended', 'label' => 'A+ Student'],
+        ['code' => 'NEWBIE', 'threshold' => 1, 'icon' => '🎓', 'title' => 'Newbie: 1st class attended', 'label' => 'Newbie']
+    ],
+    'visits' => [
+        ['code' => 'CENTURY_CLUB', 'threshold' => 100, 'icon' => '💯', 'title' => 'Century Club: 100 gym visits', 'label' => 'Century Club'],
+        ['code' => 'IRON_REGULAR', 'threshold' => 50, 'icon' => '🏋️', 'title' => 'Iron Regular: 50 gym visits', 'label' => 'Iron Regular'],
+        ['code' => 'GYM_EXPLORER', 'threshold' => 10, 'icon' => '✨', 'title' => 'Gym Explorer: 10 gym visits', 'label' => 'Gym Explorer']
+    ],
+    'time' => [
+        ['code' => 'TIME_CHAMPION', 'threshold' => 6000, 'icon' => '⏱️', 'title' => 'Time Champion: 100+ hours at the gym', 'label' => '100+ Hours'],
+        ['code' => 'GYM_WARRIOR', 'threshold' => 3000, 'icon' => '⏱️', 'title' => 'Gym Warrior: 50+ hours at the gym', 'label' => '50+ Hours'],
+        ['code' => 'ENDURANCE_BUILDER', 'threshold' => 1200, 'icon' => '⏱️', 'title' => 'Endurance Builder: 20+ hours at the gym', 'label' => '20+ Hours']
+    ]
+];
+
+$earnedBadgeCount = 0;
+$availableBadges = [];
+foreach ($badgeDefinitions as $category => $definitions) {
+    $value = 0;
+    if ($category === 'classes') {
+        $value = $classesAttended;
+    } elseif ($category === 'visits') {
+        $value = $totalVisits;
+    } elseif ($category === 'time') {
+        $value = $totalGymMinutes;
+    }
+
+    foreach ($definitions as $definition) {
+        if ($value >= $definition['threshold']) {
+            $earnedBadgeCount++;
+        }
+    }
+
+    foreach ($definitions as $definition) {
+        if ($value >= $definition['threshold']) {
+            $availableBadges[] = $definition;
+            break;
+        }
+    }
+}
+
+$selectedBadges = array_filter($availableBadges, function ($badge) use ($selectedBadgeCodes) {
+    return in_array($badge['code'], $selectedBadgeCodes, true);
+});
 
 // --- Chart range ---
 $daysRange = isset($_GET['days']) && in_array((int)$_GET['days'], [7, 30], true)
@@ -226,11 +277,11 @@ if ($totalGymMinutes >= 6000) {
             <div class="metrics-grid">
                 <div class="metric-card">
                     <span class="metric-label">Body Weight</span>
-                    <span class="metric-value"><?= htmlspecialchars($bodyWeight) ?></span>
+                    <span class="metric-value"><?= htmlspecialchars((string)$bodyWeight) ?></span>
                 </div>
                 <div class="metric-card">
                     <span class="metric-label">Height</span>
-                    <span class="metric-value"><?= htmlspecialchars($height) ?></span>
+                    <span class="metric-value"><?= htmlspecialchars((string)$height) ?></span>
                 </div>
             </div>
         </div>
@@ -247,13 +298,13 @@ if ($totalGymMinutes >= 6000) {
                     <span class="stat-label">CLASSES ATTENDED</span>
                 </div>
                 <div class="stat-box">
-                    <span class="stat-number"><?= count($badges) ?></span>
+                    <span class="stat-number"><?= $earnedBadgeCount ?></span>
                     <span class="stat-label">EARNED BADGES</span>
                 </div>
             </div>
 
             <div class="badge-container">
-                <?php foreach ($badges as $badge): ?>
+                <?php foreach ($selectedBadges as $badge): ?>
                     <span class="badge" title="<?= htmlspecialchars($badge['title']) ?>">
                         <?= $badge['icon'] ?>
                     </span>
