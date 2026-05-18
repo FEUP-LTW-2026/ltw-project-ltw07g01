@@ -55,11 +55,11 @@ CREATE TABLE clients
     user_id          INTEGER PRIMARY KEY,
     gym_token        TEXT UNIQUE,
     token_expire_at  TIMESTAMP,
-    preferred_gym_id INTEGER,
+    preferred_gym_id INTEGER, -- fazer uma tabela a parte para relacionar clientes e ginásios?
     archetype TEXT DEFAULT NULL,
     body_weight REAL,
     height REAL,
-          CHECK (archetype IS NULL OR archetype IN (
+          CHECK (archetype IS NULL OR archetype IN ( -- fazer a parte
               'SPINNER',
               'POWERLIFTER',
               'YOGI',
@@ -265,6 +265,34 @@ VALUES (3, 1, datetime('now', '-3 days', '+7 hours'), datetime('now', '-3 days',
 INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
 VALUES (3, 1, datetime('now', '-5 days', '+9 hours'), datetime('now', '-5 days', '+11 hours'));
 INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
-VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); //para testar os badges
-
-   
+VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-20 days', '+9 hours'), datetime('now', '-19 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-18 days', '+9 hours'), datetime('now', '-17 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-16 days', '+9 hours'), datetime('now', '-15 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-18 days', '+9 hours'), datetime('now', '-17 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-16 days', '+9 hours'), datetime('now', '-15 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
+INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
+VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
