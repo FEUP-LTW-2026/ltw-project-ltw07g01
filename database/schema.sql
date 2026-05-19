@@ -55,6 +55,7 @@ CREATE TABLE users
     first_name    TEXT NOT NULL,
     last_name     TEXT NOT NULL,
     profile_photo TEXT,
+    bio           TEXT,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -255,6 +256,11 @@ INSERT INTO class_types (name) VALUES ('Yoga');
 INSERT INTO class_types (name) VALUES ('Cycling');
 INSERT INTO class_types (name) VALUES ('Pilates');
 INSERT INTO class_types (name) VALUES ('HIIT');
+INSERT INTO class_types (name) VALUES ('Personal Training');
+INSERT INTO class_types (name) VALUES ('Spin');
+INSERT INTO class_types (name) VALUES ('Strength & Conditioning');
+INSERT INTO class_types (name) VALUES ('Zumba');
+INSERT INTO class_types (name) VALUES ('Boxing');
 
 INSERT INTO archetypes (name) VALUES ('SPINNER');
 INSERT INTO archetypes (name) VALUES ('POWERLIFTER');

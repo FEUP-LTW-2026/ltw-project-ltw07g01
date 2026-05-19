@@ -11,14 +11,14 @@ $session = new Session();
 $userId = 3; //user de teste
 
 require_once('../database/connection.db.php');
-require_once('../templates/common.tmp.php');
+require_once('../templates/common.tpl.php');
 
 $db = getDatabaseConnection();
 //$userId = $session->getId();
 
 // --- Buscar dados atuais ---
 $stmt = $db->prepare(
-    'SELECT u.username, u.email, u.first_name, u.last_name, u.profile_photo, u.created_at, c.preferred_gym_id, c.archetype_id, c.body_weight, c.height, c.selected_badges,
+    'SELECT u.username, u.email, u.first_name, u.last_name, u.profile_photo, u.bio, u.created_at, c.preferred_gym_id, c.archetype_id, c.body_weight, c.height, c.selected_badges,
             gl.name AS gym_name, gl.city AS gym_city,
             a.name AS archetype
      FROM users u
@@ -53,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstName = trim($_POST['first_name'] ?? '');
     $lastName = trim($_POST['last_name'] ?? '');
     $email = trim($_POST['email'] ?? '');
+    $username = trim($_POST['username'] ?? '');
     $archetypeId = $_POST['archetype'] ? (int)$_POST['archetype'] : null;
     $preferredGymId = (int)($_POST['preferred_gym_id'] ?? 0);
     $bodyWeight = (float)($_POST['body_weight'] ?? 0);
@@ -60,19 +61,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selectedBadges = array_map('trim', (array)($_POST['display_badges'] ?? []));
     $selectedBadges = array_values(array_filter($selectedBadges));
 
+    $bio = mb_substr(trim($_POST['bio'] ?? ''), 0, 300);
+    $currentPassword = $_POST['current_password'] ?? '';
+    $newPassword = $_POST['new_password'] ?? '';
+    $confirmPassword = $_POST['confirm_password'] ?? '';
+
     // Validações básicas
-    if (empty($firstName) || empty($lastName) || empty($email)) {
-        $error = 'All fields are required.';
+    if (empty($firstName) || empty($lastName) || empty($email) || empty($username)) {
+        $error = 'First name, last name, email and username are required.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Invalid email format.';
+    } elseif (!preg_match('/^\w{3,30}$/', $username)) {
+        $error = 'Username must be 3–30 characters (letters, numbers, underscores only).';
     } elseif ($bodyWeight <= 0 || $height <= 0) {
         $error = 'Body weight and height must be positive numbers.';
     } elseif ($archetypeId !== null && !in_array($archetypeId, $validArchetypeIds, true)) {
         $error = 'Invalid archetype selected.';
     } else {
-        // Atualizar users
-        $stmt = $db->prepare('UPDATE users SET first_name = :first, last_name = :last, email = :email WHERE id = :id');
-        $stmt->execute([':first' => $firstName, ':last' => $lastName, ':email' => $email, ':id' => $userId]);
+        // Check username uniqueness (excluding current user)
+        $stmt = $db->prepare('SELECT id FROM users WHERE username = :username AND id != :id');
+        $stmt->execute([':username' => $username, ':id' => $userId]);
+        if ($stmt->fetch()) {
+            $error = 'That username is already taken.';
+        }
+    }
+
+    // Password change validation
+    if (!isset($error) && $newPassword !== '') {
+        $stmt = $db->prepare('SELECT password_hash FROM users WHERE id = :id');
+        $stmt->execute([':id' => $userId]);
+        $row = $stmt->fetch();
+        if (!password_verify($currentPassword, $row['password_hash'])) {
+            $error = 'Current password is incorrect.';
+        } elseif (strlen($newPassword) < 6) {
+            $error = 'New password must be at least 6 characters.';
+        } elseif ($newPassword !== $confirmPassword) {
+            $error = 'New passwords do not match.';
+        }
+    }
+
+    // Profile photo upload
+    $newPhotoPath = null;
+    if (!isset($error) && isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
+        $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->file($_FILES['profile_photo']['tmp_name']);
+        if (!in_array($mime, $allowed, true)) {
+            $error = 'Profile photo must be a JPEG, PNG, WebP, or GIF image.';
+        } elseif ($_FILES['profile_photo']['size'] > 5 * 1024 * 1024) {
+            $error = 'Profile photo must be smaller than 5 MB.';
+        } else {
+            $ext = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif'][$mime];
+            $filename = 'user_' . $userId . '_' . time() . '.' . $ext;
+            $destDir = __DIR__ . '/../images/profile_photos/';
+            if (move_uploaded_file($_FILES['profile_photo']['tmp_name'], $destDir . $filename)) {
+                $newPhotoPath = '../images/profile_photos/' . $filename;
+            } else {
+                $error = 'Failed to save the profile photo. Please try again.';
+            }
+        }
+    }
+
+    if (!isset($error)) {
+        // Build users UPDATE
+        $userFields = 'first_name = :first, last_name = :last, email = :email, username = :username, bio = :bio';
+        $userParams = [':first' => $firstName, ':last' => $lastName, ':email' => $email, ':username' => $username, ':bio' => $bio, ':id' => $userId];
+
+        if ($newPhotoPath !== null) {
+            $userFields .= ', profile_photo = :photo';
+            $userParams[':photo'] = $newPhotoPath;
+        }
+        if ($newPassword !== '') {
+            $userFields .= ', password_hash = :hash';
+            $userParams[':hash'] = password_hash($newPassword, PASSWORD_DEFAULT);
+        }
+
+        $stmt = $db->prepare("UPDATE users SET {$userFields} WHERE id = :id");
+        $stmt->execute($userParams);
 
         // Atualizar clients
         $stmt = $db->prepare('UPDATE clients SET archetype_id = :arch, preferred_gym_id = :gym, body_weight = :weight, height = :height, selected_badges = :selected_badges WHERE user_id = :id');
@@ -85,7 +150,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':id' => $userId
         ]);
 
-        // Redirecionar de volta ao perfil
         header('Location: profile.php');
         exit;
     }
@@ -97,6 +161,7 @@ $memberSince = (new DateTime($user['created_at']))->format('F Y');
 $homeGym = $user['gym_name'] ? 'Cubo Gym - ' . $user['gym_city'] . ', ' . $user['gym_name'] : 'No gym selected';
 $profilePhoto = $user['profile_photo'] ?? '../images/profile_pic.webp';
 $archetype = $user['archetype'] ?? 'NO ARCHETYPE';
+$bio = $user['bio'] ?? '';
 $bodyWeight = $user['body_weight'] ?? '';
 $height = $user['height'] ?? '';
 $memberTag = 'MEMBER'; // Simplificado
@@ -196,16 +261,17 @@ $selectedBadgesDisplay = array_filter($availableBadges, function ($badge) use ($
     <aside class="sidebar-container">
         <section class="profile-card">
             <div class="profile-info">
-                <figure class="profile-avatar">
-                    <img src="<?= htmlspecialchars($profilePhoto) ?>" alt="User Profile Picture">
+                <figure class="profile-avatar profile-avatar--edit" id="avatarWrapper">
+                    <img src="<?= htmlspecialchars($profilePhoto) ?>" alt="User Profile Picture" id="avatarPreview">
+                    <label class="avatar-upload-overlay" for="profile_photo" title="Change photo">
+                        <i class="fa fa-camera"></i>
+                    </label>
                 </figure>
                 <div class="user-meta">
                     <h2 class="user-name"><?= htmlspecialchars($fullName) ?></h2>
                     <p class="user-handle">@<?= htmlspecialchars($user['username']) ?></p>
                     <span class="member-tag"><?= htmlspecialchars($memberTag) ?></span>
                 </div>
-            </div>
-
             </div>
         </section>
     </aside>
@@ -215,7 +281,8 @@ $selectedBadgesDisplay = array_filter($availableBadges, function ($badge) use ($
             <div class="error-message" style="color: red; margin-bottom: 20px;"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
-        <form method="post" class="edit-form">
+        <form method="post" enctype="multipart/form-data" class="edit-form">
+            <input type="file" id="profile_photo" name="profile_photo" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none">
             <div class="profile-details">
                 <div class="detail-item">
                     <label class="detail-label" for="first_name">First Name</label>
@@ -226,8 +293,16 @@ $selectedBadgesDisplay = array_filter($availableBadges, function ($badge) use ($
                     <input type="text" id="last_name" name="last_name" class="detail-input" value="<?= htmlspecialchars($user['last_name']) ?>" required>
                 </div>
                 <div class="detail-item">
+                    <label class="detail-label" for="username">Username</label>
+                    <input type="text" id="username" name="username" class="detail-input" value="<?= htmlspecialchars($user['username']) ?>" required pattern="\w{3,30}" title="3–30 characters: letters, numbers, underscores">
+                </div>
+                <div class="detail-item">
                     <label class="detail-label" for="email">Email Address</label>
                     <input type="email" id="email" name="email" class="detail-input" value="<?= htmlspecialchars($user['email']) ?>" required>
+                </div>
+                <div class="detail-item detail-item--bio">
+                    <label class="detail-label" for="bio">Bio <span class="bio-char-count">(<span id="bioCount"><?= mb_strlen($bio) ?></span>/300)</span></label>
+                    <textarea id="bio" name="bio" class="detail-input bio-textarea" maxlength="300" rows="4" placeholder="Tell the gym about yourself..."><?= htmlspecialchars($bio) ?></textarea>
                 </div>
                 <div class="detail-item">
                     <label class="detail-label" for="preferred_gym_id">Home Gym</label>
@@ -291,6 +366,23 @@ $selectedBadgesDisplay = array_filter($availableBadges, function ($badge) use ($
                 </div>
             </div>
 
+            <div class="password-section">
+                <h3>CHANGE PASSWORD</h3>
+                <p class="detail-label">Leave blank to keep your current password.</p>
+                <div class="detail-item">
+                    <label class="detail-label" for="current_password">Current Password</label>
+                    <input type="password" id="current_password" name="current_password" class="detail-input" autocomplete="current-password">
+                </div>
+                <div class="detail-item">
+                    <label class="detail-label" for="new_password">New Password</label>
+                    <input type="password" id="new_password" name="new_password" class="detail-input" autocomplete="new-password" minlength="6">
+                </div>
+                <div class="detail-item">
+                    <label class="detail-label" for="confirm_password">Confirm New Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="detail-input" autocomplete="new-password">
+                </div>
+            </div>
+
             <div class="profile-actions">
                 <button type="submit" class="btn-save-changes">Save Changes</button>
                 <a href="profile.php" class="btn-cancel">Cancel</a>
@@ -311,8 +403,44 @@ document.addEventListener('DOMContentLoaded', function () {
                 label.classList.remove('selected');
             }
         });
-        // clicking the label will toggle the hidden checkbox natively
     });
+
+    var bioTextarea = document.getElementById('bio');
+    var bioCount = document.getElementById('bioCount');
+    if (bioTextarea && bioCount) {
+        bioTextarea.addEventListener('input', function () {
+            bioCount.textContent = bioTextarea.value.length;
+        });
+    }
+
+    var photoInput = document.getElementById('profile_photo');
+    var avatarPreview = document.getElementById('avatarPreview');
+    if (photoInput && avatarPreview) {
+        photoInput.addEventListener('change', function () {
+            var file = photoInput.files[0];
+            if (file && file.type.startsWith('image/')) {
+                var reader = new FileReader();
+                reader.onload = function (e) { avatarPreview.src = e.target.result; };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    var newPw = document.getElementById('new_password');
+    var confirmPw = document.getElementById('confirm_password');
+    var currentPw = document.getElementById('current_password');
+    if (newPw && confirmPw && currentPw) {
+        document.querySelector('.edit-form').addEventListener('submit', function (e) {
+            if (newPw.value !== '' && newPw.value !== confirmPw.value) {
+                e.preventDefault();
+                alert('New passwords do not match.');
+            }
+            if (newPw.value !== '' && currentPw.value === '') {
+                e.preventDefault();
+                alert('Please enter your current password to set a new one.');
+            }
+        });
+    }
 });
 </script>
 
