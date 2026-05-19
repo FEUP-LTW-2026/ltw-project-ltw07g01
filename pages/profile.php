@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-require_once('../utils/session.php');
+require_once(__DIR__ . '/../utils/session.php');
 $session = new Session();
 
 //if (!$session->isLoggedIn()) {
@@ -10,15 +10,15 @@ $session = new Session();
 
 $userId = 3; //user de teste
 
-require_once('../database/connection.db.php');
-require_once('../templates/common.tmp.php');
+require_once(__DIR__ . '/../database/connection.db.php');
+require_once(__DIR__ . '/../templates/common.tpl.php');
 
 $db = getDatabaseConnection();
 //$userId = $session->getId();
 
 // --- Utilizador e gym ---
 $stmt = $db->prepare(
-    'SELECT u.username, u.email, u.first_name, u.last_name, u.profile_photo, u.created_at, c.preferred_gym_id, c.archetype_id, c.selected_badges, c.body_weight, c.height,
+    'SELECT u.username, u.email, u.first_name, u.last_name, u.profile_photo, u.bio, u.created_at, c.preferred_gym_id, c.archetype_id, c.selected_badges, c.body_weight, c.height,
             gl.name AS gym_name, gl.city AS gym_city,
             a.name AS archetype
      FROM users u
@@ -175,6 +175,7 @@ $homeGym        = $user['gym_name']
     : 'No gym selected';
 $profilePhoto   = $user['profile_photo'] ?? '../images/profile_pic.webp';
 $archetype = $user['archetype'] ?? 'NO ARCHETYPE';
+$bio = $user['bio'] ?? '';
 $bodyWeight = $user['body_weight'] ?? 'N/A';
 $height = $user['height'] ?? 'N/A';
 $memberTag      = $membership
@@ -235,18 +236,13 @@ if ($totalGymMinutes >= 6000) {
                 </div>
             </div>
 
-            <div class="qr-container">
-                <button class="btn-qr" id="entry-key">
-                    <span class="icon"></span> Digital Entry Key
-                </button>
-                <div class="qr-display-area">
-                    <img src="../images/random_qr.png" alt="User Access QR Code" class="qr-image">
-                    <p class="qr-status">Ready to Scan</p>
-                </div>
-            </div>
-
             <div class="user-identity">
                 <span class="archetype-tag"><?= htmlspecialchars($archetype) ?></span>
+                <?php if ($bio): ?>
+                    <p class="user-bio"><?= nl2br(htmlspecialchars($bio)) ?></p>
+                <?php else: ?>
+                    <p class="user-bio user-bio--empty">No bio yet.</p>
+                <?php endif; ?>
             </div>
         </section>
     </aside>
