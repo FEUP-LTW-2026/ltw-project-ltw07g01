@@ -81,41 +81,40 @@ body {
     border-radius: 50px;
 }
 
-.qr-container {
-    background: var(--accent);
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    color: #000;
-}
-
-.btn-qr {
-    background: #000;
-    color: #fff;
-    padding: 12px;
-    width: 100%;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    margin-bottom: 15px;
-    cursor: pointer;
-}
-
-.qr-image {
-    background: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    width: 150px;
+.user-identity {
+    border-top: var(--border);
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
 }
 
 .archetype-tag {
+    display: inline-block;
     background: transparent;
     color: var(--accent);
     border: 1px solid var(--accent);
     font-weight: bold;
-    padding: 6px 16px;
-    font-size: 0.9rem;
+    padding: 6px 20px;
+    font-size: 0.85rem;
     border-radius: 50px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
 
+.user-bio {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    text-align: center;
+    line-height: 1.6;
+    padding: 0 8px;
+    margin: 0;
+}
+
+.user-bio--empty {
+    font-style: italic;
+    opacity: 0.5;
 }
 
 .user-motto {
@@ -553,4 +552,228 @@ body {
 .btn-edit-profile:hover {
     background: var(--accent);
     color: var(--text-main);
+}
+/* --- Profile photo upload (edit page) --- */
+.profile-avatar--edit {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.avatar-upload-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 25px;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    cursor: pointer;
+}
+
+.avatar-upload-overlay i {
+    font-size: 2rem;
+    color: #fff;
+}
+
+.profile-avatar--edit:hover .avatar-upload-overlay {
+    opacity: 1;
+}
+
+/* --- Password section (edit page) --- */
+.password-section {
+    background: var(--card-bg);
+    border: var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.password-section h3 {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+}
+
+.password-section .detail-label {
+    margin-bottom: 14px;
+}
+
+.password-section .detail-item {
+    margin-bottom: 10px;
+}
+
+/* --- Bio textarea (edit page) --- */
+.bio-textarea {
+    resize: vertical;
+    min-height: 90px;
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+.bio-char-count {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    font-weight: normal;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.detail-item--bio {
+    grid-column: 1 / -1;
+}
+
+/* --- Trainer tag --- */
+.trainer-tag {
+    background: #7c3aed;
+}
+
+/* --- Specializations (profile view) --- */
+.specializations-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.specialization-tag {
+    background: transparent;
+    color: #a78bfa;
+    border: 1px solid #7c3aed;
+    padding: 4px 14px;
+    font-size: 0.78rem;
+    border-radius: 50px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.specialization-tag--empty {
+    color: var(--text-dim);
+    border-color: var(--text-dim);
+    opacity: 0.5;
+}
+
+/* --- Certifications (profile view) --- */
+.certifications-section {
+    margin-bottom: 20px;
+}
+
+.certifications-section h3 {
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.certifications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.certification-card {
+    background: var(--card-bg);
+    border: var(--border);
+    border-left: 3px solid #7c3aed;
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cert-icon {
+    color: #7c3aed;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.cert-name {
+    font-size: 0.95rem;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.no-certifications {
+    color: var(--text-dim);
+    font-style: italic;
+}
+
+/* --- Specializations toggle (edit page) --- */
+.specializations-section,
+.certifications-edit-section,
+.gyms-section {
+    background: var(--card-bg);
+    border: var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.specializations-section h3,
+.certifications-edit-section h3,
+.gyms-section h3 {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+}
+
+.specialization-toggle-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.spec-toggle {
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid #444;
+    background: var(--card-bg);
+    border-radius: 50px;
+    padding: 8px 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.spec-toggle input[type="checkbox"] {
+    display: none;
+}
+
+.spec-toggle.selected {
+    border-color: #7c3aed;
+    background: rgba(124, 58, 237, 0.12);
+    color: #a78bfa;
+}
+
+.spec-toggle:hover {
+    border-color: #a78bfa;
+}
+
+.spec-name {
+    font-size: 0.9rem;
+}
+
+.certifications-edit-section .bio-textarea {
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* --- Trainer theme: purple accent --- */
+body.trainer-theme {
+    --accent: #7c3aed;
+}
+
+body.trainer-theme .btn-save-changes:hover,
+body.trainer-theme .btn-save-changes {
+    background: #7c3aed;
+    color: #fff;
+}
+
+body.trainer-theme .btn-save-changes:hover {
+    background: #6d28d9;
 }
