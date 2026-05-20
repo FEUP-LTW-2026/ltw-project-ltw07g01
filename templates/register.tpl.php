@@ -1,10 +1,10 @@
-<?php function drawLoginPage(object $session, string $error) { ?>
+<?php function drawRegisterPage(object $session, string $error) { ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | CUBO GYM</title>
+    <title>Register | CUBO GYM</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/login-register.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
@@ -17,17 +17,25 @@
 <main class="login-page">
 
     <div class="login-image">
-        <img src="../images/login.png" alt="CUBO GYM">
+        <img src="../images/register.png" alt="CUBO GYM">
     </div>
 
     <section class="login-box">
-        <h1>LOG IN</h1>
+        <h1>SIGN UP</h1>
 
         <?php if ($error !== ''): ?>
             <p class="login-error"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
-        <form method="POST" action="login.php">
+        <form method="POST" action="/pages/register.php">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name" required>
+
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name" required>
 
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
@@ -35,17 +43,20 @@
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
 
-            <button type="submit">LOG IN</button>
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
 
+            <button type="submit">SIGN UP</button>
         </form>
 
         <p class="login-register">
-            Don't have an account?
-            <a href="register.php">Sign up</a>
+            Already have an account?
+            <a href="/pages/login.php">Log in</a>
         </p>
     </section>
 
 </main>
+
 <?php drawFooter(); ?>
 
 </body>
