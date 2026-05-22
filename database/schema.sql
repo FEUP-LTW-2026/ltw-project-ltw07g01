@@ -276,15 +276,24 @@ VALUES ('admin', 'admin@cubogym.com',
 'Admin', 'CUBO');
 INSERT INTO admins (user_id) VALUES (1);
 
-INSERT INTO users (username, email, password_hash, first_name, last_name)
-VALUES ('ana.silva', 'ana@cubogym.com',
+INSERT INTO users (id, username, email, password_hash, first_name, last_name)
+VALUES (2, 'ana.silva', 'ana@cubogym.com',
         '$2y$12$RLrV1W7DVRUuO64nGrcxKeM9yl8qIE7V86o3zswBXQyLg96ASGA26',
         'Ana', 'Silva');
+
 INSERT INTO trainers (user_id, bio, certifications)
 VALUES (2, 'Yoga instructor with 10 years experience.', 'ACE, RYT-200');
 
-INSERT INTO users (username, email, password_hash, first_name, last_name)
-VALUES ('joao.costa', 'joao@cubogym.com',
+INSERT INTO users (id, username, email, password_hash, first_name, last_name)
+VALUES (4, 'maria.fernandes', 'maria@cubogym.com',
+        '$2y$12$RLrV1W7DVRUuO64nGrcxKeM9yl8qIE7V86o3zswBXQyLg96ASGA26',
+        'Maria', 'Fernandes');
+
+INSERT INTO trainers (user_id, bio, certifications)
+VALUES (4, 'Certified personal trainer specializing in strength training.', 'NASM-CPT, CSCS');
+
+INSERT INTO users (id, username, email, password_hash, first_name, last_name)
+VALUES (3, 'joao.costa', 'joao@cubogym.com',
         '$2y$12$RLrV1W7DVRUuO64nGrcxKeM9yl8qIE7V86o3zswBXQyLg96ASGA26',
         'João', 'Costa');
 INSERT INTO clients (user_id, preferred_gym_id, archetype_id, body_weight, height) VALUES (3, 1, 2, 70, 175);
@@ -333,3 +342,29 @@ INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
 VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
 INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
 VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
+
+
+INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
+VALUES (1, 1, 4, datetime('now', '+1 day', '+10 hours'), 60, 20);
+INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
+VALUES (2, 1, 4, datetime('now', '+2 days', '+18 hours'), 45, 15);
+INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
+VALUES (3, 1, 2, datetime('now', '+3 days', '+7 hours'), 30, 10);
+INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
+VALUES (4, 1, 2, datetime('now', '+4 days', '+19 hours'), 50, 25);
+INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
+VALUES (5, 1, 4, datetime('now', '+5 days', '+6 hours'), 40, 20);
+INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
+VALUES (6, 1, 2, datetime('now', '+6 days', '+17 hours'), 55, 30);
+INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
+VALUES (7, 1, 2, datetime('now', '+7 days', '+8 hours'), 35, 15);
+INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
+VALUES (8, 1, 2, datetime('now', '+8 days', '+18 hours'), 45, 20);
+INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
+VALUES (9, 1, 2, datetime('now', '+9 days', '+7 hours'), 60, 25);
+INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
+VALUES (1, 1, 2, datetime('now', '+10 days', '+9 hours'), 30, 10);
+INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
+VALUES (2, 1, 3, datetime('now', '+11 days', '+19 hours'), 50, 20);
+INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
+VALUES (3, 1, 4, datetime('now', '+12 days', '+6 hours'), 40, 15);

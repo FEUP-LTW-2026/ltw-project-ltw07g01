@@ -69,18 +69,18 @@ $selectedBadgeCodes = array_filter(array_map('trim', explode(',', $user['selecte
 
 $badgeDefinitions = [
     'classes' => [
-        ['code' => 'A_PLUS_STUDENT', 'threshold' => 20, 'icon' => '📚', 'title' => 'A+ Student: 20 classes attended', 'label' => 'A+ Student'],
-        ['code' => 'NEWBIE', 'threshold' => 1, 'icon' => '🎓', 'title' => 'Newbie: 1st class attended', 'label' => 'Newbie']
+        ['code' => 'A_PLUS_STUDENT', 'threshold' => 20, 'icon' => '<i class="fa fa-book"></i>', 'title' => 'A+ Student: 20 classes attended', 'label' => 'A+ Student'],
+        ['code' => 'NEWBIE', 'threshold' => 1, 'icon' => '<i class="fa fa-graduation-cap"></i>', 'title' => 'Newbie: 1st class attended', 'label' => 'Newbie']
     ],
     'visits' => [
-        ['code' => 'CENTURY_CLUB', 'threshold' => 100, 'icon' => '💯', 'title' => 'Century Club: 100 gym visits', 'label' => 'Century Club'],
-        ['code' => 'IRON_REGULAR', 'threshold' => 50, 'icon' => '🏋️', 'title' => 'Iron Regular: 50 gym visits', 'label' => 'Iron Regular'],
-        ['code' => 'GYM_EXPLORER', 'threshold' => 10, 'icon' => '✨', 'title' => 'Gym Explorer: 10 gym visits', 'label' => 'Gym Explorer']
+        ['code' => 'CENTURY_CLUB', 'threshold' => 100, 'icon' => '<i class="fa fa-trophy"></i>', 'title' => 'Century Club: 100 gym visits', 'label' => 'Century Club'],
+        ['code' => 'IRON_REGULAR', 'threshold' => 50, 'icon' => '<i class="fa fa-dumbbell"></i>', 'title' => 'Iron Regular: 50 gym visits', 'label' => 'Iron Regular'],
+        ['code' => 'GYM_EXPLORER', 'threshold' => 10, 'icon' => '<i class="fa fa-compass"></i>', 'title' => 'Gym Explorer: 10 gym visits', 'label' => 'Gym Explorer']
     ],
     'time' => [
-        ['code' => 'TIME_CHAMPION', 'threshold' => 6000, 'icon' => '⏱️', 'title' => 'Time Champion: 100+ hours at the gym', 'label' => '100+ Hours'],
-        ['code' => 'GYM_WARRIOR', 'threshold' => 3000, 'icon' => '⏱️', 'title' => 'Gym Warrior: 50+ hours at the gym', 'label' => '50+ Hours'],
-        ['code' => 'ENDURANCE_BUILDER', 'threshold' => 1200, 'icon' => '⏱️', 'title' => 'Endurance Builder: 20+ hours at the gym', 'label' => '20+ Hours']
+        ['code' => 'TIME_CHAMPION', 'threshold' => 6000, 'icon' => '<i class="fa fa-crown"></i>', 'title' => 'Time Champion: 100+ hours at the gym', 'label' => '100+ Hours'],
+        ['code' => 'GYM_WARRIOR', 'threshold' => 3000, 'icon' => '<i class="fa fa-shield-halved"></i>', 'title' => 'Gym Warrior: 50+ hours at the gym', 'label' => '50+ Hours'],
+        ['code' => 'ENDURANCE_BUILDER', 'threshold' => 1200, 'icon' => '<i class="fa fa-bolt"></i>', 'title' => 'Endurance Builder: 20+ hours at the gym', 'label' => '20+ Hours']
     ]
 ];
 
@@ -186,25 +186,25 @@ $memberTag      = $membership
 $badges = [];
 
 if ($classesAttended >= 20) {
-    $badges[] = ['icon' => '📚', 'title' => 'A+ Student: 20 classes attended'];
+    $badges[] = ['icon' => '<i class="fa fa-book"></i>', 'title' => 'A+ Student: 20 classes attended'];
 } elseif ($classesAttended >= 1) {
-    $badges[] = ['icon' => '🎓', 'title' => 'Newbie: 1st class attended'];
+    $badges[] = ['icon' => '<i class="fa fa-graduation-cap"></i>', 'title' => 'Newbie: 1st class attended'];
 }
 
 if ($totalVisits >= 100) {
-    $badges[] = ['icon' => '💯', 'title' => 'Century Club: 100 gym visits'];
+    $badges[] = ['icon' => '<i class="fa fa-trophy"></i>', 'title' => 'Century Club: 100 gym visits'];
 } elseif ($totalVisits >= 50) {
-    $badges[] = ['icon' => '🏋️', 'title' => 'Iron Regular: 50 gym visits'];
+    $badges[] = ['icon' => '<i class="fa fa-dumbbell"></i>', 'title' => 'Iron Regular: 50 gym visits'];
 } elseif ($totalVisits >= 10) {
-    $badges[] = ['icon' => '�', 'title' => 'Gym Explorer: 10 gym visits'];
+    $badges[] = ['icon' => '<i class="fa fa-compass"></i>', 'title' => 'Gym Explorer: 10 gym visits'];
 }
 
 if ($totalGymMinutes >= 6000) {
-    $badges[] = ['icon' => '⏱️', 'title' => 'Time Champion: 100+ hours at the gym'];
+    $badges[] = ['icon' => '<i class="fa fa-crown"></i>', 'title' => 'Time Champion: 100+ hours at the gym'];
 } elseif ($totalGymMinutes >= 3000) {
-    $badges[] = ['icon' => '⏱️', 'title' => 'Gym Warrior: 50+ hours at the gym'];
+    $badges[] = ['icon' => '<i class="fa fa-shield-halved"></i>', 'title' => 'Gym Warrior: 50+ hours at the gym'];
 } elseif ($totalGymMinutes >= 1200) {
-    $badges[] = ['icon' => '⏱️', 'title' => 'Endurance Builder: 20+ hours at the gym'];
+    $badges[] = ['icon' => '<i class="fa fa-bolt"></i>', 'title' => 'Endurance Builder: 20+ hours at the gym'];
 }
 ?>
 <!DOCTYPE html>
@@ -269,7 +269,7 @@ if ($totalGymMinutes >= 6000) {
         </div>
 
         <div class="metrics-section">
-            <h3>METRICS</h3>
+            <h3>MY METRICS</h3>
             <div class="metrics-grid">
                 <div class="metric-card">
                     <span class="metric-label">Body Weight</span>
