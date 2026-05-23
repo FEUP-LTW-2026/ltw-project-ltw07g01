@@ -1,4 +1,4 @@
-.login-page {
+main.login-page {
     min-height: 100vh;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -19,7 +19,7 @@
     border: 23px solid #00bfa6;
 }
 
-.login-box {
+main.login-page section {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -27,26 +27,26 @@
     font-family: 'League Gothic', sans-serif;
 }
 
-.login-box h1 {
+main.login-page section h1 {
     font-size: 90px;
     color: #00bfa6;
     margin-bottom: 40px;
     font-weight: normal;
 }
 
-.login-box form {
+main.login-page section form {
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
 
-.login-box label {
+main.login-page section label {
     font-size: 28px;
     color: white;
     letter-spacing: 1px;
 }
 
-.login-box input {
+main.login-page section input {
     padding: 14px 18px;
 
     background-color: transparent;
@@ -59,11 +59,11 @@
     transition: 0.3s;
 }
 
-.login-box input:focus {
+main.login-page section input:focus {
     border-color: #00bfa6;
 }
 
-.login-box button {
+main.login-page section button {
     margin-top: 25px;
     padding: 14px;
     border: 3px solid #00bfa6;
@@ -76,7 +76,7 @@
     transition: 0.3s;
 }
 
-.login-box button:hover {
+main.login-page section button:hover {
     background-color: #00bfa6;
     color: black;
 }
@@ -105,7 +105,7 @@
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-    .login-page {
+    main.login-page {
         grid-template-columns: 1fr;
     }
 
@@ -114,12 +114,12 @@
         padding: 120px 5% 50px 5%;
     }
 
-    .login-box {
+    main.login-page section {
         order: 2;
         padding: 50px 8%;
     }
 
-    .login-box h1 {
+    main.login-page section h1 {
         font-size: 70px;
     }
 }

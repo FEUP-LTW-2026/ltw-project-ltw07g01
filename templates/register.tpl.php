@@ -20,7 +20,7 @@
         <img src="../images/register.png" alt="CUBO GYM">
     </div>
 
-    <section class="login-box">
+    <section>
         <h1>SIGN UP</h1>
 
         <?php if ($error !== ''): ?>
