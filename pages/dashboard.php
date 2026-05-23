@@ -3,19 +3,18 @@ declare(strict_types=1);
 require_once('../utils/session.php');
 $session = new Session();
 
-// if (!$session->isLoggedIn()) {
-//     header('Location: login.php');
-//     exit;
-// }
+if (!$session->isLoggedIn()) {
+    header('Location: login.php');
+    exit;
+ }
 
 require_once('../database/connection.db.php');
 require_once('../templates/common.tpl.php');
 
 $db = getDatabaseConnection();
 
-// --- Detectar role ---
-// Em produção: $userId = $session->getId();
-$userId = 3; // utilizador de teste (client joao.costa)
+$userId = $session->getId();
+
 
 $role = null;
 
@@ -40,19 +39,48 @@ if (!$role) {
     exit;
 }
 
-// --- Dados do utilizador ---
+//dados do user
 $stmt = $db->prepare('SELECT username, first_name, last_name, profile_photo FROM users WHERE id = :id');
 $stmt->execute([':id' => $userId]);
 $user = $stmt->fetch();
 $profilePhoto = $user['profile_photo'] ?? '../images/profile_pic.webp';
 $fullName     = $user['first_name'] . ' ' . $user['last_name'];
+$profileUrl   = ($role === 'trainer') ? 'trainer-profile.php?id=' . $userId : 'profile.php';
 
-// ============================================================
-// DATA: CLIENT
-// ============================================================
+//enrolled students for a trainers class
+if (!empty($_GET['ajax']) && isset($_GET['class_id']) && $role === 'trainer') {
+    $classId = (int)$_GET['class_id'];
+    $s = $db->prepare(
+        'SELECT u.id, u.first_name, u.last_name, u.username, u.profile_photo
+         FROM client_classes cc
+         JOIN users u ON u.id = cc.client_id
+         WHERE cc.class_id = :cid
+         ORDER BY u.first_name, u.last_name'
+    );
+    $s->execute([':cid' => $classId]);
+    $students = $s->fetchAll(PDO::FETCH_ASSOC);
+
+    $s = $db->prepare(
+        'SELECT ct.name AS class_name, cl.schedule, cl.capacity,
+                (SELECT COUNT(*) FROM client_classes WHERE class_id = cl.id) AS enrolled
+         FROM classes cl
+         JOIN class_types ct ON ct.id = cl.class_type_id
+         WHERE cl.id = :cid AND cl.trainer_id = :tid'
+    );
+    $s->execute([':cid' => $classId, ':tid' => $userId]);
+    $classInfo = $s->fetch();
+
+    header('Content-Type: application/json');
+    if (!$classInfo) { echo json_encode(['ok' => false]); exit; }
+    echo json_encode(['ok' => true, 'class' => $classInfo, 'students' => $students]);
+    exit;
+}
+
+//client
+
 if ($role === 'client') {
 
-    // Dados do client
+    //dados do client
     $stmt = $db->prepare(
         'SELECT c.body_weight, c.height, c.archetype_id, c.selected_badges,
                 c.preferred_gym_id, gl.name AS gym_name, gl.city AS gym_city,
@@ -65,7 +93,7 @@ if ($role === 'client') {
     $stmt->execute([':id' => $userId]);
     $clientData = $stmt->fetch();
 
-    // Próximas aulas (inscritas e ainda não realizadas)
+    //próximas aulas (inscritas)
     $stmt = $db->prepare(
         'SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min,
                 gl.name AS gym_name, gl.city AS gym_city,
@@ -83,7 +111,7 @@ if ($role === 'client') {
     $stmt->execute([':id' => $userId]);
     $upcomingClasses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Visitas recentes
+    //visitas recentes
     $stmt = $db->prepare(
         'SELECT gv.checked_in, gv.checked_out, gl.name AS gym_name, gl.city AS gym_city
          FROM gym_visits gv
@@ -95,7 +123,7 @@ if ($role === 'client') {
     $stmt->execute([':id' => $userId]);
     $recentVisits = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Stats gerais
+    //stats gerais
     $stmt = $db->prepare('SELECT COUNT(*) FROM gym_visits WHERE client_id = :id');
     $stmt->execute([':id' => $userId]);
     $totalVisits = (int)$stmt->fetchColumn();
@@ -112,7 +140,7 @@ if ($role === 'client') {
     $totalMinutes = (int)round((float)$stmt->fetchColumn());
     $totalHours   = round($totalMinutes / 60, 1);
 
-    // Badges — mesma lógica do profile.php: melhor badge por categoria
+    // badges
     $selectedBadgeCodes = array_filter(array_map('trim', explode(',', $clientData['selected_badges'] ?? '')));
     $badgeCategories = [
         'classes' => [
@@ -148,12 +176,10 @@ if ($role === 'client') {
     $displayBadges = array_filter($earnedBadges, fn($b) => in_array($b['code'], $selectedBadgeCodes, true));
 }
 
-// ============================================================
-// DATA: TRAINER
-// ============================================================
+// trainer
 if ($role === 'trainer') {
 
-    // Próximas aulas do trainer
+    // próximas aulas do trainer
     $stmt = $db->prepare(
         'SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min, cl.capacity,
                 gl.name AS gym_name, gl.city AS gym_city,
@@ -197,7 +223,7 @@ if ($role === 'trainer') {
 
     // Clientes recentes
     $stmt = $db->prepare(
-        'SELECT DISTINCT u.first_name, u.last_name, u.username, u.profile_photo,
+        'SELECT DISTINCT u.id AS user_id, u.first_name, u.last_name, u.username, u.profile_photo,
                 cc.enrolled_at
          FROM client_classes cc
          JOIN clients c ON c.user_id = cc.client_id
@@ -220,9 +246,9 @@ if ($role === 'trainer') {
     $specializations = $stmt->fetchAll(PDO::FETCH_COLUMN);
 }
 
-// ============================================================
-// DATA: ADMIN
-// ============================================================
+
+// admin
+
 if ($role === 'admin') {
 
     $stmt = $db->prepare('SELECT COUNT(*) FROM clients');
@@ -268,7 +294,7 @@ if ($role === 'admin') {
     $stmt->execute();
     $popularClasses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Membros mais recentes
+    //membros mais recentes
     $stmt = $db->prepare(
         'SELECT u.first_name, u.last_name, u.username, u.profile_photo, u.created_at
          FROM users u
@@ -279,7 +305,7 @@ if ($role === 'admin') {
     $stmt->execute();
     $recentMembers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Ginásios e visitas
+    // ginásios e visitas
     $stmt = $db->prepare(
         'SELECT gl.name, gl.city, COUNT(gv.id) AS visit_count
          FROM gym_locations gl
@@ -305,49 +331,11 @@ if ($role === 'admin') {
 </head>
 <body class="<?= $role === 'trainer' ? 'trainer-theme' : '' ?>">
 
-<!-- Navbar -->
-<header class="dash-navbar">
-    <a href="/pages/index.php" class="logo">
-        <img src="/images/logo.png" alt="CUBO GYM logo">
-    </a>
-    <div class="dash-navbar-right">
-        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
-            <span></span><span></span><span></span>
-        </button>
-        <a href="profile.php" class="dash-nav-profile" title="My Profile">
-            <img src="<?= htmlspecialchars($profilePhoto) ?>" alt="Profile" class="dash-nav-pfp">
-        </a>
-    </div>
-</header>
-
-<!-- Nav popup -->
-<div class="nav-popup-backdrop" id="navBackdrop"></div>
-<div class="nav-popup" id="navPopup">
-    <div class="nav-popup-user">
-        <img src="<?= htmlspecialchars($profilePhoto) ?>" alt="Profile" class="nav-popup-avatar">
-        <div>
-            <p class="nav-popup-name"><?= htmlspecialchars($fullName) ?></p>
-            <p class="nav-popup-handle">@<?= htmlspecialchars($user['username']) ?></p>
-        </div>
-    </div>
-    <nav class="nav-popup-links">
-        <a href="dashboard.php"  class="nav-popup-link active"><i class="fa fa-home"></i> Home</a>
-        <a href="profile.php"    class="nav-popup-link"><i class="fa fa-user"></i> Profile</a>
-        <a href="schedule.php"   class="nav-popup-link"><i class="fa fa-calendar"></i> Schedule</a>
-        <a href="facilities.php" class="nav-popup-link"><i class="fa fa-dumbbell"></i> Facilities</a>
-        <a href="locations.php"  class="nav-popup-link"><i class="fa fa-location-dot"></i> Locations</a>
-        <a href="membership.php" class="nav-popup-link"><i class="fa fa-id-card"></i> Membership</a>
-        <a href="about.php"      class="nav-popup-link"><i class="fa fa-circle-info"></i> About Us</a>
-        <hr class="nav-popup-divider">
-        <a href="logout.php"     class="nav-popup-link nav-popup-link--logout"><i class="fa fa-right-from-bracket"></i> Logout</a>
-    </nav>
-</div>
+<?php drawDashNavbar($session, $db, 'home'); ?>
 
 <main class="dashboard-page dashboard-<?= $role ?>">
 
-    <!-- ============================================================
-         PAGE HEADER
-    ============================================================ -->
+    
     <div class="dash-header">
         <div class="dash-greeting">
             <span class="dash-role-tag"><?= strtoupper($role) ?></span>
@@ -356,9 +344,7 @@ if ($role === 'admin') {
         </div>
     </div>
 
-<?php /* ============================================================
-         CLIENT DASHBOARD
-============================================================ */ ?>
+<?php /* dashboard do cliente*/ ?>
 <?php if ($role === 'client'): ?>
 
     <!-- Stats row -->
@@ -395,7 +381,7 @@ if ($role === 'admin') {
 
     <div class="dash-grid-2">
 
-        <!-- Próximas Aulas -->
+        <!--próximas Aulas -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-calendar-check"></i> Upcoming Classes</h2>
@@ -433,7 +419,7 @@ if ($role === 'admin') {
             <?php endif; ?>
         </section>
 
-        <!-- Visitas Recentes -->
+        <!--visitas recentes -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-clock"></i> Recent Visits</h2>
@@ -460,7 +446,7 @@ if ($role === 'admin') {
             <?php endif; ?>
         </section>
 
-        <!-- Métricas -->
+        <!--metrics -->
         <section class="dash-card dash-metrics-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-chart-line"></i> My Metrics</h2>
@@ -486,7 +472,7 @@ if ($role === 'admin') {
             </div>
         </section>
 
-        <!-- Badges -->
+        <!--badges -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-medal"></i> My Badges</h2>
@@ -510,9 +496,7 @@ if ($role === 'admin') {
 <?php endif; /* end client */ ?>
 
 
-<?php /* ============================================================
-         TRAINER DASHBOARD
-============================================================ */ ?>
+<?php /* dashboard do trainer */ ?>
 <?php if ($role === 'trainer'): ?>
 
     <!-- Stats row -->
@@ -547,7 +531,7 @@ if ($role === 'admin') {
         </div>
     </div>
 
-    <!-- Specializations -->
+    <!--specializations -->
     <?php if (!empty($specializations)): ?>
     <div class="dash-spec-row">
         <?php foreach ($specializations as $spec): ?>
@@ -558,7 +542,7 @@ if ($role === 'admin') {
 
     <div class="dash-grid-2">
 
-        <!-- Próximas aulas do trainer -->
+        <!-- próximas aulas do trainer -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-chalkboard-teacher"></i> Upcoming Classes</h2>
@@ -571,7 +555,8 @@ if ($role === 'admin') {
                         $dt = new DateTime($cls['schedule']);
                         $fillPct = $cls['capacity'] > 0 ? round(($cls['enrolled'] / $cls['capacity']) * 100) : 0;
                     ?>
-                    <li class="dash-class-item">
+                    <li class="dash-class-item dash-class-item--clickable"
+                        onclick="openClassStudentsModal(<?= $cls['id'] ?>)">
                         <div class="class-date-block">
                             <span class="class-month"><?= $dt->format('M') ?></span>
                             <span class="class-day"><?= $dt->format('d') ?></span>
@@ -593,7 +578,7 @@ if ($role === 'admin') {
             <?php endif; ?>
         </section>
 
-        <!-- Alunos recentes -->
+        <!-- alunos recentes -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-users"></i> Recent Students</h2>
@@ -604,12 +589,14 @@ if ($role === 'admin') {
                 <ul class="dash-student-list">
                     <?php foreach ($recentStudents as $stu): ?>
                     <li class="dash-student-item">
-                        <img src="<?= htmlspecialchars($stu['profile_photo'] ?? '../images/profile_pic.webp') ?>"
-                             alt="<?= htmlspecialchars($stu['username']) ?>" class="student-avatar">
-                        <div>
-                            <strong><?= htmlspecialchars($stu['first_name'] . ' ' . $stu['last_name']) ?></strong>
-                            <span>@<?= htmlspecialchars($stu['username']) ?></span>
-                        </div>
+                        <a href="profile.php?id=<?= (int)$stu['user_id'] ?>" class="dash-student-link">
+                            <img src="<?= htmlspecialchars($stu['profile_photo'] ?? '../images/profile_pic.webp') ?>"
+                                 alt="<?= htmlspecialchars($stu['username']) ?>" class="student-avatar">
+                            <div>
+                                <strong><?= htmlspecialchars($stu['first_name'] . ' ' . $stu['last_name']) ?></strong>
+                                <span>@<?= htmlspecialchars($stu['username']) ?></span>
+                            </div>
+                        </a>
                         <span class="student-date"><?= (new DateTime($stu['enrolled_at']))->format('d M') ?></span>
                     </li>
                     <?php endforeach; ?>
@@ -619,12 +606,23 @@ if ($role === 'admin') {
 
     </div>
 
+<!--class students modal -->
+<div class="csm-overlay" id="csmOverlay" aria-hidden="true">
+    <div class="csm-backdrop" id="csmBackdrop"></div>
+    <div class="csm-panel">
+        <button class="csm-close" id="csmClose"><i class="fa fa-xmark"></i></button>
+        <div class="csm-header">
+            <h3 id="csmTitle"></h3>
+            <p id="csmInfo"></p>
+        </div>
+        <div class="csm-grid" id="csmGrid"></div>
+    </div>
+</div>
+
 <?php endif; /* end trainer */ ?>
 
 
-<?php /* ============================================================
-         ADMIN DASHBOARD
-============================================================ */ ?>
+<?php /* dahsboard do admin*/ ?>
 <?php if ($role === 'admin'): ?>
 
     <!-- Stats row -->
@@ -675,7 +673,7 @@ if ($role === 'admin') {
 
     <div class="dash-grid-3">
 
-        <!-- Ginásios -->
+        <!--ginásios -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-building"></i> Gym Locations</h2>
@@ -693,7 +691,7 @@ if ($role === 'admin') {
             </ul>
         </section>
 
-        <!-- Aulas mais populares -->
+        <!--aulas mais populares -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-fire"></i> Popular Classes</h2>
@@ -723,7 +721,7 @@ if ($role === 'admin') {
             <?php endif; ?>
         </section>
 
-        <!-- Membros recentes -->
+        <!--membros recentes -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-user-plus"></i> Recent Members</h2>
@@ -753,23 +751,63 @@ if ($role === 'admin') {
 
 </main>
 
+<?php drawFooter(); ?>
+
+<?php if ($role === 'trainer'): ?>
 <script>
 (function () {
-    var btn      = document.getElementById('hamburgerBtn');
-    var popup    = document.getElementById('navPopup');
-    var backdrop = document.getElementById('navBackdrop');
-    if (!btn) return;
+    var overlay  = document.getElementById('csmOverlay');
+    var backdrop = document.getElementById('csmBackdrop');
+    var closeBtn = document.getElementById('csmClose');
+    var grid     = document.getElementById('csmGrid');
 
-    function openMenu()  { popup.classList.add('open'); backdrop.classList.add('open'); document.body.style.overflow = 'hidden'; }
-    function closeMenu() { popup.classList.remove('open'); backdrop.classList.remove('open'); document.body.style.overflow = ''; }
+    function closeModal() {
+        overlay.setAttribute('aria-hidden', 'true');
+        overlay.classList.remove('csm-open');
+        document.body.style.overflow = '';
+    }
 
-    btn.addEventListener('click', function (e) { e.stopPropagation(); popup.classList.contains('open') ? closeMenu() : openMenu(); });
-    backdrop.addEventListener('click', closeMenu);
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+    window.openClassStudentsModal = function (classId) {
+        grid.innerHTML = '<p class="csm-loading"><i class="fa fa-spinner fa-spin"></i> Loading…</p>';
+        overlay.setAttribute('aria-hidden', 'false');
+        overlay.classList.add('csm-open');
+        document.body.style.overflow = 'hidden';
+
+        fetch('dashboard.php?ajax=1&class_id=' + classId)
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (!data.ok) { grid.innerHTML = '<p class="csm-loading">Could not load students.</p>'; return; }
+                document.getElementById('csmTitle').textContent = data.class.class_name;
+                var d = new Date(data.class.schedule);
+                document.getElementById('csmInfo').textContent =
+                    d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })
+                    + ' · ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+                    + ' · ' + data.class.enrolled + ' / ' + data.class.capacity + ' enrolled';
+
+                if (data.students.length === 0) {
+                    grid.innerHTML = '<p class="csm-loading">No students enrolled yet.</p>';
+                } else {
+                    grid.innerHTML = data.students.map(function (s) {
+                        var photo = s.profile_photo || '../images/profile_pic.webp';
+                        return '<a href="profile.php?id=' + s.id + '" class="csm-card">'
+                            + '<img src="' + photo + '" alt="' + s.first_name + '" '
+                            + 'onerror="this.src=\'../images/profile_pic.webp\'">'
+                            + '<span>' + s.first_name + ' ' + s.last_name + '</span>'
+                            + '</a>';
+                    }).join('');
+                }
+            })
+            .catch(function () {
+                grid.innerHTML = '<p class="csm-loading">Error loading students.</p>';
+            });
+    };
 })();
 </script>
-
-<?php drawFooter(); ?>
+<?php endif; ?>
 
 </body>
 </html>

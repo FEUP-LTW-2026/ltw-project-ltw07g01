@@ -6,12 +6,12 @@ require_once('../database/connection.db.php');
 require_once('../templates/common.tpl.php');
 $db = getDatabaseConnection();
 
-// ── Auth ──────────────────────────────────────────────────────────────────
-$userId = $session->isLoggedIn() ? (int)$session->getId() : 3; // 3 = test client
-$role   = null;
-$user   = null;
+
+$userId = $session->isLoggedIn() ? (int)$session->getId() : 3;
+$role = null;
+$user = null;
 $profilePhoto = '../images/profile_pic.webp';
-$fullName     = '';
+$fullName = '';
 
 if ($userId) {
     foreach (['admins' => 'admin', 'trainers' => 'trainer', 'clients' => 'client'] as $tbl => $r) {
@@ -22,13 +22,14 @@ if ($userId) {
     if ($role) {
         $s = $db->prepare('SELECT username, first_name, last_name, profile_photo FROM users WHERE id = :id');
         $s->execute([':id' => $userId]);
-        $user         = $s->fetch();
+        $user = $s->fetch();
         $profilePhoto = $user['profile_photo'] ?? $profilePhoto;
-        $fullName     = ($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '');
+        $fullName = ($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '');
     }
 }
+$profileUrl = ($role === 'trainer') ? 'trainer-profile.php?id=' . $userId : 'profile.php';
 
-// ── AJAX enroll (POST) ────────────────────────────────────────────────────
+// enroll(POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && $role === 'client') {
     header('Content-Type: application/json');
     $classId = (int)($_POST['class_id'] ?? 0);
@@ -48,18 +49,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && $role ===
     $db->prepare('INSERT INTO client_classes (client_id, class_id) VALUES (?,?)')->execute([$userId, $classId]);
     $newEnrolled = (int)$cl['enrolled'] + 1;
     echo json_encode([
-        'ok'       => true,
+        'ok' => true,
         'enrolled' => $newEnrolled,
         'capacity' => (int)$cl['capacity'],
-        'spots'    => (int)$cl['capacity'] - $newEnrolled,
+        'spots' => (int)$cl['capacity'] - $newEnrolled,
     ]);
     exit;
 }
 
-// ── Week computation ──────────────────────────────────────────────────────
+// week computaton 
 $weekOffset = isset($_GET['w']) ? max(-2, min(8, (int)$_GET['w'])) : 0;
-$today      = new DateTime('today');
-$weekMon    = new DateTime('monday this week');
+$today = new DateTime('today');
+$weekMon = new DateTime('monday this week');
 $weekMon->modify("+{$weekOffset} weeks");
 
 $days = [];
@@ -74,7 +75,7 @@ $defaultDay = ($weekOffset === 0 && $today >= $weekMon && $today <= $weekSun)
     ? $today->format('Y-m-d')
     : $weekMon->format('Y-m-d');
 
-// ── Fetch week classes ────────────────────────────────────────────────────
+//fetch week classes
 $stmt = $db->prepare('
     SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min, cl.capacity,
            cl.trainer_id,
@@ -90,9 +91,14 @@ $stmt = $db->prepare('
     LEFT JOIN trainers t ON t.user_id = cl.trainer_id
     LEFT JOIN users u ON u.id = t.user_id
     WHERE date(cl.schedule) BETWEEN :start AND :end
+    AND (:trainer_filter IS NULL OR cl.trainer_id = :trainer_filter)
     ORDER BY cl.schedule ASC
 ');
-$stmt->execute([':start' => $weekMon->format('Y-m-d'), ':end' => $weekSun->format('Y-m-d')]);
+$stmt->execute([
+    ':start'          => $weekMon->format('Y-m-d'),
+    ':end'            => $weekSun->format('Y-m-d'),
+    ':trainer_filter' => ($role === 'trainer') ? $userId : null,
+]);
 $allClasses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $classesByDay = [];
@@ -110,7 +116,7 @@ if ($role === 'client') {
 $totalClasses = count($allClasses);
 $totalSpots   = array_sum(array_map(fn($c) => max(0, $c['capacity'] - $c['enrolled']), $allClasses));
 
-$weekTypes    = array_values(array_unique(array_column($allClasses, 'class_name')));
+$weekTypes = array_values(array_unique(array_column($allClasses, 'class_name')));
 sort($weekTypes);
 $weekTrainers = [];
 foreach ($allClasses as $c) {
@@ -152,7 +158,7 @@ function timeOfDay(string $schedule): string {
     return 'evening';
 }
 
-// ── Build dynamic HTML fragment ───────────────────────────────────────────
+//dynamic HTML
 $buildDynamicHTML = function() use ($days, $classesByDay, $today, $enrolledIds, $typeColors, $typeDescriptions, $role, $allClasses) {
     $usedTypes = array_unique(array_column($allClasses, 'class_name'));
     sort($usedTypes);
@@ -162,8 +168,8 @@ $buildDynamicHTML = function() use ($days, $classesByDay, $today, $enrolledIds, 
     <!-- Days strip -->
     <div class="sc-days-strip">
         <?php foreach ($days as $day):
-            $dayKey     = $day->format('Y-m-d');
-            $isToday    = $dayKey === $today->format('Y-m-d');
+            $dayKey = $day->format('Y-m-d');
+            $isToday = $dayKey === $today->format('Y-m-d');
             $dayClasses = $classesByDay[$dayKey] ?? [];
             $typesOnDay = array_unique(array_column($dayClasses, 'class_name'));
         ?>
@@ -186,7 +192,7 @@ $buildDynamicHTML = function() use ($days, $classesByDay, $today, $enrolledIds, 
 
     <!-- Day panels -->
     <?php foreach ($days as $day):
-        $dayKey     = $day->format('Y-m-d');
+        $dayKey = $day->format('Y-m-d');
         $dayClasses = $classesByDay[$dayKey] ?? [];
     ?>
     <div class="sc-day-panel" id="panel-<?= $dayKey ?>">
@@ -212,14 +218,14 @@ $buildDynamicHTML = function() use ($days, $classesByDay, $today, $enrolledIds, 
 
         <div class="sc-timeline" id="timeline-<?= $dayKey ?>">
             <?php foreach ($dayClasses as $cls):
-                $dt       = new DateTime($cls['schedule']);
-                $spots    = (int)$cls['capacity'] - (int)$cls['enrolled'];
-                $full     = $spots <= 0;
+                $dt = new DateTime($cls['schedule']);
+                $spots = (int)$cls['capacity'] - (int)$cls['enrolled'];
+                $full = $spots <= 0;
                 $enrolled = in_array((int)$cls['id'], $enrolledIds);
-                $fillPct  = $cls['capacity'] > 0 ? round(($cls['enrolled'] / $cls['capacity']) * 100) : 0;
-                $filling  = !$full && $fillPct >= 70;
-                $color    = typeColor($cls['class_name'], $typeColors);
-                $tod      = timeOfDay($cls['schedule']);
+                $fillPct = $cls['capacity'] > 0 ? round(($cls['enrolled'] / $cls['capacity']) * 100) : 0;
+                $filling = !$full && $fillPct >= 70;
+                $color = typeColor($cls['class_name'], $typeColors);
+                $tod = timeOfDay($cls['schedule']);
 
                 $modalData = json_encode([
                     'id'           => (int)$cls['id'],
@@ -325,7 +331,7 @@ $buildDynamicHTML = function() use ($days, $classesByDay, $today, $enrolledIds, 
     </div>
     <?php endforeach; ?>
 
-    <!-- Type legend -->
+    <!-- type legend -->
     <?php if (!empty($usedTypes)): ?>
     <div class="sc-legend">
         <?php foreach ($usedTypes as $tn): ?>
@@ -341,7 +347,7 @@ $buildDynamicHTML = function() use ($days, $classesByDay, $today, $enrolledIds, 
     return ob_get_clean();
 };
 
-// ── AJAX GET (week data refresh) ──────────────────────────────────────────
+// week data refresh
 if (!empty($_GET['ajax'])) {
     $html = $buildDynamicHTML();
 
@@ -402,45 +408,9 @@ if (!empty($_GET['ajax'])) {
 </head>
 <body>
 
-<!-- ── Navbar ─────────────────────────────────────────────────────────── -->
-<?php if ($role): ?>
-<header class="dash-navbar">
-    <a href="/pages/index.php" class="logo"><img src="/images/logo.png" alt="CUBO GYM logo"></a>
-    <div class="dash-navbar-right">
-        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
-            <span></span><span></span><span></span>
-        </button>
-        <a href="profile.php" class="dash-nav-profile">
-            <img src="<?= htmlspecialchars($profilePhoto) ?>" alt="Profile" class="dash-nav-pfp">
-        </a>
-    </div>
-</header>
-<div class="nav-popup-backdrop" id="navBackdrop"></div>
-<div class="nav-popup" id="navPopup">
-    <div class="nav-popup-user">
-        <img src="<?= htmlspecialchars($profilePhoto) ?>" alt="Profile" class="nav-popup-avatar">
-        <div>
-            <p class="nav-popup-name"><?= htmlspecialchars($fullName) ?></p>
-            <p class="nav-popup-handle">@<?= htmlspecialchars($user['username'] ?? '') ?></p>
-        </div>
-    </div>
-    <nav class="nav-popup-links">
-        <a href="dashboard.php"  class="nav-popup-link"><i class="fa fa-home"></i> Home</a>
-        <a href="profile.php"    class="nav-popup-link"><i class="fa fa-user"></i> Profile</a>
-        <a href="schedule.php"   class="nav-popup-link active"><i class="fa fa-calendar"></i> Schedule</a>
-        <a href="facilities.php" class="nav-popup-link"><i class="fa fa-dumbbell"></i> Facilities</a>
-        <a href="locations.php"  class="nav-popup-link"><i class="fa fa-location-dot"></i> Locations</a>
-        <a href="membership.php" class="nav-popup-link"><i class="fa fa-id-card"></i> Membership</a>
-        <a href="about.php"      class="nav-popup-link"><i class="fa fa-circle-info"></i> About Us</a>
-        <hr class="nav-popup-divider">
-        <a href="logout.php"     class="nav-popup-link nav-popup-link--logout"><i class="fa fa-right-from-bracket"></i> Logout</a>
-    </nav>
-</div>
-<?php else: ?>
-<?php drawHeader($session); ?>
-<?php endif; ?>
+<?php drawDashNavbar($session, $db, 'schedule'); ?>
 
-<!-- ── Sticky filter bar ──────────────────────────────────────────────── -->
+<!-- filter bar -->
 <div class="sc-filter-bar" id="scFilterBar">
     <span class="sc-filter-label"><i class="fa fa-sliders"></i> Filter</span>
 
@@ -451,12 +421,16 @@ if (!empty($_GET['ajax'])) {
         <?php endforeach; ?>
     </select>
 
+    <?php if ($role !== 'trainer'): ?>
     <select class="sc-filter-select" id="filterTrainer">
         <option value="">All trainers</option>
         <?php foreach ($weekTrainers as $tid => $tname): ?>
         <option value="<?= $tid ?>"><?= htmlspecialchars($tname) ?></option>
         <?php endforeach; ?>
     </select>
+    <?php else: ?>
+    <select class="sc-filter-select" id="filterTrainer" hidden></select>
+    <?php endif; ?>
 
     <select class="sc-filter-select" id="filterTime">
         <option value="">Any time</option>
@@ -471,10 +445,10 @@ if (!empty($_GET['ajax'])) {
     <span class="sc-filter-count" id="filterCount"></span>
 </div>
 
-<!-- ── Main ───────────────────────────────────────────────────────────── -->
+<!-- main -->
 <main class="sc-page <?= $role ? 'sc-has-navbar' : '' ?>">
 
-    <!-- Title row -->
+    <!-- title -->
     <div class="sc-title-row">
         <div>
             <h1 class="sc-title">Schedule</h1>
@@ -486,7 +460,7 @@ if (!empty($_GET['ajax'])) {
         </div>
     </div>
 
-    <!-- Week navigator -->
+    <!--week navigator -->
     <div class="sc-week-nav">
         <button class="sc-week-arrow <?= $weekOffset <= -2 ? 'sc-week-arrow--disabled' : '' ?>"
                 id="scPrevBtn" <?= $weekOffset <= -2 ? 'disabled' : '' ?> aria-label="Previous week">
@@ -507,14 +481,14 @@ if (!empty($_GET['ajax'])) {
         </button>
     </div>
 
-    <!-- Dynamic: days strip + panels + legend (replaced by AJAX) -->
+    <!-- days strip, panels,legend (dynamic)-->
     <div id="scDynamicContent">
         <?= $buildDynamicHTML() ?>
     </div>
 
 </main>
 
-<!-- ── Detail Modal ───────────────────────────────────────────────────── -->
+<!-- detail modal -->
 <div class="sc-modal" id="scModal" aria-hidden="true">
     <div class="sc-modal-backdrop" id="scModalBackdrop"></div>
     <div class="sc-modal-panel" id="scModalPanel">
@@ -574,7 +548,7 @@ if (!empty($_GET['ajax'])) {
     </div>
 </div>
 
-<!-- ── JS data bridge ─────────────────────────────────────────────────── -->
+<!--JS data bridge -->
 <script>
 var SC = {
     isClient    : <?= json_encode($role === 'client') ?>,

@@ -2,40 +2,19 @@
 (function () {
     'use strict';
 
-    /* ── Nav popup ───────────────────────────────────────────────────────── */
-    var hamburgerBtn = document.getElementById('hamburgerBtn');
-    var navPopup     = document.getElementById('navPopup');
-    var navBackdrop  = document.getElementById('navBackdrop');
-
-    function closeNav() {
-        if (!navPopup) return;
-        navPopup.classList.remove('open');
-        navBackdrop.classList.remove('open');
-        document.body.style.overflow = '';
-    }
-
-    if (hamburgerBtn) {
-        hamburgerBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            var isOpen = navPopup.classList.contains('open');
-            isOpen ? closeNav() : (navPopup.classList.add('open'), navBackdrop.classList.add('open'), document.body.style.overflow = 'hidden');
-        });
-        navBackdrop.addEventListener('click', closeNav);
-    }
-
     /* ── Persistent DOM refs ─────────────────────────────────────────────── */
-    var dynamicContent  = document.getElementById('scDynamicContent');
-    var prevBtn         = document.getElementById('scPrevBtn');
-    var nextBtn         = document.getElementById('scNextBtn');
-    var todayBtn        = document.getElementById('scTodayBtn');
-    var weekLabelEl     = document.getElementById('scWeekLabel');
-    var statClassesEl   = document.getElementById('statClasses');
-    var statSpotsEl     = document.getElementById('statSpots');
-    var filterTypeEl    = document.getElementById('filterType');
+    var dynamicContent = document.getElementById('scDynamicContent');
+    var prevBtn = document.getElementById('scPrevBtn');
+    var nextBtn = document.getElementById('scNextBtn');
+    var todayBtn = document.getElementById('scTodayBtn');
+    var weekLabelEl = document.getElementById('scWeekLabel');
+    var statClassesEl = document.getElementById('statClasses');
+    var statSpotsEl = document.getElementById('statSpots');
+    var filterTypeEl = document.getElementById('filterType');
     var filterTrainerEl = document.getElementById('filterTrainer');
-    var filterTimeEl    = document.getElementById('filterTime');
-    var filterClearBtn  = document.getElementById('filterClear');
-    var filterCountEl   = document.getElementById('filterCount');
+    var filterTimeEl = document.getElementById('filterTime');
+    var filterClearBtn = document.getElementById('filterClear');
+    var filterCountEl = document.getElementById('filterCount');
 
     /* ── Day selection (queries live DOM) ───────────────────────────────── */
     function selectDay(dayKey) {
@@ -49,11 +28,11 @@
 
     /* ── Filters (queries live DOM) ─────────────────────────────────────── */
     function applyFilters() {
-        var rows   = document.querySelectorAll('.sc-row');
+        var rows = document.querySelectorAll('.sc-row');
         var panels = document.querySelectorAll('.sc-day-panel');
-        var type    = filterTypeEl.value;
+        var type = filterTypeEl.value;
         var trainer = filterTrainerEl.value;
-        var time    = filterTimeEl.value;
+        var time = filterTimeEl.value;
         var hasFilter = !!(type || trainer || time);
 
         filterClearBtn.hidden = !hasFilter;
@@ -62,19 +41,19 @@
 
         rows.forEach(function (row) {
             var show = true;
-            if (type    && row.dataset.type      !== type)    show = false;
+            if (type && row.dataset.type !== type) show = false;
             if (trainer && row.dataset.trainerId !== trainer) show = false;
-            if (time    && row.dataset.timeofday !== time)    show = false;
+            if (time && row.dataset.timeofday !== time) show = false;
             row.classList.toggle('sc-row--hidden', !show);
             if (show) visibleTotal++;
         });
 
         panels.forEach(function (panel) {
-            var dayKey    = panel.id.replace('panel-', '');
+            var dayKey = panel.id.replace('panel-', '');
             var panelRows = panel.querySelectorAll('.sc-row');
-            var visible   = panel.querySelectorAll('.sc-row:not(.sc-row--hidden)').length;
-            var emptyEl   = document.getElementById('fempty-' + dayKey);
-            var countEl   = document.getElementById('count-' + dayKey);
+            var visible = panel.querySelectorAll('.sc-row:not(.sc-row--hidden)').length;
+            var emptyEl = document.getElementById('fempty-' + dayKey);
+            var countEl = document.getElementById('count-' + dayKey);
 
             if (emptyEl) emptyEl.hidden = !(panelRows.length > 0 && visible === 0);
             if (countEl) {
@@ -90,9 +69,9 @@
     });
 
     filterClearBtn.addEventListener('click', function () {
-        filterTypeEl.value    = '';
+        filterTypeEl.value = '';
         filterTrainerEl.value = '';
-        filterTimeEl.value    = '';
+        filterTimeEl.value = '';
         applyFilters();
     });
 
@@ -106,7 +85,7 @@
     }
 
     function updateFilterOptions(types, trainers) {
-        var currentType    = filterTypeEl.value;
+        var currentType = filterTypeEl.value;
         var currentTrainer = filterTrainerEl.value;
 
         filterTypeEl.innerHTML = '<option value="">All types</option>';
@@ -135,12 +114,12 @@
             .then(function (r) { return r.json(); })
             .then(function (data) {
                 SC.weekOffset = data.weekOffset;
-                SC.classes    = data.classes;
+                SC.classes = data.classes;
                 SC.defaultDay = data.defaultDay;
 
-                weekLabelEl.textContent   = data.weekLabel;
+                weekLabelEl.textContent = data.weekLabel;
                 statClassesEl.textContent = data.totalClasses;
-                statSpotsEl.textContent   = data.totalSpots;
+                statSpotsEl.textContent = data.totalSpots;
 
                 dynamicContent.innerHTML = data.html;
                 dynamicContent.classList.remove('sc-loading');
@@ -182,8 +161,8 @@
 
     /* ── Book (AJAX) ─────────────────────────────────────────────────────── */
     window.bookClass = function (classId, btn) {
-        btn.disabled    = true;
-        btn.innerHTML   = '<i class="fa fa-spinner fa-spin"></i> Booking…';
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Booking…';
 
         fetch('schedule.php', {
             method  : 'POST',
@@ -224,23 +203,23 @@
             }
 
             if (SC.classes[classId]) {
-                SC.classes[classId].enrolled    = data.enrolled;
+                SC.classes[classId].enrolled = data.enrolled;
                 SC.classes[classId].is_enrolled = true;
-                SC.classes[classId].is_full     = data.spots <= 0;
+                SC.classes[classId].is_full = data.spots <= 0;
             }
 
             if (currentModalId === classId) openModal(classId);
         })
         .catch(function () {
-            btn.disabled  = false;
+            btn.disabled = false;
             btn.innerHTML = '<i class="fa fa-calendar-check"></i> Book';
         });
     };
 
     /* ── Modal ───────────────────────────────────────────────────────────── */
-    var modal          = document.getElementById('scModal');
-    var modalBackdrop  = document.getElementById('scModalBackdrop');
-    var modalClose     = document.getElementById('scModalClose');
+    var modal = document.getElementById('scModal');
+    var modalBackdrop = document.getElementById('scModalBackdrop');
+    var modalClose = document.getElementById('scModalClose');
     var currentModalId = null;
 
     window.openModal = function (classId) {
@@ -248,8 +227,8 @@
         if (!cls) return;
         currentModalId = classId;
 
-        var color   = cls.color || '#888';
-        var spots   = cls.capacity - cls.enrolled;
+        var color = cls.color || '#888';
+        var spots = cls.capacity - cls.enrolled;
         var fillPct = cls.capacity > 0 ? Math.round((cls.enrolled / cls.capacity) * 100) : 0;
 
         document.getElementById('scModalHeader').style.setProperty('--modal-color', color);
@@ -257,7 +236,7 @@
         document.getElementById('scModalType').style.color  = color;
         document.getElementById('scModalTitle').textContent = cls.class_name;
 
-        var d       = new Date(cls.schedule);
+        var d = new Date(cls.schedule);
         var dateStr = d.toLocaleDateString('en-GB', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
         var timeStr = d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
         document.getElementById('scModalDatetime').textContent = dateStr + ' · ' + timeStr;
@@ -326,11 +305,11 @@
         currentModalId = null;
     }
 
-    if (modalClose)    modalClose.addEventListener('click', closeModal);
+    if (modalClose) modalClose.addEventListener('click', closeModal);
     if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
 
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') { closeModal(); closeNav(); }
+        if (e.key === 'Escape') { closeModal(); }
     });
 
 })();
