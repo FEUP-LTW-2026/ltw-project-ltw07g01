@@ -58,22 +58,38 @@
     <img src="../images/pilatu.jpg" alt="Pilates section">
     <h3>Pilates</h3>
     <div>
-        <article class="pack">
+        <article class="plan">
             <h2>1 CLASS</h2>
             <p class="price">12 €</p>
-            <p>Drop in anytime. No commitment.</p>
+            <p class="plan-info">Drop in anytime. No commitment required.</p>
+            <ul>
+                <li>1 session with certified instructor</li>
+                <li>Mat included</li>
+                <li>Valid immediately</li>
+            </ul>
             <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=pilates-1' : 'login.php' ?>" class="plan-btn">BUY</a>
         </article>
-        <article class="pack">
+        <article class="plan plan-popular">
+            <span class="popular-badge">BEST VALUE</span>
             <h2>5 CLASSES</h2>
             <p class="price">50 €</p>
-            <p>Best for getting started with a routine.</p>
+            <p class="plan-info">Best for getting started with a routine.</p>
+            <ul>
+                <li>5 sessions to use flexibly</li>
+                <li>All locations</li>
+                <li>Valid for 3 months</li>
+            </ul>
             <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=pilates-5' : 'login.php' ?>" class="plan-btn">BUY</a>
         </article>
-        <article class="pack">
+        <article class="plan">
             <h2>10 CLASSES</h2>
             <p class="price">90 €</p>
-            <p>Commit to your practice and save.</p>
+            <p class="plan-info">Commit to your practice and save.</p>
+            <ul>
+                <li>10 sessions at your pace</li>
+                <li>Priority booking</li>
+                <li>Valid for 6 months</li>
+            </ul>
             <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=pilates-10' : 'login.php' ?>" class="plan-btn">BUY</a>
         </article>
     </div>
@@ -83,22 +99,38 @@
     <img src="../images/cycling.jpg" alt="Cycling section">
     <h3>Cycling</h3>
     <div>
-        <article class="pack">
+        <article class="plan">
             <h2>1 CLASS</h2>
             <p class="price">10 €</p>
-            <p>Jump on anytime. No strings attached.</p>
+            <p class="plan-info">Jump on anytime. No strings attached.</p>
+            <ul>
+                <li>1 high-energy session</li>
+                <li>Bike reserved for you</li>
+                <li>Valid immediately</li>
+            </ul>
             <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=cycling-1' : 'login.php' ?>" class="plan-btn">BUY</a>
         </article>
-        <article class="pack">
+        <article class="plan plan-popular">
+            <span class="popular-badge">BEST VALUE</span>
             <h2>5 CLASSES</h2>
             <p class="price">40 €</p>
-            <p>Build the habit with a flexible pack.</p>
+            <p class="plan-info">Build the habit with a flexible pack.</p>
+            <ul>
+                <li>5 sessions to use flexibly</li>
+                <li>All locations</li>
+                <li>Valid for 3 months</li>
+            </ul>
             <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=cycling-5' : 'login.php' ?>" class="plan-btn">BUY</a>
         </article>
-        <article class="pack">
+        <article class="plan">
             <h2>10 CLASSES</h2>
             <p class="price">75 €</p>
-            <p>Ride more, pay less. Your best value.</p>
+            <p class="plan-info">Ride more, pay less. Your best value.</p>
+            <ul>
+                <li>10 sessions at your pace</li>
+                <li>Performance metrics included</li>
+                <li>Valid for 6 months</li>
+            </ul>
             <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=cycling-10' : 'login.php' ?>" class="plan-btn">BUY</a>
         </article>
     </div>
