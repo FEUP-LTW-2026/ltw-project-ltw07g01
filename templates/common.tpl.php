@@ -91,7 +91,7 @@
             <a href="membership.php" class="nav-popup-link <?= $activePage === 'membership' ? 'active' : '' ?>"><i class="fa fa-id-card"></i> Membership</a>
             <a href="about.php"      class="nav-popup-link <?= $activePage === 'about'      ? 'active' : '' ?>"><i class="fa fa-circle-info"></i> About Us</a>
             <hr class="nav-popup-divider">
-            <a href="logout.php" class="nav-popup-link nav-popup-link--logout"><i class="fa fa-right-from-bracket"></i> Logout</a>
+            <a href="/actions/logout.php" class="nav-popup-link nav-popup-link--logout"><i class="fa fa-right-from-bracket"></i> Logout</a>
         </nav>
     </div>
     <script src="../js/nav.js"></script>

@@ -92,7 +92,7 @@
                 <a href="schedule.php" class="btn-filled">View Schedule</a>
                 <a href="membership.php" class="btn-border">Membership Plans</a>
             <?php else: ?>
-                <a href="register.php" class="btn-filled">Join Now</a>
+                <a href="/actions/register.php" class="btn-filled">Join Now</a>
                 <a href="membership.php" class="btn-border">Membership Plans</a>
             <?php endif; ?>
         </div>

@@ -4,7 +4,7 @@ require_once('../utils/session.php');
 $session = new Session();
 
 if (!$session->isLoggedIn()) {
-    header('Location: login.php');
+    header('Location: /actions/login.php');
     exit;
  }
 
@@ -35,7 +35,7 @@ if (!$role) {
 }
 
 if (!$role) {
-    header('Location: login.php');
+    header('Location: /actions/login.php');
     exit;
 }
 
