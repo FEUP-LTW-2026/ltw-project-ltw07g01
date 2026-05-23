@@ -164,12 +164,13 @@ $certifications = $user['certifications'] ?? '';
     <title>Edit Trainer Profile | Cubo Gym</title>
     <link rel="stylesheet" href="../css/profile.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
 </head>
-<body class="trainer-theme">
+<body class="trainer-theme profile-body">
 
-<?php drawHeader($session); ?>
+<?php drawDashNavbar($session, $db, 'profile', false); ?>
 
 <main class="profile-page">
     <aside class="sidebar-container">
@@ -279,7 +280,7 @@ $certifications = $user['certifications'] ?? '';
 
             <div class="profile-actions">
                 <button type="submit" class="btn-save-changes">Save Changes</button>
-                <a href="trainer-profile.php" class="btn-cancel">Cancel</a>
+                <a href="../pages/trainer-profile.php" class="btn-cancel">Cancel</a>
             </div>
         </form>
     </div>

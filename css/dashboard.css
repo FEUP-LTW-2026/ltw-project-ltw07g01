@@ -1,0 +1,976 @@
+/* =============================================================
+   dashboard.css — Cubo Gym Dashboard
+   Complementa profile.css (variáveis herdadas)
+============================================================= */
+
+/* ------------------------------------------------------------------
+   Dashboard Navbar
+------------------------------------------------------------------ */
+header.dash-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    background: #0a0a0a;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+header.dash-navbar img {
+    height: 85px;
+    width: auto;
+}
+
+.dash-navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dash-nav-profile {
+    display: block;
+    transition: transform 0.2s;
+}
+
+.dash-nav-profile:hover {
+    transform: scale(1.06);
+}
+
+.dash-nav-pfp {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+    display: block;
+}
+
+.dashboard-trainer .dash-nav-pfp { border-color: #7c3aed; }
+.dashboard-admin   .dash-nav-pfp { border-color: #e11d48; }
+
+/* ------------------------------------------------------------------
+   Layout base
+------------------------------------------------------------------ */
+main.dashboard-page {
+    padding: 106px 4px 50px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ------------------------------------------------------------------
+   Cabeçalho da dashboard
+------------------------------------------------------------------ */
+.dash-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: 35px;
+    gap: 20px;
+}
+
+.dash-greeting {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dash-role-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 3px 12px;
+    border-radius: 50px;
+    width: fit-content;
+    margin-bottom: 4px;
+}
+
+.dashboard-trainer .dash-role-tag {
+    background: #7c3aed;
+    color: #fff;
+}
+
+.dashboard-admin .dash-role-tag {
+    background: #e11d48;
+    color: #fff;
+}
+
+.dash-greeting h1 {
+    font-size: 2.4rem;
+    margin: 0;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+
+.dash-name {
+    color: var(--accent);
+}
+
+.dashboard-trainer .dash-name { color: #a78bfa; }
+.dashboard-admin   .dash-name { color: #fb7185; }
+
+.dash-date {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin: 0;
+}
+
+
+/* ------------------------------------------------------------------
+   Stats row
+------------------------------------------------------------------ */
+.dash-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.dash-stats-row--admin {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+@media (min-width: 900px) {
+    .dash-stats-row--admin {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+.dash-stat-card {
+    background: var(--card-bg);
+    border: var(--border);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.dash-stat-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.dashboard-trainer .dash-stat-card:hover { border-color: #7c3aed; }
+.dashboard-admin   .dash-stat-card:hover { border-color: #e11d48; }
+
+.dash-stat-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+}
+
+.dash-stat-card > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dash-stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+.dash-stat-label {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* ------------------------------------------------------------------
+   Specializations row (trainer)
+------------------------------------------------------------------ */
+.dash-spec-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 25px;
+}
+
+/* ------------------------------------------------------------------
+   Grids de cards
+------------------------------------------------------------------ */
+.dash-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 900px) {
+    .dash-grid-2 {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.dash-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 900px) {
+    .dash-grid-3 {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+/* ------------------------------------------------------------------
+   Card genérico
+------------------------------------------------------------------ */
+.dash-card {
+    background: var(--card-bg);
+    border: var(--border);
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.dash-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.dash-card-header h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-main);
+}
+
+.dash-card-header h2 i {
+    color: var(--accent);
+}
+
+.dashboard-trainer .dash-card-header h2 i { color: #a78bfa; }
+.dashboard-admin   .dash-card-header h2 i { color: #fb7185; }
+
+.dash-link-small {
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.dash-link-small:hover {
+    opacity: 0.7;
+}
+
+/* ------------------------------------------------------------------
+   Estado vazio
+------------------------------------------------------------------ */
+.dash-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 30px 0;
+    color: var(--text-dim);
+    text-align: center;
+    flex: 1;
+}
+
+.dash-empty span {
+    font-size: 2.5rem;
+    color: var(--text-dim);
+}
+
+.dash-empty p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.dash-empty a {
+    color: var(--accent);
+}
+
+/* ------------------------------------------------------------------
+   Lista de aulas
+------------------------------------------------------------------ */
+.dash-class-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dash-class-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border: var(--border);
+    border-radius: 12px;
+    background: #0a0a0a;
+    transition: border-color 0.2s;
+}
+
+.dash-class-item:hover {
+    border-color: var(--accent);
+}
+
+.dashboard-trainer .dash-class-item:hover { border-color: #7c3aed; }
+
+.class-date-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    padding: 6px 8px;
+    background: var(--accent);
+    border-radius: 10px;
+    color: #000;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.dashboard-trainer .class-date-block { background: #7c3aed; color: #fff; }
+
+.class-month {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.class-day {
+    font-size: 1.3rem;
+}
+
+.class-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.class-info strong {
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.class-info span {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+.class-trainer {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+/* capacity bar (trainer) */
+.class-capacity {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    min-width: 60px;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+.capacity-bar {
+    width: 60px;
+    height: 4px;
+    background: #222;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.capacity-fill {
+    height: 100%;
+    background: #7c3aed;
+    border-radius: 4px;
+    transition: width 0.4s;
+}
+
+/* ------------------------------------------------------------------
+   Visitas recentes
+------------------------------------------------------------------ */
+.dash-visit-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dash-visit-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: var(--border);
+    border-radius: 12px;
+    background: #0a0a0a;
+}
+
+.visit-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+}
+
+.visit-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.visit-info strong {
+    font-size: 0.9rem;
+}
+
+.visit-info span {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+.visit-dur {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    background: #1a1a1a;
+    padding: 3px 10px;
+    border-radius: 50px;
+    flex-shrink: 0;
+}
+
+.visit-dur--active {
+    color: var(--accent);
+    border: 1px solid var(--accent);
+}
+
+/* ------------------------------------------------------------------
+   Badges (dashboard)
+------------------------------------------------------------------ */
+.badge--active {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 4px rgba(0, 191, 166, 0.10);
+}
+
+/* ------------------------------------------------------------------
+   Alunos/membros
+------------------------------------------------------------------ */
+.dash-student-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dash-student-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: var(--border);
+    border-radius: 12px;
+    background: #0a0a0a;
+    transition: border-color 0.2s;
+}
+
+.dash-student-item:hover {
+    border-color: var(--accent);
+}
+
+.dashboard-trainer .dash-student-item:hover { border-color: #7c3aed; }
+.dashboard-admin   .dash-student-item:hover { border-color: #e11d48; }
+
+.student-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.dash-student-item > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.dash-student-item strong {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dash-student-item span {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+.student-date {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    flex-shrink: 0;
+}
+
+/* Clickable student link inside list item */
+.dash-student-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
+}
+
+/* Clickable class item */
+.dash-class-item--clickable {
+    cursor: pointer;
+}
+
+/* ------------------------------------------------------------------
+   Class students modal (trainer dashboard)
+------------------------------------------------------------------ */
+.csm-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.csm-overlay.csm-open {
+    display: flex;
+}
+
+.csm-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(4px);
+}
+
+.csm-panel {
+    position: relative;
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 20px;
+    width: min(580px, 92vw);
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 28px;
+    z-index: 1;
+}
+
+.csm-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #333;
+    background: transparent;
+    color: var(--text-main);
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.csm-close:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.csm-header {
+    margin-bottom: 20px;
+    padding-right: 32px;
+}
+
+.csm-header h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text-main);
+}
+
+.csm-header p {
+    font-size: 0.83rem;
+    color: var(--text-dim);
+}
+
+.csm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+    gap: 14px;
+}
+
+.csm-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-main);
+    padding: 14px 8px;
+    border-radius: 14px;
+    border: 1px solid #222;
+    background: var(--card-bg);
+    font-size: 0.8rem;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.csm-card:hover {
+    border-color: #7c3aed;
+    transform: translateY(-2px);
+}
+
+.csm-card img {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #7c3aed;
+}
+
+.csm-loading {
+    text-align: center;
+    color: var(--text-dim);
+    padding: 32px 0;
+    grid-column: 1 / -1;
+}
+
+/* ------------------------------------------------------------------
+   Admin: Ginásios
+------------------------------------------------------------------ */
+.dash-gym-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dash-gym-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    border: var(--border);
+    border-radius: 12px;
+    background: #0a0a0a;
+}
+
+.dash-gym-item > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dash-gym-item strong {
+    font-size: 0.9rem;
+}
+
+.dash-gym-item span {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+.gym-visit-badge {
+    font-size: 0.75rem;
+    background: rgba(225, 29, 72, 0.12);
+    color: #fb7185;
+    border: 1px solid rgba(225, 29, 72, 0.3);
+    padding: 3px 10px;
+    border-radius: 50px;
+    flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------------
+   Admin: Aulas populares
+------------------------------------------------------------------ */
+.dash-popular-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dash-popular-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.popular-rank {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    min-width: 24px;
+    text-align: right;
+}
+
+.popular-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.popular-info > span {
+    font-size: 0.85rem;
+}
+
+.popular-bar {
+    height: 4px;
+    background: #1a1a1a;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.popular-fill {
+    height: 100%;
+    background: #e11d48;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.popular-count {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    min-width: 24px;
+    text-align: right;
+}
+
+/* ------------------------------------------------------------------
+   Hamburger button
+------------------------------------------------------------------ */
+.hamburger-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 8px;
+    transition: border-color 0.2s;
+    flex-shrink: 0;
+}
+
+.hamburger-btn:hover {
+    border-color: var(--accent);
+}
+
+.hamburger-btn span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--text-main);
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+/* ------------------------------------------------------------------
+   Nav popup menu
+------------------------------------------------------------------ */
+.nav-popup-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(3px);
+    z-index: 1100;
+}
+
+.nav-popup-backdrop.open {
+    display: block;
+}
+
+.nav-popup {
+    position: fixed;
+    top: 98px;
+    right: 16px;
+    width: 230px;
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 18px;
+    z-index: 1200;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+    opacity: 0;
+    transform: translateY(-10px) scale(0.97);
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.nav-popup.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.nav-popup-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 16px 14px;
+    border-bottom: 1px solid #1e1e1e;
+}
+
+.nav-popup-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+    flex-shrink: 0;
+}
+
+.nav-popup-name {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nav-popup-handle {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+.nav-popup-links {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+}
+
+.nav-popup-link {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background 0.15s, color 0.15s;
+}
+
+.nav-popup-link i {
+    width: 16px;
+    text-align: center;
+    font-size: 0.85rem;
+    transition: color 0.15s;
+}
+
+.nav-popup-link:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-main);
+}
+
+.nav-popup-link:hover i,
+.nav-popup-link.active i {
+    color: var(--accent);
+}
+
+.nav-popup-link.active {
+    background: rgba(0,191,166,0.08);
+    color: var(--text-main);
+}
+
+.nav-popup-divider {
+    border: none;
+    border-top: 1px solid #1e1e1e;
+    margin: 6px 8px;
+}
+
+.nav-popup-link--logout {
+    color: #f87171;
+}
+
+.nav-popup-link--logout i {
+    color: #f87171;
+}
+
+.nav-popup-link--logout:hover {
+    background: rgba(248, 113, 113, 0.08);
+    color: #fca5a5;
+}
+
+
+@media (max-width: 768px) {
+    main.dashboard-page {
+        padding: 80px 16px 40px;
+    }
+
+    .dash-stats-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dash-stats-row--admin {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dash-greeting h1 {
+        font-size: 1.8rem;
+    }
+}

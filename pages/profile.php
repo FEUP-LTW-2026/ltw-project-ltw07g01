@@ -3,18 +3,20 @@ declare(strict_types=1);
 require_once(__DIR__ . '/../utils/session.php');
 $session = new Session();
 
-//if (!$session->isLoggedIn()) {
-//  header('Location: login.php');
-//    exit;
-//}
-
-$userId = 3; //user de teste
-
 require_once(__DIR__ . '/../database/connection.db.php');
 require_once(__DIR__ . '/../templates/common.tpl.php');
 
 $db = getDatabaseConnection();
-//$userId = $session->getId();
+$currentUserId = $session->isLoggedIn() ? (int)$session->getId() : 3; // 3 = test client fallback
+
+if (!$currentUserId) {
+    header('Location: login.php');
+    exit;
+}
+
+// ?id=X allows viewing another client's profile
+$viewId      = (isset($_GET['id']) && (int)$_GET['id'] > 0) ? (int)$_GET['id'] : $currentUserId;
+$isOwnProfile = ($viewId === $currentUserId);
 
 // --- Utilizador e gym ---
 $stmt = $db->prepare(
@@ -27,11 +29,11 @@ $stmt = $db->prepare(
      LEFT JOIN archetypes a ON a.id = c.archetype_id
      WHERE u.id = :id'
 );
-$stmt->execute([':id' => $userId]);
+$stmt->execute([':id' => $viewId]);
 $user = $stmt->fetch();
 
 if (!$user) {
-    header('Location: login.php');
+    header('Location: dashboard.php');
     exit;
 }
 
@@ -43,17 +45,17 @@ $stmt = $db->prepare(
      ORDER BY start_date DESC
      LIMIT 1'
 );
-$stmt->execute([':id' => $userId]);
+$stmt->execute([':id' => $viewId]);
 $membership = $stmt->fetch();
 
 // --- Total visitas ---
 $stmt = $db->prepare('SELECT COUNT(*) FROM gym_visits WHERE client_id = :id');
-$stmt->execute([':id' => $userId]);
+$stmt->execute([':id' => $viewId]);
 $totalVisits = (int)$stmt->fetchColumn();
 
 // --- Classes attended ---
 $stmt = $db->prepare('SELECT COUNT(*) FROM client_classes WHERE client_id = :id');
-$stmt->execute([':id' => $userId]);
+$stmt->execute([':id' => $viewId]);
 $classesAttended = (int)$stmt->fetchColumn();
 
 // --- Total training time ---
@@ -62,25 +64,25 @@ $stmt = $db->prepare(
      FROM gym_visits
      WHERE client_id = :id AND checked_out IS NOT NULL'
 );
-$stmt->execute([':id' => $userId]);
+$stmt->execute([':id' => $viewId]);
 $totalGymMinutes = (int)round($stmt->fetchColumn() ?? 0);
 
 $selectedBadgeCodes = array_filter(array_map('trim', explode(',', $user['selected_badges'] ?? '')));
 
 $badgeDefinitions = [
     'classes' => [
-        ['code' => 'A_PLUS_STUDENT', 'threshold' => 20, 'icon' => '📚', 'title' => 'A+ Student: 20 classes attended', 'label' => 'A+ Student'],
-        ['code' => 'NEWBIE', 'threshold' => 1, 'icon' => '🎓', 'title' => 'Newbie: 1st class attended', 'label' => 'Newbie']
+        ['code' => 'A_PLUS_STUDENT', 'threshold' => 20, 'icon' => '<i class="fa fa-book"></i>', 'title' => 'A+ Student: 20 classes attended', 'label' => 'A+ Student'],
+        ['code' => 'NEWBIE', 'threshold' => 1, 'icon' => '<i class="fa fa-graduation-cap"></i>', 'title' => 'Newbie: 1st class attended', 'label' => 'Newbie']
     ],
     'visits' => [
-        ['code' => 'CENTURY_CLUB', 'threshold' => 100, 'icon' => '💯', 'title' => 'Century Club: 100 gym visits', 'label' => 'Century Club'],
-        ['code' => 'IRON_REGULAR', 'threshold' => 50, 'icon' => '🏋️', 'title' => 'Iron Regular: 50 gym visits', 'label' => 'Iron Regular'],
-        ['code' => 'GYM_EXPLORER', 'threshold' => 10, 'icon' => '✨', 'title' => 'Gym Explorer: 10 gym visits', 'label' => 'Gym Explorer']
+        ['code' => 'CENTURY_CLUB', 'threshold' => 100, 'icon' => '<i class="fa fa-trophy"></i>', 'title' => 'Century Club: 100 gym visits', 'label' => 'Century Club'],
+        ['code' => 'IRON_REGULAR', 'threshold' => 50, 'icon' => '<i class="fa fa-dumbbell"></i>', 'title' => 'Iron Regular: 50 gym visits', 'label' => 'Iron Regular'],
+        ['code' => 'GYM_EXPLORER', 'threshold' => 10, 'icon' => '<i class="fa fa-compass"></i>', 'title' => 'Gym Explorer: 10 gym visits', 'label' => 'Gym Explorer']
     ],
     'time' => [
-        ['code' => 'TIME_CHAMPION', 'threshold' => 6000, 'icon' => '⏱️', 'title' => 'Time Champion: 100+ hours at the gym', 'label' => '100+ Hours'],
-        ['code' => 'GYM_WARRIOR', 'threshold' => 3000, 'icon' => '⏱️', 'title' => 'Gym Warrior: 50+ hours at the gym', 'label' => '50+ Hours'],
-        ['code' => 'ENDURANCE_BUILDER', 'threshold' => 1200, 'icon' => '⏱️', 'title' => 'Endurance Builder: 20+ hours at the gym', 'label' => '20+ Hours']
+        ['code' => 'TIME_CHAMPION', 'threshold' => 6000, 'icon' => '<i class="fa fa-crown"></i>', 'title' => 'Time Champion: 100+ hours at the gym', 'label' => '100+ Hours'],
+        ['code' => 'GYM_WARRIOR', 'threshold' => 3000, 'icon' => '<i class="fa fa-shield-halved"></i>', 'title' => 'Gym Warrior: 50+ hours at the gym', 'label' => '50+ Hours'],
+        ['code' => 'ENDURANCE_BUILDER', 'threshold' => 1200, 'icon' => '<i class="fa fa-bolt"></i>', 'title' => 'Endurance Builder: 20+ hours at the gym', 'label' => '20+ Hours']
     ]
 ];
 
@@ -129,7 +131,7 @@ $stmt = $db->prepare(
      WHERE client_id = :id AND checked_in >= DATE("now", :rangeStart)
      ORDER BY checked_in ASC'
 );
-$stmt->execute([':id' => $userId, ':rangeStart' => $rangeStart]);
+$stmt->execute([':id' => $viewId, ':rangeStart' => $rangeStart]);
 $periodVisits = $stmt->fetchAll();
 
 // --- Calcular minutos por dia ---
@@ -186,25 +188,25 @@ $memberTag      = $membership
 $badges = [];
 
 if ($classesAttended >= 20) {
-    $badges[] = ['icon' => '📚', 'title' => 'A+ Student: 20 classes attended'];
+    $badges[] = ['icon' => '<i class="fa fa-book"></i>', 'title' => 'A+ Student: 20 classes attended'];
 } elseif ($classesAttended >= 1) {
-    $badges[] = ['icon' => '🎓', 'title' => 'Newbie: 1st class attended'];
+    $badges[] = ['icon' => '<i class="fa fa-graduation-cap"></i>', 'title' => 'Newbie: 1st class attended'];
 }
 
 if ($totalVisits >= 100) {
-    $badges[] = ['icon' => '💯', 'title' => 'Century Club: 100 gym visits'];
+    $badges[] = ['icon' => '<i class="fa fa-trophy"></i>', 'title' => 'Century Club: 100 gym visits'];
 } elseif ($totalVisits >= 50) {
-    $badges[] = ['icon' => '🏋️', 'title' => 'Iron Regular: 50 gym visits'];
+    $badges[] = ['icon' => '<i class="fa fa-dumbbell"></i>', 'title' => 'Iron Regular: 50 gym visits'];
 } elseif ($totalVisits >= 10) {
-    $badges[] = ['icon' => '�', 'title' => 'Gym Explorer: 10 gym visits'];
+    $badges[] = ['icon' => '<i class="fa fa-compass"></i>', 'title' => 'Gym Explorer: 10 gym visits'];
 }
 
 if ($totalGymMinutes >= 6000) {
-    $badges[] = ['icon' => '⏱️', 'title' => 'Time Champion: 100+ hours at the gym'];
+    $badges[] = ['icon' => '<i class="fa fa-crown"></i>', 'title' => 'Time Champion: 100+ hours at the gym'];
 } elseif ($totalGymMinutes >= 3000) {
-    $badges[] = ['icon' => '⏱️', 'title' => 'Gym Warrior: 50+ hours at the gym'];
+    $badges[] = ['icon' => '<i class="fa fa-shield-halved"></i>', 'title' => 'Gym Warrior: 50+ hours at the gym'];
 } elseif ($totalGymMinutes >= 1200) {
-    $badges[] = ['icon' => '⏱️', 'title' => 'Endurance Builder: 20+ hours at the gym'];
+    $badges[] = ['icon' => '<i class="fa fa-bolt"></i>', 'title' => 'Endurance Builder: 20+ hours at the gym'];
 }
 ?>
 <!DOCTYPE html>
@@ -215,12 +217,13 @@ if ($totalGymMinutes >= 6000) {
     <title>Profile | Cubo Gym</title>
     <link rel="stylesheet" href="../css/profile.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="profile-body">
 
-<?php drawHeader($session); ?>
+<?php drawDashNavbar($session, $db, 'profile', false); ?>
 
 <main class="profile-page">
     <aside class="sidebar-container">
@@ -269,7 +272,7 @@ if ($totalGymMinutes >= 6000) {
         </div>
 
         <div class="metrics-section">
-            <h3>METRICS</h3>
+            <h3>MY METRICS</h3>
             <div class="metrics-grid">
                 <div class="metric-card">
                     <span class="metric-label">Body Weight</span>
@@ -353,9 +356,11 @@ if ($totalGymMinutes >= 6000) {
             </div>
         </div>
 
+        <?php if ($isOwnProfile): ?>
         <div class="profile-actions">
-            <a href="edit-profile.php" class="btn-edit-profile">Edit Profile</a>
+            <a href="../actions/edit-profile.php" class="btn-edit-profile">Edit Profile</a>
         </div>
+        <?php endif; ?>
     </div>
 </main>
 

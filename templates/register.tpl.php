@@ -20,7 +20,7 @@
         <img src="../images/register.png" alt="CUBO GYM">
     </div>
 
-    <section class="login-box">
+    <section>
         <h1>SIGN UP</h1>
 
         <?php if ($error !== ''): ?>
@@ -51,7 +51,7 @@
 
         <p class="login-register">
             Already have an account?
-            <a href="/pages/login.php">Log in</a>
+            <a href="/actions/login.php">Log in</a>
         </p>
     </section>
 
