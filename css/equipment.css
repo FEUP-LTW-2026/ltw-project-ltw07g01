@@ -1,0 +1,102 @@
+.equipment-page {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, black, #2a2a2a, black);
+    padding-top: 120px;
+    font-family: 'League Gothic', sans-serif;
+}
+
+.equipment-hero {
+    text-align: center;
+    padding: 60px 10%;
+}
+
+.equipment-hero h1 {
+    color: #00bfa6;
+    font-size: 90px;
+    font-weight: normal;
+    padding-bottom: 20px;
+}
+
+.equipment-hero p {
+    color: white;
+    font-size: 28px;
+}
+
+.equipment-filters {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    padding: 0 10% 20px;
+}
+
+
+
+.equipment-filters select:focus {
+    outline: none;
+    border-color: #00bfa6;
+    box-shadow: none;
+}
+
+.equipment-filters select {
+    padding: 12px 20px;
+    text-align: center;
+    background-color: black;
+    border: 2px solid #00bfa6;
+    color: white;
+    font-family: 'League Gothic', sans-serif;
+    font-size: 22px;
+}
+
+.equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 35px;
+    padding: 40px 10% 90px;
+}
+
+
+.equipment-card {
+    background-color: #d9d9d9;
+    padding: 35px;
+    border-left: 8px solid #00bfa6;
+}
+
+.equipment-card h2 {
+    color: #4f4f4f;
+    font-size: 42px;
+    font-weight: normal;
+}
+
+.equipment-card p {
+    color: #4f4f4f;
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.status {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-size: 22px;
+}
+
+.status.available {
+    color: #00bfa6;
+    border: 2px solid #00bfa6;
+}
+
+.status.unavailable {
+    color: #ff4d4d;
+    border: 2px solid #ff4d4d;
+}
+
+@media (max-width: 900px) {
+    .equipment-filters {
+        flex-direction: column;
+    }
+
+    .equipment-grid {
+        grid-template-columns: 1fr;
+    }
+}
