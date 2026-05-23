@@ -55,7 +55,6 @@
 
                 <h2><?= htmlspecialchars($item['name']) ?></h2>
                 <p><?= htmlspecialchars($item['gym_name']) ?></p>
-                <p><?= htmlspecialchars($item['body_part']) ?></p>
 
                 <?php if ((int)$item['is_available'] === 1): ?>
                     <span class="status available">Available</span>
