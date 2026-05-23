@@ -450,7 +450,7 @@ if ($role === 'admin') {
         <section class="dash-card dash-metrics-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-chart-line"></i> My Metrics</h2>
-                <a href="edit-profile.php" class="dash-link-small">Edit →</a>
+                <a href="../actions/edit-profile.php" class="dash-link-small">Edit →</a>
             </div>
             <div class="metrics-grid">
                 <div class="metric-card">
@@ -476,7 +476,7 @@ if ($role === 'admin') {
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-medal"></i> My Badges</h2>
-                <a href="edit-profile.php#badges" class="dash-link-small">Manage →</a>
+                <a href="../actions/edit-profile.php#badges" class="dash-link-small">Manage →</a>
             </div>
             <?php if (empty($displayBadges)): ?>
                 <div class="dash-empty"><span><i class="fa fa-bullseye"></i></span><p>Keep training to earn badges!</p></div>

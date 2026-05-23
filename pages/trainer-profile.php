@@ -155,7 +155,7 @@ $homeGyms     = array_map(fn($g) => 'Cubo Gym - ' . $g['city'] . ', ' . $g['name
 
         <?php if ($isOwnProfile): ?>
         <div class="profile-actions">
-            <a href="edit-trainer-profile.php" class="btn-edit-profile">Edit Profile</a>
+            <a href="../actions/edit-trainer-profile.php" class="btn-edit-profile">Edit Profile</a>
         </div>
         <?php endif; ?>
     </div>

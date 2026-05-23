@@ -5,13 +5,13 @@
 /* ------------------------------------------------------------------
    Page layout
 ------------------------------------------------------------------ */
-.sc-page {
+main.sc-page {
     padding: 40px 24px 80px;
     max-width: 1100px;
     margin: 0 auto;
 }
 
-.sc-has-navbar {
+main.sc-has-navbar {
     padding-top: 40px;
 }
 

@@ -84,7 +84,7 @@ html {
     padding-bottom: 0.5rem;
 }
 
-.membership-title {
+.banner h2 {
     font-size: 3.125rem;
     font-style: italic;
     text-align: center;
@@ -92,7 +92,7 @@ html {
     color: black;
 }
 
-.banner-subtitle {
+.banner p {
     font-size: 1.125rem;
     color: #555;
     letter-spacing: 0.04rem;
@@ -246,7 +246,7 @@ html {
     background: #111;
 }
 
-.perguntas-title {
+section.wrapper-perguntas h2 {
     color: #00bfa6;
     font-size: 2rem;
     margin-bottom: 2rem;
@@ -260,7 +260,7 @@ html {
     color: black;
 }
 
-.table-dark {
+section.comparison table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
@@ -270,33 +270,33 @@ html {
     font-size: 1rem;
 }
 
-.table-dark th,
-.table-dark td {
+section.comparison table th,
+section.comparison table td {
     padding: 0.9375rem 1.5rem;
     text-align: center;
 }
 
-.table-dark td:first-child,
-.table-dark th:first-child {
+section.comparison table td:first-child,
+section.comparison table th:first-child {
     text-align: left;
 }
 
-.table-dark thead tr {
+section.comparison table thead tr {
     background-color: black;
     color: white;
     font-size: 1.125rem;
     letter-spacing: 0.05rem;
 }
 
-.table-dark tbody tr:nth-child(odd) {
+section.comparison table tbody tr:nth-child(odd) {
     background-color: #1a1a1a;
 }
 
-.table-dark tbody tr:nth-child(even) {
+section.comparison table tbody tr:nth-child(even) {
     background-color: #2a2a2a;
 }
 
-.table-dark tbody tr:hover {
+section.comparison table tbody tr:hover {
     background-color: #00bfa6;
     color: black;
 }
@@ -311,11 +311,11 @@ html {
     font-size: 1.1rem;
 }
 
-.table-dark tbody tr:hover .icon-check {
+section.comparison table tbody tr:hover .icon-check {
     color: white;
 }
 
-.table-dark tbody tr:hover .icon-xmark {
+section.comparison table tbody tr:hover .icon-xmark {
     color: #333;
 }
 
@@ -364,7 +364,7 @@ html {
     overflow: hidden;
 }
 
-.faq-item summary.faq-question {
+section.wrapper-perguntas details summary {
     list-style: none;
     cursor: pointer;
     display: flex;
@@ -380,11 +380,11 @@ html {
     transition: background 0.2s;
 }
 
-.faq-item summary.faq-question::-webkit-details-marker {
+section.wrapper-perguntas details summary::-webkit-details-marker {
     display: none;
 }
 
-.faq-item summary.faq-question::after {
+section.wrapper-perguntas details summary::after {
     content: '+';
     font-size: 1.4rem;
     color: #00bfa6;
@@ -392,15 +392,15 @@ html {
     line-height: 1;
 }
 
-.faq-item[open] summary.faq-question::after {
+section.wrapper-perguntas details[open] summary::after {
     content: '−';
 }
 
-.faq-item summary.faq-question:hover {
+section.wrapper-perguntas details summary:hover {
     background: #252525;
 }
 
-.faq-answer {
+section.wrapper-perguntas details > div {
     background: #222;
     color: #ddd;
     font-size: 1rem;
