@@ -358,7 +358,7 @@ if ($totalGymMinutes >= 6000) {
 
         <?php if ($isOwnProfile): ?>
         <div class="profile-actions">
-            <a href="edit-profile.php" class="btn-edit-profile">Edit Profile</a>
+            <a href="../actions/edit-profile.php" class="btn-edit-profile">Edit Profile</a>
         </div>
         <?php endif; ?>
     </div>

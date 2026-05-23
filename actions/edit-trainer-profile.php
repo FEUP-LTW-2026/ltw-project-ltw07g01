@@ -280,7 +280,7 @@ $certifications = $user['certifications'] ?? '';
 
             <div class="profile-actions">
                 <button type="submit" class="btn-save-changes">Save Changes</button>
-                <a href="trainer-profile.php" class="btn-cancel">Cancel</a>
+                <a href="../pages/trainer-profile.php" class="btn-cancel">Cancel</a>
             </div>
         </form>
     </div>

@@ -22,7 +22,7 @@
                         </a>
 
                         <div class="dropdown-menu">
-                            <a href="/pages/logout.php">Logout</a>
+                            <a href="/actions/logout.php">Logout</a>
                         </div>
                     </li>
               <?php endif; ?>
