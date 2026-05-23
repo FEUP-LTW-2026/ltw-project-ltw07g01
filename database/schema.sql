@@ -103,6 +103,7 @@ CREATE TABLE equipment
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     name         TEXT NOT NULL,
     gym_id       INTEGER NOT NULL,
+    body_part    TEXT NOT NULL,
     is_available INTEGER NOT NULL DEFAULT 1,
     FOREIGN KEY (gym_id)
         REFERENCES gym_locations(id)
@@ -333,3 +334,14 @@ INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
 VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
 INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
 VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
+
+-- Equipment status
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Bench Press', 1, 'Chest', 1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Chest Press', 1, 'Chest', 0);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Shoulder Press', 1, 'Shoulders', 1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Tricep Pushdown', 1, 'Triceps', 1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Bicep Curl Machine', 2, 'Biceps', 0);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Leg Press', 2, 'Legs', 1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Leg Extension', 2, 'Legs', 1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Lat Pulldown', 3, 'Back', 1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Rowing Machine', 3, 'Back', 0);
