@@ -11,22 +11,26 @@ body {
     );
 }
 
-.main-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    gap: 2.5rem;
-    padding: 2.5rem;
-    flex-wrap: wrap;
+section.type-section {
+    margin-bottom: 4rem;
 }
 
-.examples-img {
+section.type-section > img {
     display: block;
     width: 100%;
     max-height: 31.25rem;
     object-fit: cover;
     scroll-margin-top: 5.5rem;
+}
+
+section.type-section > div {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    padding: 4rem 3rem;
+    gap: 3.5rem;
+    color: white;
+    flex-wrap: wrap;
 }
 
 .types-membership-container {
@@ -42,16 +46,6 @@ body {
     justify-content: center;
     gap: 3.125rem;
     color: white;
-}
-
-.memberships {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    padding: 2rem 3rem;
-    gap: 2rem;
-    color: white;
-    flex-wrap: wrap;
 }
 
 .types-memberships a {
@@ -103,33 +97,80 @@ html {
 .slogan {
     display: flex;
     justify-content: center;
-    margin: 1.25rem;
+    margin: 4rem 1.25rem;
     font-style: inherit;
     font-size: 2.5rem;
     text-align: center;
 }
 
-.Gym-title,
-.Pilatus-title,
-.Cycling-title {
+section.type-section > h3 {
     font-size: 3rem;
     font-style: italic;
     text-transform: uppercase;
     text-align: center;
     color: black;
-    padding: 1.25rem 0 0.25rem;
+    padding: 2.5rem 0 0.5rem;
     letter-spacing: 0.15rem;
 }
 
-.Gym-title::after,
-.Pilatus-title::after,
-.Cycling-title::after {
+section.type-section > h3::after {
     content: '';
     display: block;
     width: 4rem;
     height: 0.1875rem;
     background: #00bfa6;
     margin: 0.4rem auto 0;
+}
+
+.pack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    text-align: center;
+    border: 0.25rem solid #00bfa6;
+    border-radius: 1.25rem;
+    width: 18rem;
+    min-height: 20rem;
+    padding: 1.5rem 1rem;
+    gap: 0.75rem;
+    background-color: black;
+    color: white;
+    transition: 0.4s;
+}
+
+.pack h2 {
+    font-size: 2.4rem;
+    border-bottom: 0.125rem solid white;
+    padding-bottom: 0.5rem;
+    width: 80%;
+    text-align: center;
+}
+
+.pack p {
+    font-size: 1.3rem;
+    color: #ccc;
+    margin: 0;
+    width: 80%;
+}
+
+.pack:hover {
+    background-color: #00bfa6;
+    color: black;
+}
+
+.pack:hover p {
+    color: black;
+}
+
+.pack:hover .plan-btn {
+    border-color: black;
+    color: black;
+}
+
+.pack:hover .plan-btn:hover {
+    background-color: black;
+    color: white;
 }
 
 .plan {
@@ -197,7 +238,7 @@ html {
 .plan ul li {
     padding: 0.3rem 0 0.3rem 1.6rem;
     position: relative;
-    font-size: 1.0625rem;
+    font-size: 1.3rem;
 }
 
 .plan ul li::before {
@@ -217,14 +258,14 @@ html {
 .price {
     display: flex;
     justify-content: center;
-    font-size: 1.875rem;
+    font-size: 2.5rem;
 }
 
 .plan-info {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 1.125rem;
+    font-size: 1.3rem;
     text-align: center;
 
     width: 80%;
@@ -255,7 +296,7 @@ section.wrapper-perguntas h2 {
 }
 
 .comparison {
-    margin: 3.125rem auto;
+    margin: 5rem auto;
     width: 80%;
     color: black;
 }
@@ -267,7 +308,7 @@ section.comparison table {
     border-radius: 0.75rem;
     overflow: hidden;
     color: white;
-    font-size: 1rem;
+    font-size: 1.3rem;
 }
 
 section.comparison table th,
@@ -328,7 +369,7 @@ section.comparison table tbody tr:hover .icon-xmark {
     border: 2px solid white;
     border-radius: 50px;
     font-family: 'League Gothic', sans-serif;
-    font-size: 1rem;
+    font-size: 1.3rem;
     letter-spacing: 0.05rem;
     text-decoration: none;
     transition: 0.3s;
@@ -374,7 +415,7 @@ section.wrapper-perguntas details summary {
     background: #1a1a1a;
     color: white;
     padding: 1.125rem 1.5rem;
-    font-size: 1.125rem;
+    font-size: 1.4rem;
     letter-spacing: 0.03rem;
     user-select: none;
     transition: background 0.2s;
@@ -408,39 +449,21 @@ section.wrapper-perguntas details > div {
 }
 
 @media (max-width: 48rem) {
-    .membership-title {
-        font-size: 1.75rem;
-        padding: 1.25rem 0.9375rem 0.5rem;
-    }
-
-    .banner-subtitle {
-        font-size: 1rem;
-        padding: 0 1rem;
-    }
-
     .slogan {
         font-size: 1.375rem;
         margin: 0.625rem;
         text-align: center;
     }
 
-    .main-wrapper {
-        flex-direction: column;
-        padding: 1rem;
-        gap: 1rem;
-    }
-
-    .examples-img {
+    section.type-section > img {
         max-height: 15.625rem;
     }
 
-    .Gym-title,
-    .Pilatus-title,
-    .Cycling-title {
+    section.type-section > h3 {
         font-size: 2rem;
     }
 
-    .memberships {
+    section.type-section > div {
         flex-direction: column;
         align-items: center;
         gap: 2rem;
@@ -451,6 +474,11 @@ section.wrapper-perguntas details > div {
         width: 85%;
         min-height: auto;
         padding: 1.5rem 1rem;
+    }
+
+    .pack {
+        width: 85%;
+        min-height: auto;
     }
 
     .plan-popular {
@@ -473,11 +501,6 @@ section.wrapper-perguntas details > div {
 
     .faq-item {
         max-width: 100%;
-    }
-
-    .faq-item summary.faq-question {
-        font-size: 1rem;
-        padding: 1rem 1.25rem;
     }
 }
 
