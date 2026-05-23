@@ -5,6 +5,8 @@
    DB Server: SQLite
 ********************************************************************************/
 
+DROP TABLE IF EXISTS workout_sessions;
+DROP TABLE IF EXISTS workout_plans;
 DROP TABLE IF EXISTS gym_visits;
 DROP TABLE IF EXISTS client_classes;
 DROP TABLE IF EXISTS client_gyms;
@@ -229,6 +231,30 @@ CREATE TABLE gym_visits
         ON DELETE SET NULL ON UPDATE NO ACTION
 );
 
+CREATE TABLE workout_plans
+(
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    client_id  INTEGER NOT NULL,
+    name       TEXT    NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (client_id)
+        REFERENCES clients(user_id)
+        ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE workout_sessions
+(
+    id       INTEGER PRIMARY KEY AUTOINCREMENT,
+    plan_id  INTEGER NOT NULL,
+    type     TEXT    NOT NULL CHECK(type IN ('pilates', 'cycling', 'running')),
+    date     DATE    NOT NULL,
+    duration INTEGER,
+    notes    TEXT,
+    FOREIGN KEY (plan_id)
+        REFERENCES workout_plans(id)
+        ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
 /*******************************************************************************
    Create Indexes
 ********************************************************************************/
@@ -244,6 +270,8 @@ CREATE INDEX IFK_reviews_client        ON reviews (client_id);
 CREATE INDEX IFK_reviews_class         ON reviews (class_id);
 CREATE INDEX IFK_gym_visits_client     ON gym_visits (client_id);
 CREATE INDEX IFK_gym_visits_gym        ON gym_visits (gym_id);
+CREATE INDEX IFK_workout_plans_client  ON workout_plans (client_id);
+CREATE INDEX IFK_workout_sessions_plan ON workout_sessions (plan_id);
 
 /*******************************************************************************
    Populate Tables
