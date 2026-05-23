@@ -16,7 +16,7 @@ require_once('../templates/common.tpl.php');
 $db = getDatabaseConnection();
 //$userId = $session->getId();
 
-// --- Buscar dados atuais ---
+// buscar dados atuais
 $stmt = $db->prepare(
     'SELECT u.username, u.email, u.first_name, u.last_name, u.profile_photo, u.bio, u.created_at, c.preferred_gym_id, c.archetype_id, c.body_weight, c.height, c.selected_badges,
             gl.name AS gym_name, gl.city AS gym_city,
@@ -37,18 +37,18 @@ if (!$user) {
 
 $selectedBadgeCodes = array_filter(array_map('trim', explode(',', $user['selected_badges'] ?? '')));
 
-// --- Buscar todos os gyms ---
+// buscar todos os gyms 
 $stmt = $db->prepare('SELECT id, name, city FROM gym_locations ORDER BY city, name');
 $stmt->execute();
 $gyms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// --- Buscar todos os archetypes ---
+// buscar todos os archetypes 
 $stmt = $db->prepare('SELECT id, name FROM archetypes ORDER BY name');
 $stmt->execute();
 $archetypeOptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $validArchetypeIds = array_column($archetypeOptions, 'id');
 
-// --- Processar form ---
+// processar form 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstName = trim($_POST['first_name'] ?? '');
     $lastName = trim($_POST['last_name'] ?? '');
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($archetypeId !== null && !in_array($archetypeId, $validArchetypeIds, true)) {
         $error = 'Invalid archetype selected.';
     } else {
-        // Check username uniqueness (excluding current user)
+        // check username uniqueness
         $stmt = $db->prepare('SELECT id FROM users WHERE username = :username AND id != :id');
         $stmt->execute([':username' => $username, ':id' => $userId]);
         if ($stmt->fetch()) {
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Password change validation
+    //password change validation
     if (!isset($error) && $newPassword !== '') {
         $stmt = $db->prepare('SELECT password_hash FROM users WHERE id = :id');
         $stmt->execute([':id' => $userId]);
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Profile photo upload
+    // profile photo
     $newPhotoPath = null;
     if (!isset($error) && isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
         $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!isset($error)) {
-        // Build users UPDATE
+        // users update
         $userFields = 'first_name = :first, last_name = :last, email = :email, username = :username, bio = :bio';
         $userParams = [':first' => $firstName, ':last' => $lastName, ':email' => $email, ':username' => $username, ':bio' => $bio, ':id' => $userId];
 
@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $db->prepare("UPDATE users SET {$userFields} WHERE id = :id");
         $stmt->execute($userParams);
 
-        // Atualizar clients
+        // atualizar clients
         $stmt = $db->prepare('UPDATE clients SET archetype_id = :arch, preferred_gym_id = :gym, body_weight = :weight, height = :height, selected_badges = :selected_badges WHERE user_id = :id');
         $stmt->execute([
             ':arch' => $archetypeId ?: null,
@@ -155,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// --- Valores atuais ---
+// valores atuais
 $fullName = $user['first_name'] . ' ' . $user['last_name'];
 $memberSince = (new DateTime($user['created_at']))->format('F Y');
 $homeGym = $user['gym_name'] ? 'Cubo Gym - ' . $user['gym_city'] . ', ' . $user['gym_name'] : 'No gym selected';
@@ -166,7 +166,7 @@ $bodyWeight = $user['body_weight'] ?? '';
 $height = $user['height'] ?? '';
 $memberTag = 'MEMBER'; // Simplificado
 
-// --- Estatísticas para badges ---
+// estatísticas para badges
 $stmt = $db->prepare('SELECT COUNT(*) FROM gym_visits WHERE client_id = :id');
 $stmt->execute([':id' => $userId]);
 $totalVisits = (int)$stmt->fetchColumn();
@@ -250,12 +250,13 @@ $selectedBadgesDisplay = array_filter($availableBadges, function ($badge) use ($
     <title>Edit Profile | Cubo Gym</title>
     <link rel="stylesheet" href="../css/profile.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="profile-body">
 
-<?php drawHeader($session); ?>
+<?php drawDashNavbar($session, $db, 'profile', false); ?>
 
 <main class="profile-page">
     <aside class="sidebar-container">
@@ -347,7 +348,7 @@ $selectedBadgesDisplay = array_filter($availableBadges, function ($badge) use ($
                 </div>
             </div>
 
-            <!-- DISPLAY BADGES: editable picker placed after Metrics -->
+            <!-- display dos badges -->
             <div class="display-badges-section">
                 <h3>DISPLAY BADGES</h3>
                 <p class="detail-label">Select which earned badges should appear on your profile.</p>

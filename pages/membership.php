@@ -2,7 +2,9 @@
     declare(strict_types=1);
     require_once('../utils/session.php');
     $session = new Session();
+    require_once('../database/connection.db.php');
     require_once('../templates/common.tpl.php');
+    $db = getDatabaseConnection();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,12 +14,17 @@
     <title>MEMBERSHIP</title>
     <link rel="stylesheet" href="../css/membership.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
+<?php if ($session->isLoggedIn()): ?>
+<?php drawDashNavbar($session, $db, 'membership'); ?>
+<?php else: ?>
 <?php drawHeader($session); ?>
+<?php endif; ?>templates/common.tpl.php
 
 <div class="banner">
     <h2 class="membership-title">MEMBERSHIPS</h2>

@@ -3,18 +3,20 @@ declare(strict_types=1);
 require_once(__DIR__ . '/../utils/session.php');
 $session = new Session();
 
-//if (!$session->isLoggedIn()) {
-//  header('Location: login.php');
-//    exit;
-//}
-
-$userId = 3; //user de teste
-
 require_once(__DIR__ . '/../database/connection.db.php');
 require_once(__DIR__ . '/../templates/common.tpl.php');
 
 $db = getDatabaseConnection();
-//$userId = $session->getId();
+$currentUserId = $session->isLoggedIn() ? (int)$session->getId() : 3; // 3 = test client fallback
+
+if (!$currentUserId) {
+    header('Location: login.php');
+    exit;
+}
+
+// ?id=X allows viewing another client's profile
+$viewId      = (isset($_GET['id']) && (int)$_GET['id'] > 0) ? (int)$_GET['id'] : $currentUserId;
+$isOwnProfile = ($viewId === $currentUserId);
 
 // --- Utilizador e gym ---
 $stmt = $db->prepare(
@@ -27,11 +29,11 @@ $stmt = $db->prepare(
      LEFT JOIN archetypes a ON a.id = c.archetype_id
      WHERE u.id = :id'
 );
-$stmt->execute([':id' => $userId]);
+$stmt->execute([':id' => $viewId]);
 $user = $stmt->fetch();
 
 if (!$user) {
-    header('Location: login.php');
+    header('Location: dashboard.php');
     exit;
 }
 
@@ -43,17 +45,17 @@ $stmt = $db->prepare(
      ORDER BY start_date DESC
      LIMIT 1'
 );
-$stmt->execute([':id' => $userId]);
+$stmt->execute([':id' => $viewId]);
 $membership = $stmt->fetch();
 
 // --- Total visitas ---
 $stmt = $db->prepare('SELECT COUNT(*) FROM gym_visits WHERE client_id = :id');
-$stmt->execute([':id' => $userId]);
+$stmt->execute([':id' => $viewId]);
 $totalVisits = (int)$stmt->fetchColumn();
 
 // --- Classes attended ---
 $stmt = $db->prepare('SELECT COUNT(*) FROM client_classes WHERE client_id = :id');
-$stmt->execute([':id' => $userId]);
+$stmt->execute([':id' => $viewId]);
 $classesAttended = (int)$stmt->fetchColumn();
 
 // --- Total training time ---
@@ -62,7 +64,7 @@ $stmt = $db->prepare(
      FROM gym_visits
      WHERE client_id = :id AND checked_out IS NOT NULL'
 );
-$stmt->execute([':id' => $userId]);
+$stmt->execute([':id' => $viewId]);
 $totalGymMinutes = (int)round($stmt->fetchColumn() ?? 0);
 
 $selectedBadgeCodes = array_filter(array_map('trim', explode(',', $user['selected_badges'] ?? '')));
@@ -129,7 +131,7 @@ $stmt = $db->prepare(
      WHERE client_id = :id AND checked_in >= DATE("now", :rangeStart)
      ORDER BY checked_in ASC'
 );
-$stmt->execute([':id' => $userId, ':rangeStart' => $rangeStart]);
+$stmt->execute([':id' => $viewId, ':rangeStart' => $rangeStart]);
 $periodVisits = $stmt->fetchAll();
 
 // --- Calcular minutos por dia ---
@@ -215,12 +217,13 @@ if ($totalGymMinutes >= 6000) {
     <title>Profile | Cubo Gym</title>
     <link rel="stylesheet" href="../css/profile.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="profile-body">
 
-<?php drawHeader($session); ?>
+<?php drawDashNavbar($session, $db, 'profile', false); ?>
 
 <main class="profile-page">
     <aside class="sidebar-container">
@@ -353,9 +356,11 @@ if ($totalGymMinutes >= 6000) {
             </div>
         </div>
 
+        <?php if ($isOwnProfile): ?>
         <div class="profile-actions">
             <a href="edit-profile.php" class="btn-edit-profile">Edit Profile</a>
         </div>
+        <?php endif; ?>
     </div>
 </main>
 

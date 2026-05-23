@@ -3,12 +3,19 @@ declare(strict_types=1);
 require_once(__DIR__ . '/../utils/session.php');
 $session = new Session();
 
-$userId = 2; // trainer de teste (ana.silva)
-
 require_once(__DIR__ . '/../database/connection.db.php');
 require_once(__DIR__ . '/../templates/common.tpl.php');
 
 $db = getDatabaseConnection();
+
+if (!$session->isLoggedIn()) {
+    header('Location: login.php');
+    exit;
+}
+
+$currentUserId = (int)$session->getId();
+$userId        = (isset($_GET['id']) && (int)$_GET['id'] > 0) ? (int)$_GET['id'] : $currentUserId;
+$isOwnProfile  = ($userId === $currentUserId);
 
 // --- Dados do trainer ---
 $stmt = $db->prepare(
@@ -64,12 +71,13 @@ $homeGyms     = array_map(fn($g) => 'Cubo Gym - ' . $g['city'] . ', ' . $g['name
     <title><?= htmlspecialchars($fullName) ?> | Cubo Gym Trainer</title>
     <link rel="stylesheet" href="../css/profile.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
 </head>
-<body class="trainer-theme">
+<body class="trainer-theme profile-body">
 
-<?php drawHeader($session); ?>
+<?php drawDashNavbar($session, $db, 'profile', false); ?>
 
 <main class="profile-page">
     <aside class="sidebar-container">
@@ -145,9 +153,11 @@ $homeGyms     = array_map(fn($g) => 'Cubo Gym - ' . $g['city'] . ', ' . $g['name
         </div>
         <?php endif; ?>
 
+        <?php if ($isOwnProfile): ?>
         <div class="profile-actions">
             <a href="edit-trainer-profile.php" class="btn-edit-profile">Edit Profile</a>
         </div>
+        <?php endif; ?>
     </div>
 </main>
 
