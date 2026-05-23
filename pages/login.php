@@ -9,7 +9,7 @@ require_once(__DIR__ . '/../templates/login.tpl.php');
 $session = new Session();
 
 if ($session->isLoggedIn()) {
-    header('Location: /pages/profile.php');
+    header('Location: /pages/dashboard.php');
     exit();
 }
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $session->setId((int)$user['id']);
         $session->setName($user['first_name']);
 
-        header('Location: /pages/index.php');
+        header('Location: /pages/dashboard.php');
         exit();
     } else {
         $error = 'Invalid email or password.';
