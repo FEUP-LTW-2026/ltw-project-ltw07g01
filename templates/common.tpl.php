@@ -1,6 +1,6 @@
 <?php function drawHeader(object $session) { ?>
     <header>
-        <nav class="navbar">
+        <nav>
             <a href="<?= $session->isLoggedIn() ? '/pages/dashboard.php' : '/pages/index.php' ?>" class="logo">
                 <img src="/images/logo.png" alt="CUBO GYM logo">
             </a>
@@ -10,7 +10,7 @@
                 <span></span>
                 <span></span>
             </label>
-            <ul class="nav-links">
+            <ul>
                 <li><a href="/pages/membership.php">Membership</a></li>
                 <li><a href="/pages/about.php">About Us</a></li>
                 <li><a href="/pages/locations.php">Locations</a></li>
@@ -99,7 +99,7 @@
 } ?>
 
 <?php function drawFooter() { ?>
-    <footer class="footer">
+    <footer>
         <div class="footer-logo">
             <a href="/pages/index.php">
                 <img src="/images/logo.png" alt="CUBO GYM logo">
