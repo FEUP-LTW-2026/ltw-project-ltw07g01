@@ -1,8 +1,8 @@
 <?php function drawMemberships(object $session) { ?>
 
 <div class="banner">
-    <h2 class="membership-title">MEMBERSHIPS</h2>
-    <p class="banner-subtitle">Choose the right plan to achieve your goals</p>
+    <h2>MEMBERSHIPS</h2>
+    <p>Choose the right plan to achieve your goals</p>
 </div>
 
 <div class="types-membership-container">
@@ -141,7 +141,7 @@
 <section class="comparison">
     <h2>Plan Comparison</h2>
     <div class="table-wrapper">
-        <table class="table-dark">
+        <table>
             <tr>
                 <th>Benefit</th>
                 <th>Basic</th>
@@ -171,32 +171,32 @@
 </section>
 
 <section class="wrapper-perguntas">
-    <h2 class="perguntas-title">Frequently Asked Questions</h2>
+    <h2>Frequently Asked Questions</h2>
 
     <details class="faq-item">
-        <summary class="faq-question">Can I cancel at any time?</summary>
-        <div class="faq-answer">
+        <summary>Can I cancel at any time?</summary>
+        <div>
             <p>Yes, you can cancel your subscription with 30 days' notice.</p>
         </div>
     </details>
 
     <details class="faq-item">
-        <summary class="faq-question">Are there enrollment fees?</summary>
-        <div class="faq-answer">
+        <summary>Are there enrollment fees?</summary>
+        <div>
             <p>Just a one-time initial fee of €10 at the time of enrollment.</p>
         </div>
     </details>
 
     <details class="faq-item">
-        <summary class="faq-question">Can I change my plan?</summary>
-        <div class="faq-answer">
+        <summary>Can I change my plan?</summary>
+        <div>
             <p>Yes, you can upgrade or downgrade your plan at any time in the customer area.</p>
         </div>
     </details>
 
     <details class="faq-item">
-        <summary class="faq-question">Are classes included in all plans?</summary>
-        <div class="faq-answer">
+        <summary>Are classes included in all plans?</summary>
+        <div>
             <p>Basic group classes are included in the Basic plan. Premium and specialized classes are available in Pro and Ultra plans.</p>
         </div>
     </details>

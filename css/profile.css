@@ -19,7 +19,7 @@ body.profile-body {
     flex-direction: column;
 }
 
-body.profile-body .profile-page {
+body.profile-body main {
     flex: 1;
 }
 
@@ -28,14 +28,14 @@ body.profile-body .profile-page {
     filter: brightness(0) invert(1);
 }
 
-.profile-page {
+main.profile-page {
     display: grid;
     gap: 25px;
     padding: 120px 30px 30px 30px;
 }
 
 @media (min-width: 1100px) {
-    .profile-page {
+    main.profile-page {
         grid-template-columns: 380px 1fr;
         align-items: start;
     }
