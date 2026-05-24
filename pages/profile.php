@@ -209,21 +209,7 @@ if ($totalGymMinutes >= 6000) {
     $badges[] = ['icon' => '<i class="fa fa-bolt"></i>', 'title' => 'Endurance Builder: 20+ hours at the gym'];
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile | Cubo Gym</title>
-    <link rel="stylesheet" href="../css/profile.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
-</head>
-<body class="profile-body">
-
-<?php drawDashNavbar($session, $db, 'profile', false); ?>
+<?php drawDashHeader($session, $db, 'profile', [], 'profile-body'); ?>
 
 <main class="profile-page">
     <aside class="sidebar-container">
@@ -364,6 +350,4 @@ if ($totalGymMinutes >= 6000) {
     </div>
 </main>
 
-<php drawFooter(); ?>
-</body>
-</html>
+<?php drawFooter(); ?>

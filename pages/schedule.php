@@ -393,22 +393,7 @@ if (!empty($_GET['ajax'])) {
     exit;
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule | Cubo Gym</title>
-    <link rel="stylesheet" href="../css/profile.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="../css/schedule.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
-</head>
-<body>
-
-<?php drawDashNavbar($session, $db, 'schedule'); ?>
+<?php drawDashHeader($session, $db, 'schedule', ['schedule']); ?>
 
 <!-- filter bar -->
 <div class="sc-filter-bar" id="scFilterBar">
@@ -587,5 +572,3 @@ var SC = {
 <script src="../js/schedule.js"></script>
 
 <?php drawFooter(); ?>
-</body>
-</html>

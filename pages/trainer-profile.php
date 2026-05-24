@@ -63,21 +63,7 @@ $profilePhoto = $user['profile_photo'] ?? '../images/profile_pic.webp';
 $bio          = $user['trainer_bio'] ?? '';
 $homeGyms     = array_map(fn($g) => 'Cubo Gym - ' . $g['city'] . ', ' . $g['name'], $trainerGyms);
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($fullName) ?> | Cubo Gym Trainer</title>
-    <link rel="stylesheet" href="../css/profile.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
-</head>
-<body class="trainer-theme profile-body">
-
-<?php drawDashNavbar($session, $db, 'profile', false); ?>
+<?php drawDashHeader($session, $db, 'profile', [], 'trainer-theme profile-body'); ?>
 
 <main class="profile-page">
     <aside class="sidebar-container">
@@ -162,5 +148,3 @@ $homeGyms     = array_map(fn($g) => 'Cubo Gym - ' . $g['city'] . ', ' . $g['name
 </main>
 
 <?php drawFooter(); ?>
-</body>
-</html>

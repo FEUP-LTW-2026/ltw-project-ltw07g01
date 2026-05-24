@@ -6,7 +6,7 @@ main.login-page {
 }
 
 .login-image {
-    padding: 100px 0 80px 0;
+    padding: 6.25rem 0 5rem 0;
     display: flex;
     align-items: center;
 }
@@ -14,46 +14,46 @@ main.login-page {
 .login-image img {
     width: 100%;
     height: auto;
-    max-width: 650px;
+    max-width: 40.625rem;
     display: block;
-    border: 23px solid #00bfa6;
+    border: 1.4375rem solid #00bfa6;
 }
 
 main.login-page section {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 80px;
+    padding: 5rem;
     font-family: 'League Gothic', sans-serif;
 }
 
 main.login-page section h1 {
-    font-size: 90px;
+    font-size: 5.625rem;
     color: #00bfa6;
-    margin-bottom: 40px;
+    margin-bottom: 2.5rem;
     font-weight: normal;
 }
 
 main.login-page section form {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 1.125rem;
 }
 
 main.login-page section label {
-    font-size: 28px;
+    font-size: 1.75rem;
     color: white;
-    letter-spacing: 1px;
+    letter-spacing: 0.0625rem;
 }
 
 main.login-page section input {
-    padding: 14px 18px;
+    padding: 0.875rem 1.125rem;
 
     background-color: transparent;
-    border: 2px solid #4f4f4f;
+    border: 0.125rem solid #4f4f4f;
 
     color: white;
-    font-size: 18px;
+    font-size: 1.125rem;
 
     outline: none;
     transition: 0.3s;
@@ -64,14 +64,14 @@ main.login-page section input:focus {
 }
 
 main.login-page section button {
-    margin-top: 25px;
-    padding: 14px;
-    border: 3px solid #00bfa6;
+    margin-top: 1.5625rem;
+    padding: 0.875rem;
+    border: 0.1875rem solid #00bfa6;
     background-color: transparent;
     color: #00bfa6;
     font-family: 'League Gothic', sans-serif;
-    font-size: 30px;
-    letter-spacing: 1px;
+    font-size: 1.875rem;
+    letter-spacing: 0.0625rem;
     cursor: pointer;
     transition: 0.3s;
 }
@@ -83,15 +83,15 @@ main.login-page section button:hover {
 
 .login-error {
     color: #ff4d4d;
-    font-size: 22px;
-    margin-bottom: 20px;
+    font-size: 1.375rem;
+    margin-bottom: 1.25rem;
 }
 
 .login-register {
-    margin-top: 25px;
+    margin-top: 1.5625rem;
 
     color: #8f8f8f;
-    font-size: 22px;
+    font-size: 1.375rem;
 }
 
 .login-register a {
@@ -104,22 +104,22 @@ main.login-page section button:hover {
 }
 
 /* RESPONSIVE */
-@media (max-width: 900px) {
+@media (max-width: 56.25rem) {
     main.login-page {
         grid-template-columns: 1fr;
     }
 
     .login-image {
         order: 1;
-        padding: 120px 5% 50px 5%;
+        padding: 7.5rem 5% 3.125rem 5%;
     }
 
     main.login-page section {
         order: 2;
-        padding: 50px 8%;
+        padding: 3.125rem 8%;
     }
 
     main.login-page section h1 {
-        font-size: 70px;
+        font-size: 4.375rem;
     }
 }
