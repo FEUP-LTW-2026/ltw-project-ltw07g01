@@ -86,7 +86,7 @@
             <a href="dashboard.php"  class="nav-popup-link <?= $activePage === 'home'       ? 'active' : '' ?>"><i class="fa fa-home"></i> Home</a>
             <a href="<?= htmlspecialchars($profileUrl) ?>" class="nav-popup-link <?= $activePage === 'profile'    ? 'active' : '' ?>"><i class="fa fa-user"></i> Profile</a>
             <a href="schedule.php"   class="nav-popup-link <?= $activePage === 'schedule'   ? 'active' : '' ?>"><i class="fa fa-calendar"></i> Schedule</a>
-            <a href="facilities.php" class="nav-popup-link <?= $activePage === 'facilities' ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Facilities</a>
+            <a href="equipment.php" class="nav-popup-link <?= $activePage === 'equipment' ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
             <a href="locations.php"  class="nav-popup-link <?= $activePage === 'locations'  ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
             <a href="membership.php" class="nav-popup-link <?= $activePage === 'membership' ? 'active' : '' ?>"><i class="fa fa-id-card"></i> Membership</a>
             <a href="about.php"      class="nav-popup-link <?= $activePage === 'about'      ? 'active' : '' ?>"><i class="fa fa-circle-info"></i> About Us</a>
