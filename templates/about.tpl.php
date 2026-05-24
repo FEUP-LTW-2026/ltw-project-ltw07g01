@@ -1,4 +1,4 @@
-<?php function drawAboutUsPage(object $session) { ?>
+<?php function drawAboutUsPage(object $session, object $db) { ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,13 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us | Cubo Gym</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/about.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
-<?php drawHeader($session); ?>
+<?php if ($session->isLoggedIn()): ?>
+    <?php drawDashNavbar($session, $db, 'about'); ?>
+<?php else: ?>
+    <?php drawHeader($session); ?>
+<?php endif; ?>
 
 <main class="about-page">
 

@@ -6,7 +6,11 @@
     require_once('../templates/index.tpl.php');
 
     $session = new Session();
+
+    if ($session->isLoggedIn()) {
+        header('Location: /pages/dashboard.php');
+        exit();
+    }
 ?>
 
 <?php drawIndexPage($session); ?>
-

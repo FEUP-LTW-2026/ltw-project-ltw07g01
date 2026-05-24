@@ -23,15 +23,9 @@
             </div>
 
             <div class="hero-buttons">
-                <?php if ($session->isLoggedIn()): ?>
-                    <p class="hero-slogan">ALL LEVELS. ALL GOALS. ONE GYM.</p>
-                
-                <?php else: ?>
-                    <a href="/actions/login.php">LOG IN</a>
-                    <div class="hero-divider"></div>
-                    <a href="/actions/register.php">SIGN UP</a>
-                
-                <?php endif; ?>
+                <a href="/actions/login.php">LOG IN</a>
+                <div class="hero-divider"></div>
+                <a href="/actions/register.php">SIGN UP</a>
             </div>
         </section>
 

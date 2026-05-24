@@ -9,7 +9,7 @@ require_once(__DIR__ . '/../templates/register.tpl.php');
 $session = new Session();
 
 if ($session->isLoggedIn()) {
-    header('Location: /pages/profile.php');
+    header('Location: /pages/dashboard.php');
     exit();
 }
 
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $session->setId($userId);
             $session->setName($firstName);
 
-            header('Location: /pages/index.php');
+            header('Location: /pages/dashboard.php');
             exit();
         }
     }

@@ -25,4 +25,4 @@ $stmt = $db->prepare('
 $stmt->execute();
 $equipment = $stmt->fetchAll();
 
-drawEquipmentPage($session, $equipment);
+drawEquipmentPage($session, $db, $equipment);

@@ -15,6 +15,7 @@ $db = getDatabaseConnection();
     <title>Membership | Cubo Gym</title>
     <link rel="stylesheet" href="../css/membership.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>

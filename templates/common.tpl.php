@@ -36,7 +36,7 @@
     $profilePhoto = '../images/profile_pic.webp';
     $fullName = '';
     $username = '';
-    $profileUrl = 'profile.php';
+    $profileUrl = '/pages/profile.php';
 
     if ($userId) {
         $role = null;
@@ -54,12 +54,12 @@
             $username = $u['username'];
         }
         if (isset($role) && $role === 'trainer') {
-            $profileUrl = 'trainer-profile.php?id=' . $userId;
+            $profileUrl = '/pages/trainer-profile.php?id=' . $userId;
         }
     }
     ?>
     <header class="dash-navbar">
-        <a href="dashboard.php" class="logo">
+        <a href="/pages/dashboard.php" class="logo">
             <img src="/images/logo.png" alt="CUBO GYM logo">
         </a>
         <div class="dash-navbar-right">
@@ -83,15 +83,15 @@
             </div>
         </div>
         <nav class="nav-popup-links">
-            <a href="dashboard.php"  class="nav-popup-link <?= $activePage === 'home'       ? 'active' : '' ?>"><i class="fa fa-home"></i> Home</a>
+            <a href="/pages/dashboard.php"  class="nav-popup-link <?= $activePage === 'home'       ? 'active' : '' ?>"><i class="fa fa-home"></i> Home</a>
             <a href="<?= htmlspecialchars($profileUrl) ?>" class="nav-popup-link <?= $activePage === 'profile'    ? 'active' : '' ?>"><i class="fa fa-user"></i> Profile</a>
-            <a href="schedule.php"   class="nav-popup-link <?= $activePage === 'schedule'   ? 'active' : '' ?>"><i class="fa fa-calendar"></i> Schedule</a>
-            <a href="equipment.php" class="nav-popup-link <?= $activePage === 'equipment' ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
-            <a href="locations.php"  class="nav-popup-link <?= $activePage === 'locations'  ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
-            <a href="membership.php" class="nav-popup-link <?= $activePage === 'membership' ? 'active' : '' ?>"><i class="fa fa-id-card"></i> Membership</a>
-            <a href="about.php"      class="nav-popup-link <?= $activePage === 'about'      ? 'active' : '' ?>"><i class="fa fa-circle-info"></i> About Us</a>
+            <a href="/pages/schedule.php"   class="nav-popup-link <?= $activePage === 'schedule'   ? 'active' : '' ?>"><i class="fa fa-calendar"></i> Schedule</a>
+            <a href="/pages/equipment.php" class="nav-popup-link <?= $activePage === 'equipment' ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
+            <a href="/pages/locations.php"  class="nav-popup-link <?= $activePage === 'locations'  ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
+            <a href="/pages/membership.php" class="nav-popup-link <?= $activePage === 'membership' ? 'active' : '' ?>"><i class="fa fa-id-card"></i> Membership</a>
+            <a href="/pages/about.php"      class="nav-popup-link <?= $activePage === 'about'      ? 'active' : '' ?>"><i class="fa fa-circle-info"></i> About Us</a>
             <hr class="nav-popup-divider">
-            <a href="logout.php" class="nav-popup-link nav-popup-link--logout"><i class="fa fa-right-from-bracket"></i> Logout</a>
+            <a href="/actions/logout.php" class="nav-popup-link nav-popup-link--logout"><i class="fa fa-right-from-bracket"></i> Logout</a>
         </nav>
     </div>
     <script src="../js/nav.js"></script>
