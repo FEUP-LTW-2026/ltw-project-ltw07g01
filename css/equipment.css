@@ -1,32 +1,32 @@
 .equipment-page {
     min-height: 100vh;
     background: linear-gradient(to bottom, black, #2a2a2a, black);
-    padding-top: 120px;
+    padding-top: 7.5rem;
     font-family: 'League Gothic', sans-serif;
 }
 
 .equipment-hero {
     text-align: center;
-    padding: 60px 10%;
+    padding: 3.75rem 10%;
 }
 
 .equipment-hero h1 {
     color: #00bfa6;
-    font-size: 90px;
+    font-size: 5.625rem;
     font-weight: normal;
-    padding-bottom: 20px;
+    padding-bottom: 1.25rem;
 }
 
 .equipment-hero p {
     color: white;
-    font-size: 28px;
+    font-size: 1.75rem;
 }
 
 .equipment-filters {
     display: flex;
     justify-content: center;
-    gap: 25px;
-    padding: 0 10% 20px;
+    gap: 1.5625rem;
+    padding: 0 10% 1.25rem;
 }
 
 
@@ -38,60 +38,60 @@
 }
 
 .equipment-filters select {
-    padding: 12px 20px;
+    padding: 0.75rem 1.25rem;
     text-align: center;
     background-color: black;
-    border: 2px solid #00bfa6;
+    border: 0.125rem solid #00bfa6;
     color: white;
     font-family: 'League Gothic', sans-serif;
-    font-size: 22px;
+    font-size: 1.375rem;
 }
 
 .equipment-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 35px;
-    padding: 40px 10% 90px;
+    gap: 2.1875rem;
+    padding: 2.5rem 10% 5.625rem;
 }
 
 
 .equipment-card {
     background-color: #d9d9d9;
-    padding: 35px;
-    border-left: 8px solid #00bfa6;
+    padding: 2.1875rem;
+    border-left: 0.5rem solid #00bfa6;
 }
 
 .equipment-card h2 {
     color: #4f4f4f;
-    font-size: 42px;
+    font-size: 2.625rem;
     font-weight: normal;
 }
 
 .equipment-card p {
     color: #4f4f4f;
-    font-size: 24px;
-    margin: 10px 0;
+    font-size: 1.5rem;
+    margin: 0.625rem 0;
 }
 
 .status {
     display: inline-block;
-    margin-top: 20px;
-    padding: 8px 20px;
-    border-radius: 40px;
-    font-size: 22px;
+    margin-top: 1.25rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 2.5rem;
+    font-size: 1.375rem;
 }
 
 .status.available {
     color: #00bfa6;
-    border: 2px solid #00bfa6;
+    border: 0.125rem solid #00bfa6;
 }
 
 .status.unavailable {
     color: #ff4d4d;
-    border: 2px solid #ff4d4d;
+    border: 0.125rem solid #ff4d4d;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 56.25rem) {
     .equipment-filters {
         flex-direction: column;
     }
