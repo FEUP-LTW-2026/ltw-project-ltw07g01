@@ -160,11 +160,12 @@ CREATE TABLE trainer_specializations
 
 CREATE TABLE memberships
 (
-    id                 INTEGER PRIMARY KEY AUTOINCREMENT,
-    client_id          INTEGER NOT NULL,
-    is_classes_enabled INTEGER NOT NULL DEFAULT 0,
-    start_date         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    end_date           TIMESTAMP,
+    client_id       INTEGER PRIMARY KEY,
+    gym_plan        TEXT CHECK(gym_plan IN ('basic', 'pro', 'ultra')),
+    gym_start       TIMESTAMP,
+    gym_end         TIMESTAMP,
+    pilates_classes INTEGER NOT NULL DEFAULT 0,
+    cycling_classes INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (client_id)
         REFERENCES clients(user_id)
         ON DELETE CASCADE ON UPDATE NO ACTION
@@ -265,7 +266,6 @@ CREATE INDEX IFK_equipment_gym         ON equipment (gym_id);
 CREATE INDEX IFK_classes_class_type    ON classes (class_type_id);
 CREATE INDEX IFK_classes_gym           ON classes (gym_id);
 CREATE INDEX IFK_classes_trainer       ON classes (trainer_id);
-CREATE INDEX IFK_memberships_client    ON memberships (client_id);
 CREATE INDEX IFK_reviews_client        ON reviews (client_id);
 CREATE INDEX IFK_reviews_class         ON reviews (class_id);
 CREATE INDEX IFK_gym_visits_client     ON gym_visits (client_id);
@@ -329,8 +329,8 @@ INSERT INTO clients (user_id, preferred_gym_id, archetype_id, body_weight, heigh
 INSERT INTO client_gyms (client_id, gym_id, is_primary) VALUES (3, 1, 1);
 
 -- Membership para joao.costa
-INSERT INTO memberships (client_id, is_classes_enabled, start_date)
-VALUES (3, 1, '2024-01-15');
+INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, pilates_classes, cycling_classes)
+VALUES (3, 'pro', '2024-01-15', '2025-01-15', 5, 3);
 
 -- Visitas ao ginásio
 INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)

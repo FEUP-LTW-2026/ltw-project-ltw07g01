@@ -27,6 +27,10 @@ $db = getDatabaseConnection();
     <?php drawHeader($session); ?>
 <?php endif; ?>
 
+<?php if (isset($_GET['subscribed'])): ?>
+    <p class="subscribe-success">Your plan has been activated successfully!</p>
+<?php endif; ?>
+
 <?php drawMemberships($session); ?>
 
 <?php drawFooter(); ?>

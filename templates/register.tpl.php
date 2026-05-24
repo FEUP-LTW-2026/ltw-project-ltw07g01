@@ -27,7 +27,7 @@
             <p class="login-error"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
-        <form method="POST" action="/pages/register.php">
+        <form method="POST" action="/actions/register.php">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" required>
 
