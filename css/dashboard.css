@@ -22,6 +22,8 @@ header.dash-navbar {
 }
 
 header.dash-navbar .logo img {
+    height: 5.3125rem;
+    width: auto;
 }
 
 .dash-navbar-right {
@@ -40,8 +42,8 @@ header.dash-navbar .logo img {
 }
 
 .dash-nav-pfp {
-    width: 3rem;
-    height: 3rem;
+    width: 3.5rem;
+    height: 3.5rem;
     border-radius: 0.75rem;
     object-fit: cover;
     border: 0.125rem solid var(--accent);
