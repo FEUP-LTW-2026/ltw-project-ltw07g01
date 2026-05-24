@@ -27,9 +27,9 @@
                     <p class="hero-slogan">ALL LEVELS. ALL GOALS. ONE GYM.</p>
                 
                 <?php else: ?>
-                    <a href="login.php">LOG IN</a>
+                    <a href="/actions/login.php">LOG IN</a>
                     <div class="hero-divider"></div>
-                    <a href="register.php">SIGN UP</a>
+                    <a href="/actions/register.php">SIGN UP</a>
                 
                 <?php endif; ?>
             </div>

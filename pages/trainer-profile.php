@@ -9,7 +9,7 @@ require_once(__DIR__ . '/../templates/common.tpl.php');
 $db = getDatabaseConnection();
 
 if (!$session->isLoggedIn()) {
-    header('Location: login.php');
+    header('Location: /actions/login.php');
     exit;
 }
 
@@ -29,7 +29,7 @@ $stmt->execute([':id' => $userId]);
 $user = $stmt->fetch();
 
 if (!$user) {
-    header('Location: login.php');
+    header('Location: /actions/login.php');
     exit;
 }
 

@@ -10,7 +10,7 @@ $db = getDatabaseConnection();
 $currentUserId = $session->isLoggedIn() ? (int)$session->getId() : 3; // 3 = test client fallback
 
 if (!$currentUserId) {
-    header('Location: login.php');
+    header('Location: /actions/login.php');
     exit;
 }
 
