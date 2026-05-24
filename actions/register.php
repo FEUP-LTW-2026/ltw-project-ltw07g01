@@ -16,14 +16,16 @@ if ($session->isLoggedIn()) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
-    $email = trim($_POST['email']);
-    $firstName = trim($_POST['first_name']);
-    $lastName = trim($_POST['last_name']);
-    $password = $_POST['password'];
-    $confirmPassword = $_POST['confirm_password'];
+    $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $firstName = trim($_POST['first_name'] ?? '');
+    $lastName = trim($_POST['last_name'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $confirmPassword = $_POST['confirm_password'] ?? '';
 
-    if ($password !== $confirmPassword) {
+    if ($username === '' || $email === '' || $firstName === '' || $lastName === '' || $password === '') {
+        $error = 'Please fill in all fields.';
+    } elseif ($password !== $confirmPassword) {
         $error = 'Passwords do not match.';
     } else {
         $db = getDatabaseConnection();
