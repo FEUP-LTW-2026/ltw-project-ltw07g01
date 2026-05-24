@@ -27,7 +27,7 @@
             <p class="login-error"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
-        <form method="POST" action="login.php">
+        <form method="POST" action="/actions/login.php">
 
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
@@ -41,7 +41,7 @@
 
         <p class="login-register">
             Don't have an account?
-            <a href="register.php">Sign up</a>
+            <a href="/actions/register.php">Sign up</a>
         </p>
     </section>
 
