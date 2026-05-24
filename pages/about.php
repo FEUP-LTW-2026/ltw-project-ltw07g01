@@ -8,4 +8,6 @@ require_once(__DIR__ . '/../database/connection.db.php');
 require_once(__DIR__ . '/../templates/common.tpl.php');
 require_once(__DIR__ . '/../templates/about.tpl.php');
 
-drawAboutUsPage($session);
+$db = getDatabaseConnection();
+
+drawAboutUsPage($session, $db);
