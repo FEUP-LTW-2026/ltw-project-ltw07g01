@@ -14,4 +14,7 @@ if ($session->isLoggedIn()) {
 
 drawHeader($session, ['index']);
 drawIndexPage($session);
+?>
+<script src="../js/index.js"></script>
+<?php
 drawFooter();
