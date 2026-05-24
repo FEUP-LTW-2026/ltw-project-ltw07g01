@@ -26,7 +26,7 @@
                 <li>Free schedule access</li>
                 <li>Training app included</li>
             </ul>
-            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=gym-basic' : '/actions/login.php' ?>" class="plan-btn">GET STARTED</a>
+            <a href="<?= $session->isLoggedIn() ? '/actions/subscribe.php?plan=gym-basic' : '/actions/login.php' ?>" class="plan-btn">GET STARTED</a>
         </article>
         <article class="plan plan-popular">
             <span class="popular-badge">MOST POPULAR</span>
@@ -38,7 +38,7 @@
                 <li>Premium classes</li>
                 <li>Nutritional consulting</li>
             </ul>
-            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=gym-pro' : '/actions/login.php' ?>" class="plan-btn">GET STARTED</a>
+            <a href="<?= $session->isLoggedIn() ? '/actions/subscribe.php?plan=gym-pro' : '/actions/login.php' ?>" class="plan-btn">GET STARTED</a>
         </article>
         <article class="plan">
             <h2>ULTRA</h2>
@@ -49,7 +49,7 @@
                 <li>Unlimited group classes</li>
                 <li>Monthly physical assessment</li>
             </ul>
-            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=gym-ultra' : '/actions/login.php' ?>" class="plan-btn">GET STARTED</a>
+            <a href="<?= $session->isLoggedIn() ? '/actions/subscribe.php?plan=gym-ultra' : '/actions/login.php' ?>" class="plan-btn">GET STARTED</a>
         </article>
     </div>
 </section>
@@ -67,7 +67,7 @@
                 <li>Mat included</li>
                 <li>Valid immediately</li>
             </ul>
-            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=pilates-1' : '/actions/login.php' ?>" class="plan-btn">BUY</a>
+            <a href="<?= $session->isLoggedIn() ? '/actions/subscribe.php?plan=pilates-1' : '/actions/login.php' ?>" class="plan-btn">BUY</a>
         </article>
         <article class="plan plan-popular">
             <span class="popular-badge">BEST VALUE</span>
@@ -79,7 +79,7 @@
                 <li>All locations</li>
                 <li>Valid for 3 months</li>
             </ul>
-            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=pilates-5' : '/actions/login.php' ?>" class="plan-btn">BUY</a>
+            <a href="<?= $session->isLoggedIn() ? '/actions/subscribe.php?plan=pilates-5' : '/actions/login.php' ?>" class="plan-btn">BUY</a>
         </article>
         <article class="plan">
             <h2>10 CLASSES</h2>
@@ -90,7 +90,7 @@
                 <li>Priority booking</li>
                 <li>Valid for 6 months</li>
             </ul>
-            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=pilates-10' : '/actions/login.php' ?>" class="plan-btn">BUY</a>
+            <a href="<?= $session->isLoggedIn() ? '/actions/subscribe.php?plan=pilates-10' : '/actions/login.php' ?>" class="plan-btn">BUY</a>
         </article>
     </div>
 </section>
@@ -108,7 +108,7 @@
                 <li>Bike reserved for you</li>
                 <li>Valid immediately</li>
             </ul>
-            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=cycling-1' : '/actions/login.php' ?>" class="plan-btn">BUY</a>
+            <a href="<?= $session->isLoggedIn() ? '/actions/subscribe.php?plan=cycling-1' : '/actions/login.php' ?>" class="plan-btn">BUY</a>
         </article>
         <article class="plan plan-popular">
             <span class="popular-badge">BEST VALUE</span>
@@ -120,7 +120,7 @@
                 <li>All locations</li>
                 <li>Valid for 3 months</li>
             </ul>
-            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=cycling-5' : '/actions/login.php' ?>" class="plan-btn">BUY</a>
+            <a href="<?= $session->isLoggedIn() ? '/actions/subscribe.php?plan=cycling-5' : '/actions/login.php' ?>" class="plan-btn">BUY</a>
         </article>
         <article class="plan">
             <h2>10 CLASSES</h2>
@@ -131,7 +131,7 @@
                 <li>Performance metrics included</li>
                 <li>Valid for 6 months</li>
             </ul>
-            <a href="<?= $session->isLoggedIn() ? 'subscribe.php?plan=cycling-10' : '/actions/login.php' ?>" class="plan-btn">BUY</a>
+            <a href="<?= $session->isLoggedIn() ? '/actions/subscribe.php?plan=cycling-10' : '/actions/login.php' ?>" class="plan-btn">BUY</a>
         </article>
     </div>
 </section>
