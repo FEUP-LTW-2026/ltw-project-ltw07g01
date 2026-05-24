@@ -26,7 +26,9 @@
                 <li>Free schedule access</li>
                 <li>Training app included</li>
             </ul>
+
             <a href="<?= $session->isLoggedIn() ? '/actions/subscribe.php?plan=gym-basic' : '/actions/login.php' ?>" class="plan-btn">GET STARTED</a>
+
         </article>
         <article class="plan plan-popular">
             <span class="popular-badge">MOST POPULAR</span>
