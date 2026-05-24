@@ -42,6 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<?php drawLoginPage($session, $error); ?>
+<?php
+drawHeader($session, ['login-register']);
+drawLoginPage($session, $error);
+drawFooter();
+
 
 

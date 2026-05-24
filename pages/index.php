@@ -1,16 +1,17 @@
 <?php
-    declare(strict_types=1);
+declare(strict_types=1);
 
-    require_once('../utils/session.php');
-    require_once('../templates/common.tpl.php');
-    require_once('../templates/index.tpl.php');
+require_once('../utils/session.php');
+require_once('../templates/common.tpl.php');
+require_once('../templates/index.tpl.php');
 
-    $session = new Session();
+$session = new Session();
 
-    if ($session->isLoggedIn()) {
-        header('Location: /pages/dashboard.php');
-        exit();
-    }
-?>
+if ($session->isLoggedIn()) {
+    header('Location: /pages/dashboard.php');
+    exit();
+}
 
-<?php drawIndexPage($session); ?>
+drawHeader($session, ['index']);
+drawIndexPage($session);
+drawFooter();

@@ -21,8 +21,9 @@ $stmt = $db->prepare('
     JOIN gym_locations ON equipment.gym_id = gym_locations.id
     ORDER BY gym_locations.name, equipment.body_part, equipment.name
 ');
-
 $stmt->execute();
 $equipment = $stmt->fetchAll();
 
-drawEquipmentPage($session, $db, $equipment);
+drawDashHeader($session, $db, 'equipment', ['equipment']);
+drawEquipment($equipment);
+drawFooter();
