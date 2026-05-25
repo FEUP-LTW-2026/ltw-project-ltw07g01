@@ -1,6 +1,6 @@
 body {
     font-family: 'League Gothic', sans-serif;
-    color: black;
+    color: black !important;
     background: linear-gradient(
             45deg,
             #FFFFFF 0%,
@@ -8,7 +8,7 @@ body {
             #FFFFFF 52%,
             #AFAFAF 75%,
             #FFFFFF 100%
-    );
+    ) !important;
 }
 
 section.type-section {
@@ -456,5 +456,16 @@ section.wrapper-perguntas details > div {
     .faq-item {
         max-width: 100%;
     }
+}
+
+p.credits-universal-note {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #222;
+    background: rgba(0, 191, 166, 0.12);
+    border-left: 0.25rem solid #00bfa6;
+    padding: 0.85rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.25rem;
 }
 
