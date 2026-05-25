@@ -29,7 +29,74 @@ if ($userId) {
 }
 $profileUrl = ($role === 'trainer') ? 'trainer-profile.php?id=' . $userId : 'profile.php';
 
-// enroll(POST)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? '') === 'review' && $role === 'client') {
+    header('Content-Type: application/json');
+    $classId = (int)($_POST['class_id'] ?? 0);
+    $rating  = (int)($_POST['rating'] ?? 0);
+    // limitar o comentario a 500 chars para nao encher a base de dados
+    $comment = mb_substr(trim($_POST['comment'] ?? ''), 0, 500);
+
+    if ($classId <= 0 || $rating < 1 || $rating > 5) {
+        echo json_encode(['ok' => false, 'error' => 'invalid']); exit;
+    }
+    $s = $db->prepare('SELECT 1 FROM client_classes WHERE client_id=? AND class_id=?');
+    $s->execute([$userId, $classId]);
+    if (!$s->fetch()) { echo json_encode(['ok' => false, 'error' => 'not_enrolled']); exit; }
+
+    // verificar que a aula ja aconteceu
+    $s = $db->prepare('SELECT class_type_id, trainer_id, schedule FROM classes WHERE id=?');
+    $s->execute([$classId]);
+    $cl = $s->fetch();
+    if (!$cl || $cl['schedule'] >= date('Y-m-d H:i:s')) {
+        echo json_encode(['ok' => false, 'error' => 'not_past']); exit;
+    }
+    $s = $db->prepare('SELECT COUNT(*) FROM reviews WHERE client_id=? AND class_id=?');
+    $s->execute([$userId, $classId]);
+    if ($s->fetchColumn()) { echo json_encode(['ok' => false, 'error' => 'already_reviewed']); exit; }
+
+    $db->prepare('INSERT INTO reviews (client_id, class_id, rating, comment) VALUES (?,?,?,?)')
+        ->execute([$userId, $classId, $rating, $comment ?: null]);
+
+    // recalcular a media para o par trainer+tipo de aula e devolver ao js
+    $s = $db->prepare(
+        'SELECT ROUND(AVG(r.rating),1) AS avg_rating, COUNT(*) AS review_count
+         FROM reviews r JOIN classes c2 ON c2.id = r.class_id
+         WHERE c2.trainer_id = ? AND c2.class_type_id = ?'
+    );
+    $s->execute([$cl['trainer_id'], $cl['class_type_id']]);
+    $agg = $s->fetch();
+    echo json_encode([
+        'ok'           => true,
+        'avg_rating'   => (float)($agg['avg_rating'] ?? 0),
+        'review_count' => (int)($agg['review_count'] ?? 0),
+    ]);
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? '') === 'cancel' && $role === 'client') {
+    header('Content-Type: application/json');
+    $classId = (int)($_POST['class_id'] ?? 0);
+    if ($classId <= 0) { echo json_encode(['ok' => false, 'error' => 'invalid']); exit; }
+
+    $s = $db->prepare('SELECT COUNT(*) FROM client_classes WHERE client_id=? AND class_id=?');
+    $s->execute([$userId, $classId]);
+    if (!$s->fetchColumn()) { echo json_encode(['ok' => false, 'error' => 'not_enrolled']); exit; }
+
+    $db->prepare('DELETE FROM client_classes WHERE client_id=? AND class_id=?')->execute([$userId, $classId]);
+
+    $s = $db->prepare('SELECT capacity, (SELECT COUNT(*) FROM client_classes WHERE class_id=c.id) AS enrolled FROM classes c WHERE id=?');
+    $s->execute([$classId]);
+    $cl = $s->fetch();
+    $newEnrolled = (int)$cl['enrolled'];
+    echo json_encode([
+        'ok'       => true,
+        'enrolled' => $newEnrolled,
+        'capacity' => (int)$cl['capacity'],
+        'spots'    => (int)$cl['capacity'] - $newEnrolled,
+    ]);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && $role === 'client') {
     header('Content-Type: application/json');
     $classId = (int)($_POST['class_id'] ?? 0);
@@ -66,11 +133,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && $role ===
     exit;
 }
 
-// week computaton 
 $weekOffset = isset($_GET['w']) ? max(-2, min(8, (int)$_GET['w'])) : 0;
 $today = new DateTime('today');
 $weekMon = new DateTime('monday this week');
-$weekMon->modify("+{$weekOffset} weeks");
+$weekMon->modify("{$weekOffset} weeks");
 
 $days = [];
 for ($i = 0; $i < 7; $i++) {
@@ -84,7 +150,8 @@ $defaultDay = ($weekOffset === 0 && $today >= $weekMon && $today <= $weekSun)
     ? $today->format('Y-m-d')
     : $weekMon->format('Y-m-d');
 
-//fetch week classes
+// as reviews sao agrupadas por trainer+tipo de aula, nao por aula especifica
+// assim as reviews antigas do mesmo trainer aparecem nas aulas futuras do mesmo tipo
 $stmt = $db->prepare('
     SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min, cl.capacity,
            cl.trainer_id,
@@ -92,13 +159,20 @@ $stmt = $db->prepare('
            u.first_name AS trainer_first, u.last_name AS trainer_last,
            u.profile_photo AS trainer_photo,
            (SELECT COUNT(*) FROM client_classes cc WHERE cc.class_id = cl.id) AS enrolled,
-           ROUND(COALESCE((SELECT AVG(r.rating) FROM reviews r WHERE r.class_id = cl.id), 0), 1) AS avg_rating,
-           (SELECT COUNT(*) FROM reviews r WHERE r.class_id = cl.id) AS review_count
+           ROUND(COALESCE((SELECT AVG(r2.rating) FROM reviews r2
+               JOIN classes c2 ON c2.id = r2.class_id
+               WHERE c2.trainer_id = cl.trainer_id AND c2.class_type_id = cl.class_type_id), 0), 1) AS avg_rating,
+           (SELECT COUNT(*) FROM reviews r2
+               JOIN classes c2 ON c2.id = r2.class_id
+               WHERE c2.trainer_id = cl.trainer_id AND c2.class_type_id = cl.class_type_id) AS review_count,
+           my_rev.rating  AS my_rating,
+           my_rev.comment AS my_comment
     FROM classes cl
     JOIN class_types ct ON ct.id = cl.class_type_id
     LEFT JOIN gym_locations gl ON gl.id = cl.gym_id
     LEFT JOIN trainers t ON t.user_id = cl.trainer_id
     LEFT JOIN users u ON u.id = t.user_id
+    LEFT JOIN reviews my_rev ON my_rev.class_id = cl.id AND my_rev.client_id = :uid
     WHERE date(cl.schedule) BETWEEN :start AND :end
     AND (:trainer_filter IS NULL OR cl.trainer_id = :trainer_filter)
     ORDER BY cl.schedule ASC
@@ -107,6 +181,7 @@ $stmt->execute([
     ':start'          => $weekMon->format('Y-m-d'),
     ':end'            => $weekSun->format('Y-m-d'),
     ':trainer_filter' => ($role === 'trainer') ? $userId : null,
+    ':uid'            => ($role === 'client') ? $userId : null,
 ]);
 $allClasses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -134,7 +209,6 @@ foreach ($allClasses as $c) {
     }
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────
 $typeColors = [
     'Yoga'                    => '#a78bfa',
     'Cycling'                 => '#60a5fa',
@@ -159,7 +233,6 @@ function timeOfDay(string $schedule): string {
     return 'evening';
 }
 
-//dynamic HTML
 $buildDynamicHTML = function() use ($days, $classesByDay, $today, $enrolledIds, $typeColors, $typeDescriptions, $role, $allClasses) {
     $usedTypes = array_unique(array_column($allClasses, 'class_name'));
     sort($usedTypes);
@@ -348,7 +421,6 @@ $buildDynamicHTML = function() use ($days, $classesByDay, $today, $enrolledIds, 
     return ob_get_clean();
 };
 
-// week data refresh
 if (!empty($_GET['ajax'])) {
     $html = $buildDynamicHTML();
 
@@ -375,6 +447,8 @@ if (!empty($_GET['ajax'])) {
                 'description'  => $typeDescriptions[$c['class_name']] ?? '',
                 'is_enrolled'  => in_array((int)$c['id'], $enrolledIds),
                 'is_full'      => ((int)$c['capacity'] - (int)$c['enrolled']) <= 0,
+                'my_rating'    => isset($c['my_rating']) ? (int)$c['my_rating'] : null,
+                'my_comment'   => $c['my_comment'] ?? null,
             ];
         }, $allClasses)
     ) : new stdClass();
@@ -431,10 +505,8 @@ if (!empty($_GET['ajax'])) {
     <span class="sc-filter-count" id="filterCount"></span>
 </div>
 
-<!-- main -->
 <main class="sc-page <?= $role ? 'sc-has-navbar' : '' ?>">
 
-    <!-- title -->
     <div class="sc-title-row">
         <div>
             <h1 class="sc-title">Schedule</h1>
@@ -446,7 +518,6 @@ if (!empty($_GET['ajax'])) {
         </div>
     </div>
 
-    <!--week navigator -->
     <div class="sc-week-nav">
         <button class="sc-week-arrow <?= $weekOffset <= -2 ? 'sc-week-arrow--disabled' : '' ?>"
                 id="scPrevBtn" <?= $weekOffset <= -2 ? 'disabled' : '' ?> aria-label="Previous week">
@@ -467,14 +538,12 @@ if (!empty($_GET['ajax'])) {
         </button>
     </div>
 
-    <!-- days strip, panels,legend (dynamic)-->
     <div id="scDynamicContent">
         <?= $buildDynamicHTML() ?>
     </div>
 
 </main>
 
-<!-- detail modal -->
 <div class="sc-modal" id="scModal" aria-hidden="true">
     <div class="sc-modal-backdrop" id="scModalBackdrop"></div>
     <div class="sc-modal-panel" id="scModalPanel">
@@ -534,7 +603,6 @@ if (!empty($_GET['ajax'])) {
     </div>
 </div>
 
-<!--JS data bridge -->
 <script>
 var SC = {
     isClient    : <?= json_encode($role === 'client') ?>,
@@ -564,6 +632,8 @@ var SC = {
                     'description'  => $typeDescriptions[$c['class_name']] ?? '',
                     'is_enrolled'  => in_array((int)$c['id'], $enrolledIds),
                     'is_full'      => ((int)$c['capacity'] - (int)$c['enrolled']) <= 0,
+                    'my_rating'    => isset($c['my_rating']) ? (int)$c['my_rating'] : null,
+                    'my_comment'   => $c['my_comment'] ?? null,
                 ];
             }, $allClasses)
         ) : new stdClass()

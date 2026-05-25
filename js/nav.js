@@ -1,4 +1,3 @@
-/* nav.js — dash-navbar popup, shared across all logged-in pages */
 (function () {
     'use strict';
 

@@ -17,7 +17,7 @@ $currentUserId = (int)$session->getId();
 $userId        = (isset($_GET['id']) && (int)$_GET['id'] > 0) ? (int)$_GET['id'] : $currentUserId;
 $isOwnProfile  = ($userId === $currentUserId);
 
-// --- Dados do trainer ---
+
 $stmt = $db->prepare(
     'SELECT u.username, u.email, u.first_name, u.last_name, u.profile_photo, u.bio AS user_bio, u.created_at,
             t.bio AS trainer_bio, t.certifications
@@ -33,7 +33,7 @@ if (!$user) {
     exit;
 }
 
-// --- Gyms do trainer ---
+
 $stmt = $db->prepare(
     'SELECT gl.name, gl.city
      FROM trainer_locations tl
@@ -43,7 +43,7 @@ $stmt = $db->prepare(
 $stmt->execute([':id' => $userId]);
 $trainerGyms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// --- Specializations ---
+
 $stmt = $db->prepare(
     'SELECT ct.id, ct.name
      FROM trainer_specializations ts
@@ -54,7 +54,7 @@ $stmt = $db->prepare(
 $stmt->execute([':id' => $userId]);
 $specializations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// --- Certifications (newline-separated) ---
+
 $certifications = array_values(array_filter(array_map('trim', explode("\n", $user['trainer_bio'] !== null ? ($user['certifications'] ?? '') : ($user['certifications'] ?? '')))));
 
 $fullName     = $user['first_name'] . ' ' . $user['last_name'];

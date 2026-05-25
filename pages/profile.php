@@ -18,7 +18,7 @@ if (!$currentUserId) {
 $viewId      = (isset($_GET['id']) && (int)$_GET['id'] > 0) ? (int)$_GET['id'] : $currentUserId;
 $isOwnProfile = ($viewId === $currentUserId);
 
-// --- Utilizador e gym ---
+
 $stmt = $db->prepare(
     'SELECT u.username, u.email, u.first_name, u.last_name, u.profile_photo, u.bio, u.created_at, c.preferred_gym_id, c.archetype_id, c.selected_badges, c.body_weight, c.height,
             gl.name AS gym_name, gl.city AS gym_city,
@@ -37,7 +37,7 @@ if (!$user) {
     exit;
 }
 
-// --- Membership ---
+
 $stmt = $db->prepare(
     'SELECT is_classes_enabled, start_date, end_date
      FROM memberships
@@ -48,17 +48,17 @@ $stmt = $db->prepare(
 $stmt->execute([':id' => $viewId]);
 $membership = $stmt->fetch();
 
-// --- Total visitas ---
+
 $stmt = $db->prepare('SELECT COUNT(*) FROM gym_visits WHERE client_id = :id');
 $stmt->execute([':id' => $viewId]);
 $totalVisits = (int)$stmt->fetchColumn();
 
-// --- Classes attended ---
+
 $stmt = $db->prepare('SELECT COUNT(*) FROM client_classes WHERE client_id = :id');
 $stmt->execute([':id' => $viewId]);
 $classesAttended = (int)$stmt->fetchColumn();
 
-// --- Total training time ---
+
 $stmt = $db->prepare(
     'SELECT SUM((julianday(checked_out) - julianday(checked_in)) * 1440) AS total_minutes
      FROM gym_visits
@@ -116,7 +116,7 @@ $selectedBadges = array_filter($availableBadges, function ($badge) use ($selecte
     return in_array($badge['code'], $selectedBadgeCodes, true);
 });
 
-// --- Chart range ---
+
 $daysRange = isset($_GET['days']) && in_array((int)$_GET['days'], [7, 30], true)
     ? (int)$_GET['days']
     : 7;
@@ -134,7 +134,7 @@ $stmt = $db->prepare(
 $stmt->execute([':id' => $viewId, ':rangeStart' => $rangeStart]);
 $periodVisits = $stmt->fetchAll();
 
-// --- Calcular minutos por dia ---
+
 $minutesByDay = array_fill(0, $daysRange, 0);
 $periodMinutes = 0;
 $daysLabels = [];
@@ -184,7 +184,7 @@ $memberTag      = $membership
     ? ($membership['is_classes_enabled'] ? 'ULTRA MEMBER' : 'MEMBER')
     : 'NO MEMBERSHIP';
 
-// --- Badges ---
+
 $badges = [];
 
 if ($classesAttended >= 20) {

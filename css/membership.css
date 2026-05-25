@@ -350,7 +350,6 @@ section.comparison table tbody tr:hover .icon-xmark {
 
 .table-wrapper {
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 
