@@ -38,11 +38,7 @@ if (!$user) {
 
 
 $stmt = $db->prepare(
-<<<<<<< HEAD
-    'SELECT gym_plan, gym_start, gym_end, pilates_classes, cycling_classes
-=======
     'SELECT gym_plan, gym_start, gym_end
->>>>>>> 2996d1601dc6cfec2f467569e18cb9453a97a731
      FROM memberships
      WHERE client_id = :id AND (gym_end IS NULL OR gym_end > CURRENT_TIMESTAMP)
      ORDER BY gym_start DESC
