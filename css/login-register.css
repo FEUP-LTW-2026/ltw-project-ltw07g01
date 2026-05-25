@@ -103,7 +103,6 @@ main.login-page section button:hover {
     text-decoration: underline;
 }
 
-/* RESPONSIVE */
 @media (max-width: 56.25rem) {
     main.login-page {
         grid-template-columns: 1fr;

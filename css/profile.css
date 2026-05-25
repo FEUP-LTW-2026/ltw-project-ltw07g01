@@ -7,7 +7,6 @@
     --border: 0.0625rem solid #222;
 }
 
-
 body {
     background: linear-gradient( to bottom, var(--bg-color) 0%, grey 40%, var(--bg-color) 100%);
     color: var(--text-main);
@@ -40,8 +39,6 @@ main.profile-page {
         align-items: start;
     }
 }
-
-/* card principal*/
 
 .sidebar-container {
     padding-top: 0;
@@ -134,17 +131,13 @@ main.profile-page {
     padding-left: 0.9375rem;
     margin: 0.9375rem 0;
     font-size: 1.1rem;
-
 }
 
-
-/* info*/
 .profile-details {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.625rem;
     padding-bottom: 1.25rem;
-
 }
 
 .metrics-section {
@@ -332,7 +325,6 @@ main.profile-page {
     margin-top: 0.3125rem;
 }
 
-/*hall of fame*/
 .stats-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -359,8 +351,6 @@ main.profile-page {
     color: var(--text-dim);
 }
 
-
-/* badges*/
 .badge-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(6.875rem, 1fr));
@@ -380,26 +370,22 @@ main.profile-page {
     gap: 0.625rem;
     font-size: 2.5rem;
     position: relative;
-    transition: 0.3s; 
+    transition: 0.3s;
     color: var(--text-dim);
 }
 
 .badge:hover {
     border-color: var(--accent);
     transform: translateY(-0.3125rem);
-    color: var(--text-main)
+    color: var(--text-main);
 }
-
 
 .badge::after {
     content: attr(title);
     font-size: 0.8rem;
     text-align: center;
-    
 }
 
-
-/* gráfico de barras*/
 .stats-section {
     background: var(--card-bg);
     border: var(--border);
@@ -428,13 +414,25 @@ main.profile-page {
     letter-spacing: 0.08em;
 }
 
+
 .stats-filter {
     background: var(--card-bg);
     color: var(--text-main);
-    border: var(--border);
-    padding: 0.5rem 0.625rem;
-    border-radius: 0.625rem;
-    font-size: 0.95rem;
+    border: 0.0625rem solid #333;
+    padding: 0.3125rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.stats-filter:hover {
+    border-color: var(--accent);
+}
+
+.stats-filter option {
+    background: #1a1a1a;
+    color: white;
 }
 
 .chart-badge {
@@ -459,26 +457,6 @@ main.profile-page {
     color: var(--text-dim);
     font-size: 0.9rem;
     margin: 0.3125rem;
-}
-
-.stats-filter {
-    background-color: var(--card-bg);
-    color: var(--text-main);
-    border: 0.0625rem solid #333;
-    padding: 0.3125rem 0.3125rem;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.stats-filter:hover {
-    border-color: var(--accent);
-}
-
-.stats-filter option {
-    background: #1a1a1a;
-    color: white;
 }
 
 .chart-container {
@@ -521,7 +499,6 @@ main.profile-page {
     transform: scaleX(1.1);
 }
 
-
 .bar::after {
     content: attr(data-time);
     position: absolute;
@@ -543,8 +520,6 @@ main.profile-page {
     color: var(--text-dim);
 }
 
-
-/*botões*/
 .btn-edit-profile {
     margin-top: 0.625rem;
     background: var(--text-main);
@@ -563,7 +538,7 @@ main.profile-page {
     background: var(--accent);
     color: var(--text-main);
 }
-/* --- Profile photo upload (edit page) --- */
+
 .profile-avatar--edit {
     position: relative;
     display: inline-block;
@@ -592,7 +567,6 @@ main.profile-page {
     opacity: 1;
 }
 
-/* --- Password section (edit page) --- */
 .password-section {
     background: var(--card-bg);
     border: var(--border);
@@ -615,7 +589,6 @@ main.profile-page {
     margin-bottom: 0.625rem;
 }
 
-/* --- Bio textarea (edit page) --- */
 .bio-textarea {
     resize: vertical;
     min-height: 5.625rem;
@@ -635,12 +608,10 @@ main.profile-page {
     grid-column: 1 / -1;
 }
 
-/* --- Trainer tag --- */
 .trainer-tag {
     background: #7c3aed;
 }
 
-/* --- Specializations (profile view) --- */
 .specializations-list {
     display: flex;
     flex-wrap: wrap;
@@ -666,7 +637,6 @@ main.profile-page {
     opacity: 0.5;
 }
 
-/* --- Certifications (profile view) --- */
 .certifications-section {
     margin-bottom: 1.25rem;
 }
@@ -711,7 +681,6 @@ main.profile-page {
     font-style: italic;
 }
 
-/* --- Specializations toggle (edit page) --- */
 .specializations-section,
 .certifications-edit-section,
 .gyms-section {
@@ -773,12 +742,10 @@ main.profile-page {
     width: 100%;
 }
 
-/* --- Trainer theme: purple accent --- */
 body.trainer-theme {
     --accent: #7c3aed;
 }
 
-body.trainer-theme .btn-save-changes:hover,
 body.trainer-theme .btn-save-changes {
     background: #7c3aed;
     color: #fff;

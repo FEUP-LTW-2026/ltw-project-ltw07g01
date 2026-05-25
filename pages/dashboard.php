@@ -39,7 +39,6 @@ if (!$role) {
     exit;
 }
 
-//dados do user
 $stmt = $db->prepare('SELECT username, first_name, last_name, profile_photo FROM users WHERE id = :id');
 $stmt->execute([':id' => $userId]);
 $user = $stmt->fetch();
@@ -47,7 +46,6 @@ $profilePhoto = $user['profile_photo'] ?? '../images/profile_pic.webp';
 $fullName     = $user['first_name'] . ' ' . $user['last_name'];
 $profileUrl   = ($role === 'trainer') ? 'trainer-profile.php?id=' . $userId : 'profile.php';
 
-//enrolled students for a trainers class
 if (!empty($_GET['ajax']) && isset($_GET['class_id']) && $role === 'trainer') {
     $classId = (int)$_GET['class_id'];
     $s = $db->prepare(
@@ -76,11 +74,8 @@ if (!empty($_GET['ajax']) && isset($_GET['class_id']) && $role === 'trainer') {
     exit;
 }
 
-//client
-
 if ($role === 'client') {
 
-    //dados do client
     $stmt = $db->prepare(
         'SELECT c.body_weight, c.height, c.archetype_id, c.selected_badges,
                 c.preferred_gym_id, gl.name AS gym_name, gl.city AS gym_city,
@@ -93,17 +88,24 @@ if ($role === 'client') {
     $stmt->execute([':id' => $userId]);
     $clientData = $stmt->fetch();
 
-    //próximas aulas (inscritas)
     $stmt = $db->prepare(
-        'SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min,
+        'SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min, cl.capacity,
                 gl.name AS gym_name, gl.city AS gym_city,
-                u.first_name AS trainer_first, u.last_name AS trainer_last
+                cl.trainer_id,
+                u.first_name AS trainer_first, u.last_name AS trainer_last,
+                u.profile_photo AS trainer_photo,
+                (SELECT COUNT(*) FROM client_classes cc2 WHERE cc2.class_id = cl.id) AS enrolled,
+                ROUND(COALESCE((SELECT AVG(r.rating) FROM reviews r
+                    JOIN classes c2 ON c2.id = r.class_id
+                    WHERE c2.trainer_id = cl.trainer_id AND c2.class_type_id = cl.class_type_id), 0), 1) AS avg_rating,
+                (SELECT COUNT(*) FROM reviews r
+                    JOIN classes c2 ON c2.id = r.class_id
+                    WHERE c2.trainer_id = cl.trainer_id AND c2.class_type_id = cl.class_type_id) AS review_count
          FROM client_classes cc
          JOIN classes cl ON cl.id = cc.class_id
          JOIN class_types ct ON ct.id = cl.class_type_id
          LEFT JOIN gym_locations gl ON gl.id = cl.gym_id
-         LEFT JOIN trainers t ON t.user_id = cl.trainer_id
-         LEFT JOIN users u ON u.id = t.user_id
+         LEFT JOIN users u ON u.id = cl.trainer_id
          WHERE cc.client_id = :id AND cl.schedule > datetime(\'now\')
          ORDER BY cl.schedule ASC
          LIMIT 5'
@@ -111,7 +113,34 @@ if ($role === 'client') {
     $stmt->execute([':id' => $userId]);
     $upcomingClasses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    //visitas recentes
+    $stmt = $db->prepare(
+        'SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min, cl.capacity,
+                gl.name AS gym_name, gl.city AS gym_city,
+                cl.trainer_id,
+                u.first_name AS trainer_first, u.last_name AS trainer_last,
+                u.profile_photo AS trainer_photo,
+                (SELECT COUNT(*) FROM client_classes cc2 WHERE cc2.class_id = cl.id) AS enrolled,
+                ROUND(COALESCE((SELECT AVG(r.rating) FROM reviews r
+                    JOIN classes c2 ON c2.id = r.class_id
+                    WHERE c2.trainer_id = cl.trainer_id AND c2.class_type_id = cl.class_type_id), 0), 1) AS avg_rating,
+                (SELECT COUNT(*) FROM reviews r
+                    JOIN classes c2 ON c2.id = r.class_id
+                    WHERE c2.trainer_id = cl.trainer_id AND c2.class_type_id = cl.class_type_id) AS review_count,
+                my_rev.rating  AS my_rating,
+                my_rev.comment AS my_comment
+         FROM client_classes cc
+         JOIN classes cl ON cl.id = cc.class_id
+         JOIN class_types ct ON ct.id = cl.class_type_id
+         LEFT JOIN gym_locations gl ON gl.id = cl.gym_id
+         LEFT JOIN users u ON u.id = cl.trainer_id
+         LEFT JOIN reviews my_rev ON my_rev.class_id = cl.id AND my_rev.client_id = :uid
+         WHERE cc.client_id = :id AND cl.schedule <= datetime(\'now\')
+         ORDER BY cl.schedule DESC
+         LIMIT 5'
+    );
+    $stmt->execute([':id' => $userId, ':uid' => $userId]);
+    $recentClasses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     $stmt = $db->prepare(
         'SELECT gv.checked_in, gv.checked_out, gl.name AS gym_name, gl.city AS gym_city
          FROM gym_visits gv
@@ -123,7 +152,6 @@ if ($role === 'client') {
     $stmt->execute([':id' => $userId]);
     $recentVisits = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    //stats gerais
     $stmt = $db->prepare('SELECT COUNT(*) FROM gym_visits WHERE client_id = :id');
     $stmt->execute([':id' => $userId]);
     $totalVisits = (int)$stmt->fetchColumn();
@@ -140,7 +168,6 @@ if ($role === 'client') {
     $totalMinutes = (int)round((float)$stmt->fetchColumn());
     $totalHours   = round($totalMinutes / 60, 1);
 
-    // badges
     $selectedBadgeCodes = array_filter(array_map('trim', explode(',', $clientData['selected_badges'] ?? '')));
     $badgeCategories = [
         'classes' => [
@@ -176,17 +203,25 @@ if ($role === 'client') {
     $displayBadges = array_filter($earnedBadges, fn($b) => in_array($b['code'], $selectedBadgeCodes, true));
 }
 
-// trainer
 if ($role === 'trainer') {
 
-    // próximas aulas do trainer
     $stmt = $db->prepare(
         'SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min, cl.capacity,
                 gl.name AS gym_name, gl.city AS gym_city,
-                (SELECT COUNT(*) FROM client_classes cc WHERE cc.class_id = cl.id) AS enrolled
+                cl.trainer_id,
+                u.first_name AS trainer_first, u.last_name AS trainer_last,
+                u.profile_photo AS trainer_photo,
+                (SELECT COUNT(*) FROM client_classes cc WHERE cc.class_id = cl.id) AS enrolled,
+                ROUND(COALESCE((SELECT AVG(r.rating) FROM reviews r
+                    JOIN classes c2 ON c2.id = r.class_id
+                    WHERE c2.trainer_id = cl.trainer_id AND c2.class_type_id = cl.class_type_id), 0), 1) AS avg_rating,
+                (SELECT COUNT(*) FROM reviews r
+                    JOIN classes c2 ON c2.id = r.class_id
+                    WHERE c2.trainer_id = cl.trainer_id AND c2.class_type_id = cl.class_type_id) AS review_count
          FROM classes cl
          JOIN class_types ct ON ct.id = cl.class_type_id
          LEFT JOIN gym_locations gl ON gl.id = cl.gym_id
+         LEFT JOIN users u ON u.id = cl.trainer_id
          WHERE cl.trainer_id = :id AND cl.schedule > datetime(\'now\')
          ORDER BY cl.schedule ASC
          LIMIT 6'
@@ -194,7 +229,6 @@ if ($role === 'trainer') {
     $stmt->execute([':id' => $userId]);
     $trainerClasses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Total de alunos (inscritos em aulas deste trainer)
     $stmt = $db->prepare(
         'SELECT COUNT(DISTINCT cc.client_id)
          FROM client_classes cc
@@ -204,14 +238,12 @@ if ($role === 'trainer') {
     $stmt->execute([':id' => $userId]);
     $totalStudents = (int)$stmt->fetchColumn();
 
-    // Total de aulas dadas (passadas)
     $stmt = $db->prepare(
         'SELECT COUNT(*) FROM classes WHERE trainer_id = :id AND schedule < datetime(\'now\')'
     );
     $stmt->execute([':id' => $userId]);
     $classesTaught = (int)$stmt->fetchColumn();
 
-    // Rating médio
     $stmt = $db->prepare(
         'SELECT ROUND(AVG(r.rating), 1)
          FROM reviews r
@@ -221,7 +253,6 @@ if ($role === 'trainer') {
     $stmt->execute([':id' => $userId]);
     $avgRating = $stmt->fetchColumn() ?? '—';
 
-    // Clientes recentes
     $stmt = $db->prepare(
         'SELECT DISTINCT u.id AS user_id, u.first_name, u.last_name, u.username, u.profile_photo,
                 cc.enrolled_at
@@ -236,7 +267,6 @@ if ($role === 'trainer') {
     $stmt->execute([':id' => $userId]);
     $recentStudents = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Specializations
     $stmt = $db->prepare(
         'SELECT ct.name FROM trainer_specializations ts
          JOIN class_types ct ON ct.id = ts.class_type_id
@@ -246,8 +276,6 @@ if ($role === 'trainer') {
     $specializations = $stmt->fetchAll(PDO::FETCH_COLUMN);
 }
 
-
-// admin
 
 if ($role === 'admin') {
 
@@ -276,12 +304,11 @@ if ($role === 'admin') {
 
     $stmt = $db->prepare(
         'SELECT COUNT(*) FROM memberships
-         WHERE start_date >= datetime(\'now\', \'-30 days\')'
+         WHERE gym_start >= datetime(\'now\', \'-30 days\')'
     );
     $stmt->execute();
     $newMemberships = (int)$stmt->fetchColumn();
 
-    // Aulas mais populares
     $stmt = $db->prepare(
         'SELECT ct.name, COUNT(cc.client_id) AS enrollments
          FROM client_classes cc
@@ -294,7 +321,6 @@ if ($role === 'admin') {
     $stmt->execute();
     $popularClasses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    //membros mais recentes
     $stmt = $db->prepare(
         'SELECT u.first_name, u.last_name, u.username, u.profile_photo, u.created_at
          FROM users u
@@ -305,7 +331,6 @@ if ($role === 'admin') {
     $stmt->execute();
     $recentMembers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // ginásios e visitas
     $stmt = $db->prepare(
         'SELECT gl.name, gl.city, COUNT(gv.id) AS visit_count
          FROM gym_locations gl
@@ -317,7 +342,7 @@ if ($role === 'admin') {
     $gymStats = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
-<?php drawDashHeader($session, $db, 'home'); ?>
+<?php drawDashHeader($session, $db, 'home', in_array($role, ['client', 'trainer']) ? ['schedule'] : []); ?>
 
 <main class="dashboard-page dashboard-<?= $role ?>">
 
@@ -330,7 +355,6 @@ if ($role === 'admin') {
         </div>
     </div>
 
-<?php /* dashboard do cliente*/ ?>
 <?php if ($role === 'client'): ?>
 
     <!-- Stats row -->
@@ -367,7 +391,6 @@ if ($role === 'admin') {
 
     <div class="dash-grid-2">
 
-        <!--próximas Aulas -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-calendar-check"></i> Upcoming Classes</h2>
@@ -383,7 +406,9 @@ if ($role === 'admin') {
                     <?php foreach ($upcomingClasses as $cls):
                         $dt = new DateTime($cls['schedule']);
                     ?>
-                    <li class="dash-class-item">
+                    <li class="dash-class-item dash-class-item--clickable"
+                        data-class-id="<?= $cls['id'] ?>"
+                        onclick="openModal(<?= $cls['id'] ?>)">
                         <div class="class-date-block">
                             <span class="class-month"><?= $dt->format('M') ?></span>
                             <span class="class-day"><?= $dt->format('d') ?></span>
@@ -405,34 +430,78 @@ if ($role === 'admin') {
             <?php endif; ?>
         </section>
 
-        <!--visitas recentes -->
-        <section class="dash-card">
-            <div class="dash-card-header">
-                <h2><i class="fa fa-clock"></i> Recent Visits</h2>
-            </div>
-            <?php if (empty($recentVisits)): ?>
-                <div class="dash-empty"><span><i class="fa fa-landmark"></i></span><p>No visits recorded yet.</p></div>
-            <?php else: ?>
-                <ul class="dash-visit-list">
-                    <?php foreach ($recentVisits as $visit):
-                        $inDt  = new DateTime($visit['checked_in']);
-                        $outDt = $visit['checked_out'] ? new DateTime($visit['checked_out']) : null;
-                        $dur   = $outDt ? round(($outDt->getTimestamp() - $inDt->getTimestamp()) / 60) . ' min' : 'Active';
-                    ?>
-                    <li class="dash-visit-item">
-                        <div class="visit-dot"></div>
-                        <div class="visit-info">
-                            <strong><?= htmlspecialchars($visit['gym_city'] . ' — ' . $visit['gym_name']) ?></strong>
-                            <span><?= $inDt->format('d M Y, H:i') ?></span>
-                        </div>
-                        <span class="visit-dur <?= $dur === 'Active' ? 'visit-dur--active' : '' ?>"><?= $dur ?></span>
-                    </li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </section>
+        <div class="dash-stack">
 
-        <!--metrics -->
+            <section class="dash-card">
+                <div class="dash-card-header">
+                    <h2><i class="fa fa-flag-checkered"></i> Recent Classes</h2>
+                    <a href="schedule.php" class="dash-link-small">See Schedule →</a>
+                </div>
+                <?php if (empty($recentClasses)): ?>
+                    <div class="dash-empty"><span><i class="fa fa-dumbbell"></i></span><p>No past classes yet.</p></div>
+                <?php else: ?>
+                    <ul class="dash-class-list">
+                        <?php foreach ($recentClasses as $cls):
+                            $dt = new DateTime($cls['schedule']);
+                            $reviewed = $cls['my_rating'] !== null;
+                        ?>
+                        <li class="dash-class-item dash-class-item--clickable dash-class-item--past"
+                            data-class-id="<?= $cls['id'] ?>"
+                            onclick="openModal(<?= $cls['id'] ?>)">
+                            <div class="class-date-block class-date-block--past">
+                                <span class="class-month"><?= $dt->format('M') ?></span>
+                                <span class="class-day"><?= $dt->format('d') ?></span>
+                            </div>
+                            <div class="class-info">
+                                <strong><?= htmlspecialchars($cls['class_name']) ?></strong>
+                                <span><?= $dt->format('H:i') ?> · <?= $cls['duration_min'] ?> min</span>
+                                <span><?= htmlspecialchars($cls['gym_city'] . ' — ' . $cls['gym_name']) ?></span>
+                            </div>
+                            <div class="class-review-badge">
+                                <?php if ($reviewed): ?>
+                                    <span class="review-badge review-badge--done" title="Reviewed">
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                            <i class="fa fa-star<?= $i <= $cls['my_rating'] ? '' : '-o' ?>" style="color:<?= $i <= $cls['my_rating'] ? '#f59e0b' : '#555' ?>"></i>
+                                        <?php endfor; ?>
+                                    </span>
+                                <?php else: ?>
+                                    <span class="review-badge review-badge--pending"><i class="fa fa-pen"></i> Review</span>
+                                <?php endif; ?>
+                            </div>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </section>
+
+            <section class="dash-card">
+                <div class="dash-card-header">
+                    <h2><i class="fa fa-clock"></i> Recent Visits</h2>
+                </div>
+                <?php if (empty($recentVisits)): ?>
+                    <div class="dash-empty"><span><i class="fa fa-landmark"></i></span><p>No visits recorded yet.</p></div>
+                <?php else: ?>
+                    <ul class="dash-visit-list">
+                        <?php foreach ($recentVisits as $visit):
+                            $inDt  = new DateTime($visit['checked_in']);
+                            $outDt = $visit['checked_out'] ? new DateTime($visit['checked_out']) : null;
+                            $dur   = $outDt ? round(($outDt->getTimestamp() - $inDt->getTimestamp()) / 60) . ' min' : 'Active';
+                        ?>
+                        <li class="dash-visit-item">
+                            <div class="visit-dot"></div>
+                            <div class="visit-info">
+                                <strong><?= htmlspecialchars($visit['gym_city'] . ' — ' . $visit['gym_name']) ?></strong>
+                                <span><?= $inDt->format('d M Y, H:i') ?></span>
+                            </div>
+                            <span class="visit-dur <?= $dur === 'Active' ? 'visit-dur--active' : '' ?>"><?= $dur ?></span>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </section>
+
+        </div>
+
         <section class="dash-card dash-metrics-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-chart-line"></i> My Metrics</h2>
@@ -458,7 +527,6 @@ if ($role === 'admin') {
             </div>
         </section>
 
-        <!--badges -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-medal"></i> My Badges</h2>
@@ -479,10 +547,44 @@ if ($role === 'admin') {
 
     </div><!-- /.dash-grid-2 -->
 
+<?php
+// construir o objeto SC para o js do modal - tem de ter o mesmo formato que no schedule.php
+$dashTypeColors = [
+    'Yoga' => '#a78bfa', 'Cycling' => '#60a5fa', 'Pilates' => '#f472b6',
+    'HIIT' => '#fb923c', 'Personal Training' => '#34d399', 'Spin' => '#22d3ee',
+    'Strength & Conditioning' => '#fbbf24', 'Zumba' => '#a3e635', 'Boxing' => '#f87171',
+];
+$dashClassesForSC = [];
+// juntamos as upcoming e as recentes para o modal funcionar em ambas
+foreach (array_merge($upcomingClasses, $recentClasses) as $c) {
+    $dashClassesForSC[(int)$c['id']] = [
+        'id'           => (int)$c['id'],
+        'class_name'   => $c['class_name'],
+        'color'        => $dashTypeColors[$c['class_name']] ?? '#888',
+        'schedule'     => $c['schedule'],
+        'duration_min' => (int)$c['duration_min'],
+        'gym_name'     => $c['gym_name'],
+        'gym_city'     => $c['gym_city'],
+        'trainer_id'   => (int)$c['trainer_id'],
+        'trainer_first'=> $c['trainer_first'],
+        'trainer_last' => $c['trainer_last'],
+        'trainer_photo'=> $c['trainer_photo'] ?? '',
+        'capacity'     => (int)$c['capacity'],
+        'enrolled'     => (int)$c['enrolled'],
+        'avg_rating'   => (float)$c['avg_rating'],
+        'review_count' => (int)$c['review_count'],
+        'description'  => '',
+        'is_enrolled'  => true,
+        'is_full'      => ((int)$c['capacity'] - (int)$c['enrolled']) <= 0,
+        'my_rating'    => isset($c['my_rating']) && $c['my_rating'] !== null ? (int)$c['my_rating'] : null,
+        'my_comment'   => $c['my_comment'] ?? null,
+    ];
+}
+?>
+
 <?php endif; /* end client */ ?>
 
 
-<?php /* dashboard do trainer */ ?>
 <?php if ($role === 'trainer'): ?>
 
     <!-- Stats row -->
@@ -517,7 +619,6 @@ if ($role === 'admin') {
         </div>
     </div>
 
-    <!--specializations -->
     <?php if (!empty($specializations)): ?>
     <div class="dash-spec-row">
         <?php foreach ($specializations as $spec): ?>
@@ -528,7 +629,6 @@ if ($role === 'admin') {
 
     <div class="dash-grid-2">
 
-        <!-- próximas aulas do trainer -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-chalkboard-teacher"></i> Upcoming Classes</h2>
@@ -542,7 +642,8 @@ if ($role === 'admin') {
                         $fillPct = $cls['capacity'] > 0 ? round(($cls['enrolled'] / $cls['capacity']) * 100) : 0;
                     ?>
                     <li class="dash-class-item dash-class-item--clickable"
-                        onclick="openClassStudentsModal(<?= $cls['id'] ?>)">
+                        data-class-id="<?= $cls['id'] ?>"
+                        onclick="openModal(<?= $cls['id'] ?>)">
                         <div class="class-date-block">
                             <span class="class-month"><?= $dt->format('M') ?></span>
                             <span class="class-day"><?= $dt->format('d') ?></span>
@@ -564,7 +665,6 @@ if ($role === 'admin') {
             <?php endif; ?>
         </section>
 
-        <!-- alunos recentes -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-users"></i> Recent Students</h2>
@@ -592,26 +692,44 @@ if ($role === 'admin') {
 
     </div>
 
-<!--class students modal -->
-<div class="csm-overlay" id="csmOverlay" aria-hidden="true">
-    <div class="csm-backdrop" id="csmBackdrop"></div>
-    <div class="csm-panel">
-        <button class="csm-close" id="csmClose"><i class="fa fa-xmark"></i></button>
-        <div class="csm-header">
-            <h3 id="csmTitle"></h3>
-            <p id="csmInfo"></p>
-        </div>
-        <div class="csm-grid" id="csmGrid"></div>
-    </div>
-</div>
+<?php
+$dashTypeColors = [
+    'Yoga' => '#a78bfa', 'Cycling' => '#60a5fa', 'Pilates' => '#f472b6',
+    'HIIT' => '#fb923c', 'Personal Training' => '#34d399', 'Spin' => '#22d3ee',
+    'Strength & Conditioning' => '#fbbf24', 'Zumba' => '#a3e635', 'Boxing' => '#f87171',
+];
+$dashClassesForSC = [];
+foreach ($trainerClasses as $c) {
+    $dashClassesForSC[(int)$c['id']] = [
+        'id'           => (int)$c['id'],
+        'class_name'   => $c['class_name'],
+        'color'        => $dashTypeColors[$c['class_name']] ?? '#888',
+        'schedule'     => $c['schedule'],
+        'duration_min' => (int)$c['duration_min'],
+        'gym_name'     => $c['gym_name'],
+        'gym_city'     => $c['gym_city'],
+        'trainer_id'   => (int)$c['trainer_id'],
+        'trainer_first'=> $c['trainer_first'],
+        'trainer_last' => $c['trainer_last'],
+        'trainer_photo'=> $c['trainer_photo'] ?? '',
+        'capacity'     => (int)$c['capacity'],
+        'enrolled'     => (int)$c['enrolled'],
+        'avg_rating'   => (float)$c['avg_rating'],
+        'review_count' => (int)$c['review_count'],
+        'description'  => '',
+        'is_enrolled'  => false,
+        'is_full'      => ((int)$c['capacity'] - (int)$c['enrolled']) <= 0,
+        'my_rating'    => null,
+        'my_comment'   => null,
+    ];
+}
+?>
 
-<?php endif; /* end trainer */ ?>
+<?php endif;?>
 
 
-<?php /* dahsboard do admin*/ ?>
 <?php if ($role === 'admin'): ?>
 
-    <!-- Stats row -->
     <div class="dash-stats-row dash-stats-row--admin">
         <div class="dash-stat-card">
             <span class="dash-stat-icon"><i class="fa fa-users"></i></span>
@@ -659,7 +777,6 @@ if ($role === 'admin') {
 
     <div class="dash-grid-3">
 
-        <!--ginásios -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-building"></i> Gym Locations</h2>
@@ -677,7 +794,6 @@ if ($role === 'admin') {
             </ul>
         </section>
 
-        <!--aulas mais populares -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-fire"></i> Popular Classes</h2>
@@ -707,7 +823,6 @@ if ($role === 'admin') {
             <?php endif; ?>
         </section>
 
-        <!--membros recentes -->
         <section class="dash-card">
             <div class="dash-card-header">
                 <h2><i class="fa fa-user-plus"></i> Recent Members</h2>
@@ -733,65 +848,73 @@ if ($role === 'admin') {
 
     </div>
 
-<?php endif; /* end admin */ ?>
+<?php endif; ?>
 
 </main>
 
-<?php drawFooter(); ?>
-
-<?php if ($role === 'trainer'): ?>
+<?php if (in_array($role, ['client', 'trainer'])): ?>
+<div class="sc-modal" id="scModal" aria-hidden="true">
+    <div class="sc-modal-backdrop" id="scModalBackdrop"></div>
+    <div class="sc-modal-panel" id="scModalPanel">
+        <button class="sc-modal-close" id="scModalClose"><i class="fa fa-xmark"></i></button>
+        <div class="sc-modal-header" id="scModalHeader">
+            <span class="sc-modal-type" id="scModalType"></span>
+            <h2 class="sc-modal-title" id="scModalTitle"></h2>
+            <p class="sc-modal-datetime" id="scModalDatetime"></p>
+        </div>
+        <div class="sc-modal-body">
+            <div class="sc-modal-info-grid">
+                <div class="sc-modal-info-item" id="scModalTrainerItem">
+                    <img id="scModalTrainerAvatar" src="" alt="" class="sc-modal-trainer-avatar">
+                    <div>
+                        <small>Trainer</small>
+                        <a class="sc-modal-trainer-link" id="scModalTrainerLink" href="#">
+                            <strong id="scModalTrainerName"></strong>
+                        </a>
+                    </div>
+                </div>
+                <div class="sc-modal-info-item">
+                    <i class="fa fa-location-dot"></i>
+                    <div><small>Location</small><strong id="scModalLocation"></strong></div>
+                </div>
+                <div class="sc-modal-info-item">
+                    <i class="fa fa-clock"></i>
+                    <div><small>Duration</small><strong id="scModalDuration"></strong></div>
+                </div>
+                <div class="sc-modal-info-item">
+                    <i class="fa fa-users"></i>
+                    <div><small>Capacity</small><strong id="scModalCapacity"></strong></div>
+                </div>
+            </div>
+            <div class="sc-modal-cap-wrap">
+                <div class="sc-cap-bar sc-cap-bar--lg">
+                    <div class="sc-cap-fill" id="scModalCapFill" style="width:0%"></div>
+                </div>
+                <span id="scModalCapLabel"></span>
+            </div>
+            <div class="sc-modal-section">
+                <h3><i class="fa fa-circle-info"></i> About this class</h3>
+                <p id="scModalDesc" class="sc-modal-desc"></p>
+            </div>
+            <div class="sc-modal-section">
+                <h3><i class="fa fa-star"></i> Rating &amp; Reviews</h3>
+                <div id="scModalRating"></div>
+                <div id="scModalReviewList" class="sc-review-list"></div>
+            </div>
+        </div>
+        <div class="sc-modal-footer" id="scModalFooter"></div>
+    </div>
+</div>
 <script>
-(function () {
-    var overlay  = document.getElementById('csmOverlay');
-    var backdrop = document.getElementById('csmBackdrop');
-    var closeBtn = document.getElementById('csmClose');
-    var grid     = document.getElementById('csmGrid');
-
-    function closeModal() {
-        overlay.setAttribute('aria-hidden', 'true');
-        overlay.classList.remove('csm-open');
-        document.body.style.overflow = '';
-    }
-
-    closeBtn.addEventListener('click', closeModal);
-    backdrop.addEventListener('click', closeModal);
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
-
-    window.openClassStudentsModal = function (classId) {
-        grid.innerHTML = '<p class="csm-loading"><i class="fa fa-spinner fa-spin"></i> Loading…</p>';
-        overlay.setAttribute('aria-hidden', 'false');
-        overlay.classList.add('csm-open');
-        document.body.style.overflow = 'hidden';
-
-        fetch('dashboard.php?ajax=1&class_id=' + classId)
-            .then(function (r) { return r.json(); })
-            .then(function (data) {
-                if (!data.ok) { grid.innerHTML = '<p class="csm-loading">Could not load students.</p>'; return; }
-                document.getElementById('csmTitle').textContent = data.class.class_name;
-                var d = new Date(data.class.schedule);
-                document.getElementById('csmInfo').textContent =
-                    d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })
-                    + ' · ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-                    + ' · ' + data.class.enrolled + ' / ' + data.class.capacity + ' enrolled';
-
-                if (data.students.length === 0) {
-                    grid.innerHTML = '<p class="csm-loading">No students enrolled yet.</p>';
-                } else {
-                    grid.innerHTML = data.students.map(function (s) {
-                        var photo = s.profile_photo || '../images/profile_pic.webp';
-                        return '<a href="profile.php?id=' + s.id + '" class="csm-card">'
-                            + '<img src="' + photo + '" alt="' + s.first_name + '" '
-                            + 'onerror="this.src=\'../images/profile_pic.webp\'">'
-                            + '<span>' + s.first_name + ' ' + s.last_name + '</span>'
-                            + '</a>';
-                    }).join('');
-                }
-            })
-            .catch(function () {
-                grid.innerHTML = '<p class="csm-loading">Error loading students.</p>';
-            });
-    };
-})();
+var SC = {
+    isClient   : <?= $role === 'client' ? 'true' : 'false' ?>,
+    weekOffset : 0,
+    defaultDay : '',
+    classes    : <?= json_encode($dashClassesForSC ?: new stdClass()) ?>,
+};
 </script>
+<script src="../js/schedule.js"></script>
 <?php endif; ?>
+
+<?php drawFooter(); ?>
 

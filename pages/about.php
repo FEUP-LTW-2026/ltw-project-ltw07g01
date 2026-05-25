@@ -9,11 +9,6 @@ require_once(__DIR__ . '/../templates/about.tpl.php');
 $session = new Session();
 $db = getDatabaseConnection();
 
-if ($session->isLoggedIn()) {
-    drawDashHeader($session, $db, 'about', ['about']);
-} else {
-    drawHeader($session, ['about']);
-}
-
+$session->isLoggedIn() ? drawDashHeader($session, $db, 'about', ['about']) : drawHeader($session, ['about']);
 drawAboutUs($session);
 drawFooter();

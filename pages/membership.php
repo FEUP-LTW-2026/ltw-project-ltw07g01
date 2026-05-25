@@ -7,8 +7,23 @@ require_once('../templates/common.tpl.php');
 require_once('../templates/memberships.tpl.php');
 $db = getDatabaseConnection();
 
+$classesRemaining = null;
 if ($session->isLoggedIn()) {
+    $s = $db->prepare('SELECT
+    gym_plan,
+    gym_start,
+    gym_end,
+    pilates_classes,
+    cycling_classes
+FROM memberships
+WHERE client_id = :id');
+    $s->execute(['id' => $session->getId()]);
+    $mem = $s->fetch();
+    if ($mem) {
+        $classesRemaining = (int)$mem['pilates_classes'] + (int)$mem['cycling_classes'];
+    }    
     drawDashHeader($session, $db, 'membership', ['membership']);
+    
 } else {
     drawHeader($session, ['membership']);
 }
@@ -18,6 +33,6 @@ if ($session->isLoggedIn()) {
     <p class="subscribe-success">Your plan has been activated successfully!</p>
 <?php endif; ?>
 
-<?php drawMemberships($session); ?>
+<?php drawMemberships($session, $classesRemaining); ?>
 
 <?php drawFooter(); ?>

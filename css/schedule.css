@@ -1,10 +1,3 @@
-/* =============================================================
-   schedule.css — Cubo Gym Class Schedule
-============================================================= */
-
-/* ------------------------------------------------------------------
-   Page layout
------------------------------------------------------------------- */
 main.sc-page {
     padding: 2.5rem 1.5rem 5rem;
     max-width: 68.75rem;
@@ -74,9 +67,6 @@ main.sc-has-navbar {
     margin-top: 0.25rem;
 }
 
-/* ------------------------------------------------------------------
-   Week navigator
------------------------------------------------------------------- */
 .sc-week-nav {
     display: flex;
     align-items: center;
@@ -139,16 +129,13 @@ main.sc-has-navbar {
     color: #000;
 }
 
-/* Loading state while fetching new week */
+
 #scDynamicContent.sc-loading {
     opacity: 0.45;
     pointer-events: none;
     transition: opacity 0.15s;
 }
 
-/* ------------------------------------------------------------------
-   Days strip
------------------------------------------------------------------- */
 .sc-days-strip {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -220,9 +207,6 @@ main.sc-has-navbar {
     background: #2a2a2a;
 }
 
-/* ------------------------------------------------------------------
-   Day panels
------------------------------------------------------------------- */
 .sc-day-panel {
     display: none;
 }
@@ -281,9 +265,6 @@ main.sc-has-navbar {
     font-size: 0.95rem;
 }
 
-/* ------------------------------------------------------------------
-   Timeline
------------------------------------------------------------------- */
 .sc-timeline {
     display: flex;
     flex-direction: column;
@@ -306,7 +287,6 @@ main.sc-has-navbar {
     transform: translateX(0.1875rem);
 }
 
-/* Time column */
 .sc-time-col {
     display: flex;
     flex-direction: column;
@@ -330,7 +310,6 @@ main.sc-has-navbar {
     color: var(--text-dim);
 }
 
-/* Class card */
 .sc-card {
     flex: 1;
     display: flex;
@@ -358,7 +337,6 @@ main.sc-has-navbar {
     min-width: 0;
 }
 
-/* Top: name + badges */
 .sc-card-top {
     display: flex;
     align-items: center;
@@ -394,7 +372,6 @@ main.sc-has-navbar {
 .sc-badge--full     { color: #555;          border: 0.0625rem solid #333; }
 .sc-badge--filling  { color: #fb923c;       border: 0.0625rem solid #fb923c; }
 
-/* Meta row: trainer + location */
 .sc-card-meta {
     display: flex;
     align-items: center;
@@ -442,7 +419,6 @@ main.sc-has-navbar {
     font-size: 0.75rem;
 }
 
-/* Capacity */
 .sc-capacity-row {
     display: flex;
     align-items: center;
@@ -463,6 +439,7 @@ main.sc-has-navbar {
     background: #1a1a1a;
 }
 
+/* a largura é definida inline via js quando carrega os dados */
 .sc-cap-fill {
     height: 100%;
     border-radius: inherit;
@@ -479,7 +456,6 @@ main.sc-has-navbar {
 
 .sc-spots--low { color: #fb923c; }
 
-/* Actions row */
 .sc-card-actions {
     display: flex;
     align-items: center;
@@ -547,9 +523,6 @@ main.sc-has-navbar {
     color: var(--accent);
 }
 
-/* ------------------------------------------------------------------
-   Type legend
------------------------------------------------------------------- */
 .sc-legend {
     display: flex;
     flex-wrap: wrap;
@@ -574,9 +547,6 @@ main.sc-has-navbar {
     flex-shrink: 0;
 }
 
-/* ------------------------------------------------------------------
-   Modal
------------------------------------------------------------------- */
 .sc-modal {
     display: none;
     position: fixed;
@@ -595,6 +565,7 @@ main.sc-has-navbar {
     backdrop-filter: blur(0.1875rem);
 }
 
+/* o painel começa fora do ecra (translateX 100%) e entra com transição */
 .sc-modal-panel {
     position: absolute;
     top: 0;
@@ -645,6 +616,7 @@ main.sc-has-navbar {
     background: linear-gradient(160deg, rgba(255,255,255,0.025) 0%, transparent 100%);
 }
 
+/* linha colorida no topo do header com a cor do tipo de aula */
 .sc-modal-header::before {
     content: '';
     position: absolute;
@@ -856,9 +828,153 @@ main.sc-has-navbar {
     color: var(--text-dim);
 }
 
-/* ------------------------------------------------------------------
-   Responsive
------------------------------------------------------------------- */
+.sc-modal-enrolled-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.sc-modal-cancel-btn {
+    width: 100%;
+    border: 1.5px solid #ef4444;
+    border-radius: 0.75rem;
+    background: transparent;
+    color: #ef4444;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.9375rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.sc-modal-cancel-btn:hover:not(:disabled) {
+    background: #ef4444;
+    color: #fff;
+}
+
+.sc-modal-cancel-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.sc-modal-review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    width: 100%;
+}
+
+.sc-review-prompt {
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.sc-review-stars {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.sc-star-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.875rem;
+    color: #444;
+    padding: 0.125rem 0.25rem;
+    transition: color 0.12s, transform 0.1s;
+    line-height: 1;
+}
+
+.sc-star-btn--lit,
+.sc-star-btn:hover {
+    color: #f59e0b;
+    transform: scale(1.2);
+}
+
+.sc-review-comment {
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    padding: 0.625rem 0.75rem;
+    resize: vertical;
+    min-height: 4.5rem;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.sc-review-comment:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.sc-review-submit {
+    width: 100%;
+    border: none;
+    border-radius: 0.75rem;
+    background: var(--accent);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.9375rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: opacity 0.2s;
+}
+
+.sc-review-submit:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.sc-review-submit:not(:disabled):hover {
+    opacity: 0.85;
+}
+
+.sc-modal-review-done {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+}
+
+.sc-review-done-label {
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.sc-review-done-stars {
+    display: flex;
+    gap: 0.25rem;
+    font-size: 1.375rem;
+}
+
+.sc-review-done-comment {
+    font-size: 0.875rem;
+    color: var(--text-dim);
+    text-align: center;
+    margin: 0;
+    font-style: italic;
+}
+
 @media (max-width: 40rem) {
     .sc-days-strip {
         gap: 0.3125rem;
