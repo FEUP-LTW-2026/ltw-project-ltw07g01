@@ -39,10 +39,10 @@ if (!$user) {
 
 // --- Membership ---
 $stmt = $db->prepare(
-    'SELECT is_classes_enabled, start_date, end_date
+    'SELECT gym_plan, gym_start, gym_end, pilates_classes, cycling_classes
      FROM memberships
-     WHERE client_id = :id AND (end_date IS NULL OR end_date > CURRENT_TIMESTAMP)
-     ORDER BY start_date DESC
+     WHERE client_id = :id AND (gym_end IS NULL OR gym_end > CURRENT_TIMESTAMP)
+     ORDER BY gym_start DESC
      LIMIT 1'
 );
 $stmt->execute([':id' => $viewId]);
@@ -180,8 +180,8 @@ $archetype = $user['archetype'] ?? 'NO ARCHETYPE';
 $bio = $user['bio'] ?? '';
 $bodyWeight = $user['body_weight'] ?? 'N/A';
 $height = $user['height'] ?? 'N/A';
-$memberTag      = $membership
-    ? ($membership['is_classes_enabled'] ? 'ULTRA MEMBER' : 'MEMBER')
+$memberTag = $membership
+    ? strtoupper($membership['gym_plan']) . ' MEMBER'
     : 'NO MEMBERSHIP';
 
 // --- Badges ---
