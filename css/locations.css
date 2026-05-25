@@ -1,0 +1,205 @@
+:root {
+    --accent: #00bfa6;
+    --text-main: #ffffff;
+    --text-dim: #8f8f8f;
+    --bg-color: #000000;
+}
+
+body {
+    background: var(--bg-color);
+    color: var(--text-main);
+}
+
+/* hero */
+section.locations-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    padding: 7.5rem 10% 4rem;
+    background: linear-gradient(to bottom, var(--bg-color) 0%, #1a1a1a 50%, var(--bg-color) 100%);
+    text-align: center;
+}
+
+section.locations-hero h1 {
+    font-size: 6.875rem;
+    line-height: 0.9;
+    margin: 0 0 1.5rem;
+}
+
+section.locations-hero p {
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 0;
+    letter-spacing: 0.05rem;
+}
+
+/* grid */
+section.locations-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 5rem 10%;
+}
+
+section.locations-grid article {
+    background: #111;
+    border: 0.0625rem solid #222;
+    border-top: 0.1875rem solid var(--accent);
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    transition: background 0.3s;
+}
+
+section.locations-grid article:hover {
+    background: #1a1a1a;
+}
+
+section.locations-grid article .loc-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+section.locations-grid article .loc-header i {
+    font-size: 2.25rem;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+section.locations-grid article h2 {
+    font-size: 2.75rem;
+    font-weight: normal;
+    margin: 0;
+    line-height: 1;
+}
+
+section.locations-grid article .loc-header span {
+    font-size: 1.25rem;
+    color: var(--text-dim);
+    display: block;
+    margin-top: 0.25rem;
+}
+
+section.locations-grid article > p {
+    font-size: 1.375rem;
+    color: var(--text-dim);
+    margin: 0;
+}
+
+section.locations-grid article img {
+    width: 100%;
+    height: 12rem;
+    object-fit: cover;
+    display: block;
+    border: 0.0625rem solid #333;
+}
+
+section.locations-grid article ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    flex: 1;
+}
+
+section.locations-grid article ul li {
+    font-size: 1.25rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+section.locations-grid article ul li i {
+    color: var(--accent);
+    width: 1rem;
+    text-align: center;
+}
+
+section.locations-grid article .loc-btn {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    border: 0.1875rem solid var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 1.5rem;
+    text-align: center;
+    transition: background 0.3s, color 0.3s;
+}
+
+section.locations-grid article .loc-btn:hover {
+    background: var(--accent);
+    color: var(--bg-color);
+}
+
+/* join banner */
+section.locations-join {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6rem 10%;
+    text-align: center;
+    background: linear-gradient(to bottom, var(--bg-color), #111);
+    gap: 1.25rem;
+}
+
+section.locations-join h2 {
+    font-size: 5rem;
+    font-weight: normal;
+    margin: 0;
+}
+
+section.locations-join p {
+    font-size: 1.875rem;
+    color: var(--text-dim);
+    margin: 0;
+}
+
+section.locations-join .btn-filled {
+    padding: 0.875rem 3rem;
+    border-radius: 62.5rem;
+    background: var(--accent);
+    color: var(--bg-color);
+    border: 0.1875rem solid var(--accent);
+    font-size: 1.875rem;
+    font-family: 'League Gothic', sans-serif;
+    text-decoration: none;
+    transition: transform 0.3s;
+}
+
+section.locations-join .btn-filled:hover {
+    transform: scale(1.08);
+}
+
+/* responsive */
+@media (max-width: 68.75rem) {
+    section.locations-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 48rem) {
+    section.locations-hero h1 {
+        font-size: 4.375rem;
+    }
+
+    section.locations-hero p {
+        font-size: 1.5rem;
+    }
+
+    section.locations-grid {
+        grid-template-columns: 1fr;
+        padding: 3rem 5%;
+    }
+
+    section.locations-join h2 {
+        font-size: 3.75rem;
+    }
+}
