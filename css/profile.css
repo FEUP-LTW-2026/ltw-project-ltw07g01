@@ -754,3 +754,34 @@ body.trainer-theme .btn-save-changes {
 body.trainer-theme .btn-save-changes:hover {
     background: #6d28d9;
 }
+
+.trainer-schedule-section {
+    background: var(--card-bg);
+    border: var(--border);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.trainer-schedule-title-row {
+    padding-top: 0;
+    margin-bottom: 1rem;
+}
+
+.trainer-schedule-title {
+    font-size: 1.1rem;
+    letter-spacing: 0.125rem;
+    margin: 0 0 0.375rem;
+}
+
+.trainer-schedule-stats {
+    padding-top: 0;
+}
+
+.trainer-profile-filter-bar {
+    position: static;
+    padding: 0;
+    margin-bottom: 1rem;
+    background: transparent;
+    border-bottom: 0;
+}

@@ -503,6 +503,24 @@ main.sc-has-navbar {
     color: #555;
 }
 
+.sc-no-credits-msg {
+    width: 100%;
+    margin-top: 0.375rem;
+    color: #fbbf24;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+}
+
+.sc-no-credits-msg a {
+    color: var(--text-main);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.1875rem;
+}
+
 .sc-details-btn {
     display: flex;
     align-items: center;
