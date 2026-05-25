@@ -1,19 +1,16 @@
 <?php function drawEquipment(array $equipment): void { ?>
 <main class="equipment-page">
-    <section class="equipment-hero">
-        <h1>Equipment</h1>
-        <p>Check the current state of our machines and training areas.</p>
-    </section>
+    <section class="equipment-filters filter-bar">
+        <span class="filter-label"><i class="fa fa-sliders"></i> Filter</span>
 
-    <section class="equipment-filters">
-        <select id="filter-location">
+        <select class="filter-select" id="filter-location">
             <option value="all">All Locations</option>
             <option value="Antas">Antas</option>
             <option value="Matosinhos">Matosinhos</option>
             <option value="Braga">Braga</option>
         </select>
 
-        <select id="filter-body">
+        <select class="filter-select" id="filter-body">
             <option value="all">All Body Parts</option>
             <option value="Chest">Chest</option>
             <option value="Shoulders">Shoulders</option>
@@ -23,11 +20,21 @@
             <option value="Back">Back</option>
         </select>
 
-        <select id="filter-status">
+        <select class="filter-select" id="filter-status">
             <option value="all">All Status</option>
             <option value="available">Available</option>
             <option value="out">Out of Service</option>
         </select>
+
+        <button class="filter-clear" id="equipment-filter-clear" hidden>
+            <i class="fa fa-xmark"></i> Clear
+        </button>
+        <span class="filter-count" id="equipment-filter-count"></span>
+    </section>
+
+    <section class="equipment-hero">
+        <h1>Equipment</h1>
+        <p>Check the current state of our machines and training areas.</p>
     </section>
 
     <section class="equipment-grid">

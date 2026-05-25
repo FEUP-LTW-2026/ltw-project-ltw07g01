@@ -316,6 +316,13 @@ VALUES (4, 'maria.fernandes', 'maria@cubogym.com',
 INSERT INTO trainers (user_id, bio, certifications)
 VALUES (4, 'Certified personal trainer specializing in strength training.', 'NASM-CPT, CSCS');
 
+-- New Trainer:
+INSERT INTO users (id, username, email, password_hash, first_name, last_name)
+VALUES (5, 'rui.santos', 'rui@cubogym.com', '$2y$12$RLrV1W7DVRUuO64nGrcxKeM9yl8qIE7V86o3zswBXQyLg96ASGA26', 'Rui', 'Santos');
+
+INSERT INTO trainers (user_id, bio, certifications)
+VALUES (5, 'High intensity coach focused on functional training.', 'CrossFit L1, NASM-CPT');
+
 INSERT INTO users (id, username, email, password_hash, first_name, last_name)
 VALUES (3, 'joao.costa', 'joao@cubogym.com',
         '$2y$12$RLrV1W7DVRUuO64nGrcxKeM9yl8qIE7V86o3zswBXQyLg96ASGA26',
@@ -403,3 +410,24 @@ INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, 
 VALUES (2, 1, 3, datetime('now', '+11 days', '+19 hours'), 50, 20);
 INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
 VALUES (3, 1, 4, datetime('now', '+12 days', '+6 hours'), 40, 15);
+
+
+INSERT INTO trainer_locations (trainer_id, gym_id) VALUES (2, 1);
+INSERT INTO trainer_locations (trainer_id, gym_id) VALUES (2, 2);
+
+INSERT INTO trainer_specializations (trainer_id, class_type_id) VALUES (2, 1);
+INSERT INTO trainer_specializations (trainer_id, class_type_id) VALUES (2, 3);
+
+INSERT INTO trainer_locations (trainer_id, gym_id) VALUES (4, 1);
+INSERT INTO trainer_locations (trainer_id, gym_id) VALUES (4, 3);
+
+INSERT INTO trainer_specializations (trainer_id, class_type_id) VALUES (4, 5);
+INSERT INTO trainer_specializations (trainer_id, class_type_id) VALUES (4, 7);
+INSERT INTO trainer_specializations (trainer_id, class_type_id) VALUES (4, 4);
+
+INSERT INTO trainer_locations (trainer_id, gym_id) VALUES (5, 1);
+INSERT INTO trainer_locations (trainer_id, gym_id) VALUES (5, 2);
+
+INSERT INTO trainer_specializations (trainer_id, class_type_id) VALUES (5, 4);
+INSERT INTO trainer_specializations (trainer_id, class_type_id) VALUES (5, 7);
+INSERT INTO trainer_specializations (trainer_id, class_type_id) VALUES (5, 9);

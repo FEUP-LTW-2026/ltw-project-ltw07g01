@@ -13,14 +13,13 @@ if ($session->isLoggedIn()) {
     gym_plan,
     gym_start,
     gym_end,
-    pilates_classes,
-    cycling_classes
+    classes_remaining
 FROM memberships
 WHERE client_id = :id');
     $s->execute(['id' => $session->getId()]);
     $mem = $s->fetch();
     if ($mem) {
-        $classesRemaining = (int)$mem['pilates_classes'] + (int)$mem['cycling_classes'];
+        $classesRemaining = (int)$mem['classes_remaining'];
     }    
     drawDashHeader($session, $db, 'membership', ['membership']);
     

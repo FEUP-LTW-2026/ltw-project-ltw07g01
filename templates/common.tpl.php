@@ -123,6 +123,7 @@ require_once(__DIR__ . '/../utils/session.php');
             <a href="/pages/dashboard.php"  class="nav-popup-link <?= $activePage === 'home'       ? 'active' : '' ?>"><i class="fa fa-home"></i> Home</a>
             <a href="<?= htmlspecialchars($profileUrl) ?>" class="nav-popup-link <?= $activePage === 'profile'    ? 'active' : '' ?>"><i class="fa fa-user"></i> Profile</a>
             <a href="/pages/schedule.php"   class="nav-popup-link <?= $activePage === 'schedule'   ? 'active' : '' ?>"><i class="fa fa-calendar"></i> Schedule</a>
+            <a href="/pages/trainers.php"   class="nav-popup-link <?= $activePage === 'trainers'   ? 'active' : '' ?>"><i class="fa fa-users"></i> Trainers</a>
             <a href="/pages/equipment.php"  class="nav-popup-link <?= $activePage === 'equipment'  ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
             <a href="/pages/locations.php"  class="nav-popup-link <?= $activePage === 'locations'  ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
             <a href="/pages/membership.php" class="nav-popup-link <?= $activePage === 'membership' ? 'active' : '' ?>"><i class="fa fa-id-card"></i> Membership</a>

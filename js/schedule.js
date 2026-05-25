@@ -14,6 +14,26 @@
     var filterClearBtn = document.getElementById('filterClear');
     var filterCountEl = document.getElementById('filterCount');
 
+    function scheduleActionUrl() {
+        return (window.SC && SC.actionUrl) ? SC.actionUrl : 'schedule.php';
+    }
+
+    function showNoCreditsMessage(btn) {
+        var target = btn.closest('.sc-card-actions') || btn.closest('.sc-modal-footer');
+        var html = '<span class="sc-no-credits-msg"><i class="fa fa-triangle-exclamation"></i> '
+            + 'No class credits remaining. <a href="/pages/membership.php">Get more</a></span>';
+
+        if (!target) {
+            alert('No class credits remaining.');
+            return;
+        }
+
+        target.querySelectorAll('.sc-no-credits-msg').forEach(function (el) {
+            el.remove();
+        });
+        target.insertAdjacentHTML('beforeend', html);
+    }
+
     function selectDay(dayKey) {
         document.querySelectorAll('.sc-day-btn').forEach(function (b) {
             b.classList.toggle('sc-day-btn--active', b.dataset.day === dayKey);
@@ -109,7 +129,10 @@
         prevBtn.disabled = true;
         nextBtn.disabled = true;
 
-        fetch('schedule.php?ajax=1&w=' + offset)
+        var ajaxUrl = (window.SC && SC.ajaxUrl) ? SC.ajaxUrl : 'schedule.php';
+        var sep = ajaxUrl.indexOf('?') === -1 ? '?' : '&';
+
+        fetch(ajaxUrl + sep + 'ajax=1&w=' + offset)
             .then(function (r) { return r.json(); })
             .then(function (data) {
                 // atualiza o objecto global com os dados da nova semana
@@ -160,10 +183,11 @@
     }
 
     window.bookClass = function (classId, btn) {
+        var idleHtml = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Booking…';
 
-        fetch('schedule.php', {
+        fetch(scheduleActionUrl(), {
             method  : 'POST',
             headers : { 'Content-Type': 'application/x-www-form-urlencoded' },
             body    : 'ajax=1&class_id=' + classId + '&w=' + SC.weekOffset,
@@ -172,14 +196,9 @@
         .then(function (data) {
             if (!data.ok) {
                 btn.disabled  = false;
-                btn.innerHTML = '<i class="fa fa-calendar-check"></i> Book';
+                btn.innerHTML = idleHtml;
                 if (data.error === 'no_credits') {
-                    var actEl = btn.closest('.sc-card-actions');
-                    if (actEl) {
-                        actEl.insertAdjacentHTML('beforeend',
-                            '<span class="sc-no-credits-msg"><i class="fa fa-triangle-exclamation"></i> No class credits remaining. <a href="membership.php">Get more</a></span>'
-                        );
-                    }
+                    showNoCreditsMessage(btn);
                 }
                 return;
             }
@@ -219,7 +238,7 @@
         })
         .catch(function () {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fa fa-calendar-check"></i> Book';
+            btn.innerHTML = idleHtml;
         });
     };
 
@@ -227,7 +246,7 @@
         btn.disabled = true;
         btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Cancelling…';
 
-        fetch('schedule.php', {
+        fetch(scheduleActionUrl(), {
             method  : 'POST',
             headers : { 'Content-Type': 'application/x-www-form-urlencoded' },
             body    : 'ajax=1&action=cancel&class_id=' + classId,
@@ -348,7 +367,7 @@
         btn.disabled = true;
         btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Submitting…';
 
-        fetch('schedule.php', {
+        fetch(scheduleActionUrl(), {
             method : 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body   : 'ajax=1&action=review&class_id=' + classId

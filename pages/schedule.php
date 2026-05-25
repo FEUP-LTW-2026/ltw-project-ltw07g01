@@ -78,11 +78,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && ($_POST['
     $classId = (int)($_POST['class_id'] ?? 0);
     if ($classId <= 0) { echo json_encode(['ok' => false, 'error' => 'invalid']); exit; }
 
-    $s = $db->prepare('SELECT COUNT(*) FROM client_classes WHERE client_id=? AND class_id=?');
+    $s = $db->prepare(
+        'SELECT c.schedule
+         FROM client_classes cc
+         JOIN classes c ON c.id = cc.class_id
+         WHERE cc.client_id=? AND cc.class_id=?'
+    );
     $s->execute([$userId, $classId]);
-    if (!$s->fetchColumn()) { echo json_encode(['ok' => false, 'error' => 'not_enrolled']); exit; }
+    $enrollment = $s->fetch();
+    if (!$enrollment) { echo json_encode(['ok' => false, 'error' => 'not_enrolled']); exit; }
+    if ($enrollment['schedule'] <= date('Y-m-d H:i:s')) { echo json_encode(['ok' => false, 'error' => 'past_class']); exit; }
 
+    $db->beginTransaction();
     $db->prepare('DELETE FROM client_classes WHERE client_id=? AND class_id=?')->execute([$userId, $classId]);
+    $db->prepare('UPDATE memberships SET classes_remaining = classes_remaining + 1 WHERE client_id = ?')->execute([$userId]);
+    $db->commit();
 
     $s = $db->prepare('SELECT capacity, (SELECT COUNT(*) FROM client_classes WHERE class_id=c.id) AS enrolled FROM classes c WHERE id=?');
     $s->execute([$classId]);
