@@ -160,12 +160,11 @@ CREATE TABLE trainer_specializations
 
 CREATE TABLE memberships
 (
-    client_id       INTEGER PRIMARY KEY,
-    gym_plan        TEXT CHECK(gym_plan IN ('basic', 'pro', 'ultra')),
-    gym_start       TIMESTAMP,
-    gym_end         TIMESTAMP,
-    pilates_classes INTEGER NOT NULL DEFAULT 0,
-    cycling_classes INTEGER NOT NULL DEFAULT 0,
+    client_id        INTEGER PRIMARY KEY,
+    gym_plan         TEXT CHECK(gym_plan IN ('basic', 'pro', 'ultra')),
+    gym_start        TIMESTAMP,
+    gym_end          TIMESTAMP,
+    classes_remaining INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (client_id)
         REFERENCES clients(user_id)
         ON DELETE CASCADE ON UPDATE NO ACTION
@@ -284,12 +283,8 @@ INSERT INTO gym_locations (name, city, address) VALUES ('Braga',      'Braga', '
 INSERT INTO class_types (name) VALUES ('Yoga');
 INSERT INTO class_types (name) VALUES ('Cycling');
 INSERT INTO class_types (name) VALUES ('Pilates');
-INSERT INTO class_types (name) VALUES ('HIIT');
 INSERT INTO class_types (name) VALUES ('Personal Training');
-INSERT INTO class_types (name) VALUES ('Spin');
 INSERT INTO class_types (name) VALUES ('Strength & Conditioning');
-INSERT INTO class_types (name) VALUES ('Zumba');
-INSERT INTO class_types (name) VALUES ('Boxing');
 
 INSERT INTO archetypes (name) VALUES ('SPINNER');
 INSERT INTO archetypes (name) VALUES ('POWERLIFTER');
@@ -329,8 +324,8 @@ INSERT INTO clients (user_id, preferred_gym_id, archetype_id, body_weight, heigh
 INSERT INTO client_gyms (client_id, gym_id, is_primary) VALUES (3, 1, 1);
 
 -- Membership para joao.costa
-INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, pilates_classes, cycling_classes)
-VALUES (3, 'pro', '2024-01-15', '2025-01-15', 5, 3);
+INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, classes_remaining)
+VALUES (3, 'pro', '2024-01-15', '2025-01-15', 8);
 
 -- Visitas ao ginásio
 INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
