@@ -5,13 +5,13 @@ CUBO GYM is a modern fitness club offering gym, pilates, and cycling memberships
 ## Features
 
 **All users:**
-- [ ] Register a new account.
-- [ ] Log in and out.
+- [x] Register a new account.
+- [x] Log in and out.
 - [ ] Edit their profile, including name, username, password, and profile photo.
 
 **Members:**
 - [ ] Browse the schedule of available fitness classes, filtering by type, trainer, day, or time.
-- [ ] Enroll in and cancel enrollment from upcoming classes, subject to capacity limits.
+- [x] Enroll in and cancel enrollment from upcoming classes, subject to capacity limits.
 - [ ] View trainer profiles, including their specializations and the classes they teach.
 - [ ] Check the current availability of equipment in the main training area.
 - [ ] Leave ratings and reviews for classes they have attended.
