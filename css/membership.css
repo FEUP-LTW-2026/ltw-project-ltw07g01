@@ -458,6 +458,27 @@ section.wrapper-perguntas details > div {
     }
 }
 
+.credits-balance-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    color: #111;
+    background: #fff;
+    border: 0.125rem solid #00bfa6;
+    border-radius: 0.5rem;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem auto;
+    max-width: 50rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0,191,166,0.15);
+}
+
+.credits-balance-banner i {
+    font-size: 1.5rem;
+    color: #00bfa6;
+    flex-shrink: 0;
+}
+
 p.credits-universal-note {
     font-size: 1.25rem;
     font-weight: 600;
@@ -467,5 +488,65 @@ p.credits-universal-note {
     padding: 0.85rem 1.25rem;
     margin-bottom: 1.5rem;
     border-radius: 0.25rem;
+}
+
+.plan-btn {
+    display: block;
+    margin-top: 1.25rem;
+    padding: 0.75rem;
+    background: #000;
+    color: #fff;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 2rem;
+    text-decoration: none;
+    letter-spacing: 0.03rem;
+    border: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.plan-btn:hover { background: #222; }
+
+.plan-btn--outline {
+    background: #fff;
+    color: #000;
+}
+
+.plan-btn--outline:hover {
+    background: #e0e0e0;
+}
+
+.type-section--info > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.info-card {
+    background: #111;
+    color: #fff;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    flex: 1 1 14rem;
+    max-width: 20rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-card h4 {
+    font-size: 1.4rem;
+    color: #00bfa6;
+    margin: 0;
+}
+
+.info-card p {
+    font-size: 0.95rem;
+    color: #aaa;
+    margin: 0;
+    flex: 1;
 }
 
