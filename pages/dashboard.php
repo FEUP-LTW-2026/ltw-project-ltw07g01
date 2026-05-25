@@ -304,7 +304,7 @@ if ($role === 'admin') {
 
     $stmt = $db->prepare(
         'SELECT COUNT(*) FROM memberships
-         WHERE start_date >= datetime(\'now\', \'-30 days\')'
+         WHERE gym_start >= datetime(\'now\', \'-30 days\')'
     );
     $stmt->execute();
     $newMemberships = (int)$stmt->fetchColumn();
@@ -725,12 +725,11 @@ foreach ($trainerClasses as $c) {
 }
 ?>
 
-<?php endif; /* end trainer */ ?>
+<?php endif;?>
 
 
 <?php if ($role === 'admin'): ?>
 
-    <!-- Stats row -->
     <div class="dash-stats-row dash-stats-row--admin">
         <div class="dash-stat-card">
             <span class="dash-stat-icon"><i class="fa fa-users"></i></span>
@@ -849,7 +848,7 @@ foreach ($trainerClasses as $c) {
 
     </div>
 
-<?php endif; /* end admin */ ?>
+<?php endif; ?>
 
 </main>
 

@@ -14,7 +14,6 @@ if (!$currentUserId) {
     exit;
 }
 
-// ?id=X allows viewing another client's profile
 $viewId      = (isset($_GET['id']) && (int)$_GET['id'] > 0) ? (int)$_GET['id'] : $currentUserId;
 $isOwnProfile = ($viewId === $currentUserId);
 
@@ -39,10 +38,10 @@ if (!$user) {
 
 
 $stmt = $db->prepare(
-    'SELECT is_classes_enabled, start_date, end_date
+    'SELECT gym_plan, gym_start, gym_end
      FROM memberships
-     WHERE client_id = :id AND (end_date IS NULL OR end_date > CURRENT_TIMESTAMP)
-     ORDER BY start_date DESC
+     WHERE client_id = :id AND (gym_end IS NULL OR gym_end > CURRENT_TIMESTAMP)
+     ORDER BY gym_start DESC
      LIMIT 1'
 );
 $stmt->execute([':id' => $viewId]);
@@ -181,7 +180,7 @@ $bio = $user['bio'] ?? '';
 $bodyWeight = $user['body_weight'] ?? 'N/A';
 $height = $user['height'] ?? 'N/A';
 $memberTag      = $membership
-    ? ($membership['is_classes_enabled'] ? 'ULTRA MEMBER' : 'MEMBER')
+    ? ($membership['gym_plan'] === 'ultra' ? 'ULTRA MEMBER' : 'MEMBER')
     : 'NO MEMBERSHIP';
 
 
