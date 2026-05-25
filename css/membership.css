@@ -1,6 +1,6 @@
 body {
     font-family: 'League Gothic', sans-serif;
-    color: black;
+    color: black !important;
     background: linear-gradient(
             45deg,
             #FFFFFF 0%,
@@ -8,7 +8,7 @@ body {
             #FFFFFF 52%,
             #AFAFAF 75%,
             #FFFFFF 100%
-    );
+    ) !important;
 }
 
 section.type-section {
@@ -340,13 +340,12 @@ section.comparison table tbody tr:hover .icon-xmark {
 }
 
 .plan:hover .plan-btn {
-    border-color: black;
-    color: black;
+    color: #fff;
 }
 
 .plan:hover .plan-btn:hover {
-    background-color: black;
-    color: white;
+    background: #222;
+    color: #fff;
 }
 
 .table-wrapper {
@@ -456,5 +455,173 @@ section.wrapper-perguntas details > div {
     .faq-item {
         max-width: 100%;
     }
+}
+
+.credits-balance-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    color: #111;
+    background: #fff;
+    border: 0.125rem solid #00bfa6;
+    border-radius: 0.5rem;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem auto;
+    max-width: 50rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0,191,166,0.15);
+}
+
+.credits-balance-banner i {
+    font-size: 1.5rem;
+    color: #00bfa6;
+    flex-shrink: 0;
+}
+
+p.credits-universal-note {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #222;
+    background: rgba(0, 191, 166, 0.12);
+    border-left: 0.25rem solid #00bfa6;
+    padding: 0.85rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.25rem;
+}
+
+.plan-btn {
+    display: block;
+    margin-top: 1.25rem;
+    padding: 0.75rem;
+    background: #000;
+    color: #fff;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 2rem;
+    text-decoration: none;
+    letter-spacing: 0.03rem;
+    border: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.plan-btn:hover { background: #222; }
+
+.plan-btn--outline {
+    background: #fff;
+    color: #000;
+}
+
+.plan-btn--outline:hover {
+    background: #e0e0e0;
+}
+
+.type-section--info > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.info-card {
+    background: #111;
+    color: #fff;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    flex: 1 1 14rem;
+    max-width: 20rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-card h4 {
+    font-size: 1.4rem;
+    color: #00bfa6;
+    margin: 0;
+}
+
+.info-card p {
+    font-size: 0.95rem;
+    color: #aaa;
+    margin: 0;
+    flex: 1;
+}
+
+main.confirm-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 2rem;
+}
+
+.confirm-card {
+    background: #fff;
+    border-radius: 0.75rem;
+    padding: 2.5rem 2rem;
+    max-width: 26rem;
+    width: 100%;
+    box-shadow: 0 0.25rem 1.5rem rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    text-align: center;
+}
+
+.confirm-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #111;
+    margin: 0;
+}
+
+.confirm-details {
+    background: #f5f5f5;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.confirm-plan-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #111;
+    margin: 0;
+}
+
+.confirm-price {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #000;
+    margin: 0;
+}
+
+.confirm-period {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #666;
+}
+
+.confirm-desc {
+    font-size: 0.95rem;
+    color: #555;
+    margin: 0;
+}
+
+.confirm-credits {
+    font-size: 0.95rem;
+    color: #00a08a;
+    font-weight: 600;
+    margin: 0;
+}
+
+.confirm-cancel {
+    font-size: 0.9rem;
+    color: #888;
+    text-decoration: underline;
 }
 

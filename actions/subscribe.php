@@ -21,21 +21,18 @@ if (!$stmt->fetch()) {
     exit();
 }
 
-$plan = $_GET['plan'] ?? '';
+$plan = $_POST['plan'] ?? '';
 
 $gymPlans = [
-    'gym-basic' => 'basic',
-    'gym-pro'   => 'pro',
-    'gym-ultra' => 'ultra',
+    'gym-1' => 'basic',
+    'gym-2' => 'pro',
+    'gym-3' => 'ultra',
 ];
 
 $classPacks = [
-    'pilates-1'  => ['type' => 'pilates', 'qty' => 1],
-    'pilates-5'  => ['type' => 'pilates', 'qty' => 5],
-    'pilates-10' => ['type' => 'pilates', 'qty' => 10],
-    'cycling-1'  => ['type' => 'cycling', 'qty' => 1],
-    'cycling-5'  => ['type' => 'cycling', 'qty' => 5],
-    'cycling-10' => ['type' => 'cycling', 'qty' => 10],
+    'classes-1'  => 1,
+    'classes-5'  => 5,
+    'classes-10' => 10,
 ];
 
 if (isset($gymPlans[$plan])) {
@@ -55,31 +52,27 @@ if (isset($gymPlans[$plan])) {
         $stmt->execute([$gymPlan, $gymStart, $gymEnd, $userId]);
     } else {
         $stmt = $db->prepare('
-            INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, pilates_classes, cycling_classes)
-            VALUES (?, ?, ?, ?, 0, 0)
+            INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, classes_remaining)
+            VALUES (?, ?, ?, ?, 0)
         ');
         $stmt->execute([$userId, $gymPlan, $gymStart, $gymEnd]);
     }
 
 } elseif (isset($classPacks[$plan])) {
-    $pack = $classPacks[$plan];
-    $col  = $pack['type'] === 'pilates' ? 'pilates_classes' : 'cycling_classes';
-    $qty  = $pack['qty'];
+    $qty = $classPacks[$plan];
 
     $stmt = $db->prepare('SELECT client_id FROM memberships WHERE client_id = ?');
     $stmt->execute([$userId]);
 
     if ($stmt->fetch()) {
-        $stmt = $db->prepare("UPDATE memberships SET $col = $col + ? WHERE client_id = ?");
+        $stmt = $db->prepare('UPDATE memberships SET classes_remaining = classes_remaining + ? WHERE client_id = ?');
         $stmt->execute([$qty, $userId]);
     } else {
-        $stmt = $db->prepare("
-            INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, pilates_classes, cycling_classes)
-            VALUES (?, NULL, NULL, NULL, ?, ?)
-        ");
-        $pilates = $pack['type'] === 'pilates' ? $qty : 0;
-        $cycling = $pack['type'] === 'cycling' ? $qty : 0;
-        $stmt->execute([$userId, $pilates, $cycling]);
+        $stmt = $db->prepare('
+            INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, classes_remaining)
+            VALUES (?, NULL, NULL, NULL, ?)
+        ');
+        $stmt->execute([$userId, $qty]);
     }
 } else {
     header('Location: /pages/membership.php');

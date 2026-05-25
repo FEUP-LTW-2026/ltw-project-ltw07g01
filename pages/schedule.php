@@ -46,7 +46,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && $role ===
 
     if (!$cl || $cl['enrolled'] >= $cl['capacity']) { echo json_encode(['ok' => false, 'error' => 'full']); exit; }
 
+    $s = $db->prepare('SELECT classes_remaining FROM memberships WHERE client_id = ?');
+    $s->execute([$userId]);
+    $mem = $s->fetch();
+    if (!$mem || (int)$mem['classes_remaining'] <= 0) {
+        echo json_encode(['ok' => false, 'error' => 'no_credits']);
+        exit;
+    }
+
     $db->prepare('INSERT INTO client_classes (client_id, class_id) VALUES (?,?)')->execute([$userId, $classId]);
+    $db->prepare('UPDATE memberships SET classes_remaining = classes_remaining - 1 WHERE client_id = ?')->execute([$userId]);
     $newEnrolled = (int)$cl['enrolled'] + 1;
     echo json_encode([
         'ok' => true,
@@ -130,24 +139,16 @@ $typeColors = [
     'Yoga'                    => '#a78bfa',
     'Cycling'                 => '#60a5fa',
     'Pilates'                 => '#f472b6',
-    'HIIT'                    => '#fb923c',
     'Personal Training'       => '#34d399',
-    'Spin'                    => '#22d3ee',
     'Strength & Conditioning' => '#fbbf24',
-    'Zumba'                   => '#a3e635',
-    'Boxing'                  => '#f87171',
 ];
 
 $typeDescriptions = [
     'Yoga'                    => 'A mind-body practice combining physical postures, breathing and meditation to improve flexibility, strength and mental clarity.',
     'Cycling'                 => 'High-energy indoor cycling set to motivating music. Builds cardiovascular endurance and lower-body power.',
     'Pilates'                 => 'Low-impact exercise focusing on core strength, posture and controlled movement. Suitable for all fitness levels.',
-    'HIIT'                    => 'High-Intensity Interval Training alternates short bursts of maximum effort with active rest, torching calories and boosting metabolism.',
     'Personal Training'       => 'One-on-one session tailored to your specific goals with dedicated coach guidance and personalised programming.',
-    'Spin'                    => 'Indoor cycling with varied speed and resistance simulating climbs, sprints and flat terrain. Great cardio and leg workout.',
     'Strength & Conditioning' => 'Compound lifts and functional movements to build muscle, improve athletic performance and increase overall body strength.',
-    'Zumba'                   => 'Dance fitness blending Latin rhythms with easy-to-follow moves. Fun, social and a great full-body workout.',
-    'Boxing'                  => 'Technique-driven boxing fundamentals combined with conditioning drills. Builds speed, coordination and cardiovascular fitness.',
 ];
 
 function typeColor(string $n, array $m): string { return $m[$n] ?? '#888'; }

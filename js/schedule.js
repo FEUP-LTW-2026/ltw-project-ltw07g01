@@ -174,6 +174,14 @@
             if (!data.ok) {
                 btn.disabled  = false;
                 btn.innerHTML = '<i class="fa fa-calendar-check"></i> Book';
+                if (data.error === 'no_credits') {
+                    var actEl = btn.closest('.sc-card-actions');
+                    if (actEl) {
+                        actEl.insertAdjacentHTML('beforeend',
+                            '<span class="sc-no-credits-msg"><i class="fa fa-triangle-exclamation"></i> No class credits remaining. <a href="membership.php">Get more</a></span>'
+                        );
+                    }
+                }
                 return;
             }
 

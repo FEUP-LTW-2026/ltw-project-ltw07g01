@@ -160,12 +160,11 @@ CREATE TABLE trainer_specializations
 
 CREATE TABLE memberships
 (
-    client_id       INTEGER PRIMARY KEY,
-    gym_plan        TEXT CHECK(gym_plan IN ('basic', 'pro', 'ultra')),
-    gym_start       TIMESTAMP,
-    gym_end         TIMESTAMP,
-    pilates_classes INTEGER NOT NULL DEFAULT 0,
-    cycling_classes INTEGER NOT NULL DEFAULT 0,
+    client_id        INTEGER PRIMARY KEY,
+    gym_plan         TEXT CHECK(gym_plan IN ('basic', 'pro', 'ultra')),
+    gym_start        TIMESTAMP,
+    gym_end          TIMESTAMP,
+    classes_remaining INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (client_id)
         REFERENCES clients(user_id)
         ON DELETE CASCADE ON UPDATE NO ACTION
@@ -284,12 +283,8 @@ INSERT INTO gym_locations (name, city, address) VALUES ('Braga',      'Braga', '
 INSERT INTO class_types (name) VALUES ('Yoga');
 INSERT INTO class_types (name) VALUES ('Cycling');
 INSERT INTO class_types (name) VALUES ('Pilates');
-INSERT INTO class_types (name) VALUES ('HIIT');
 INSERT INTO class_types (name) VALUES ('Personal Training');
-INSERT INTO class_types (name) VALUES ('Spin');
 INSERT INTO class_types (name) VALUES ('Strength & Conditioning');
-INSERT INTO class_types (name) VALUES ('Zumba');
-INSERT INTO class_types (name) VALUES ('Boxing');
 
 INSERT INTO archetypes (name) VALUES ('SPINNER');
 INSERT INTO archetypes (name) VALUES ('POWERLIFTER');
@@ -329,8 +324,8 @@ INSERT INTO clients (user_id, preferred_gym_id, archetype_id, body_weight, heigh
 INSERT INTO client_gyms (client_id, gym_id, is_primary) VALUES (3, 1, 1);
 
 -- Membership para joao.costa
-INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, pilates_classes, cycling_classes)
-VALUES (3, 'pro', '2024-01-15', '2025-01-15', 5, 3);
+INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, classes_remaining)
+VALUES (3, 'pro', '2024-01-15', '2025-01-15', 8);
 
 -- Visitas ao ginásio
 INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
@@ -383,6 +378,7 @@ INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Leg Exten
 INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Lat Pulldown', 3, 'Back', 1);
 INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Rowing Machine', 3, 'Back', 0);
 
+-- class_type_id: 1=Yoga 2=Cycling 3=Pilates 4=Personal Training 5=Strength & Conditioning
 INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
 VALUES (1, 1, 4, datetime('now', '+1 day', '+10 hours'), 60, 20);
 INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
@@ -394,13 +390,13 @@ VALUES (4, 1, 2, datetime('now', '+4 days', '+19 hours'), 50, 25);
 INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
 VALUES (5, 1, 4, datetime('now', '+5 days', '+6 hours'), 40, 20);
 INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
-VALUES (6, 1, 2, datetime('now', '+6 days', '+17 hours'), 55, 30);
+VALUES (1, 1, 2, datetime('now', '+6 days', '+17 hours'), 55, 30);
 INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
-VALUES (7, 1, 2, datetime('now', '+7 days', '+8 hours'), 35, 15);
+VALUES (2, 1, 2, datetime('now', '+7 days', '+8 hours'), 35, 15);
 INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
-VALUES (8, 1, 2, datetime('now', '+8 days', '+18 hours'), 45, 20);
+VALUES (3, 1, 2, datetime('now', '+8 days', '+18 hours'), 45, 20);
 INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
-VALUES (9, 1, 2, datetime('now', '+9 days', '+7 hours'), 60, 25);
+VALUES (5, 1, 2, datetime('now', '+9 days', '+7 hours'), 60, 25);
 INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
 VALUES (1, 1, 2, datetime('now', '+10 days', '+9 hours'), 30, 10);
 INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)
