@@ -21,21 +21,18 @@ if (!$stmt->fetch()) {
     exit();
 }
 
-$plan = $_GET['plan'] ?? '';
+$plan = $_POST['plan'] ?? '';
 
 $gymPlans = [
-    'gym-basic' => 'basic',
-    'gym-pro'   => 'pro',
-    'gym-ultra' => 'ultra',
+    'gym-1' => 'basic',
+    'gym-2' => 'pro',
+    'gym-3' => 'ultra',
 ];
 
 $classPacks = [
-    'pilates-1'  => 1,
-    'pilates-5'  => 5,
-    'pilates-10' => 10,
-    'cycling-1'  => 1,
-    'cycling-5'  => 5,
-    'cycling-10' => 10,
+    'classes-1'  => 1,
+    'classes-5'  => 5,
+    'classes-10' => 10,
 ];
 
 if (isset($gymPlans[$plan])) {

@@ -40,7 +40,7 @@
                 <li>Free schedule access</li>
                 <li>Training app included</li>
             </ul>
-            <a href="<?= $loggedIn ? '/actions/subscribe.php?plan=gym-basic' : '/pages/login.php' ?>" class="plan-btn <?= $loggedIn ? '' : 'plan-btn--outline' ?>">
+            <a href="<?= $loggedIn ? '/pages/confirm-purchase.php?plan=gym-1' : '/actions/login.php' ?>" class="plan-btn">
                 <?= $loggedIn ? 'Get Started' : 'Login to Subscribe' ?>
             </a>
         </article>
@@ -54,7 +54,7 @@
                 <li>Premium classes</li>
                 <li>Nutritional consulting</li>
             </ul>
-            <a href="<?= $loggedIn ? '/actions/subscribe.php?plan=gym-pro' : '/pages/login.php' ?>" class="plan-btn <?= $loggedIn ? '' : 'plan-btn--outline' ?>">
+            <a href="<?= $loggedIn ? '/pages/confirm-purchase.php?plan=gym-2' : '/actions/login.php' ?>" class="plan-btn">
                 <?= $loggedIn ? 'Get Started' : 'Login to Subscribe' ?>
             </a>
         </article>
@@ -67,7 +67,7 @@
                 <li>Unlimited group classes</li>
                 <li>Monthly physical assessment</li>
             </ul>
-            <a href="<?= $loggedIn ? '/actions/subscribe.php?plan=gym-ultra' : '/pages/login.php' ?>" class="plan-btn <?= $loggedIn ? '' : 'plan-btn--outline' ?>">
+            <a href="<?= $loggedIn ? '/pages/confirm-purchase.php?plan=gym-3' : '/actions/login.php' ?>" class="plan-btn">
                 <?= $loggedIn ? 'Get Started' : 'Login to Subscribe' ?>
             </a>
         </article>
@@ -81,41 +81,41 @@
     <div>
         <article class="plan">
             <h2>1 CLASS</h2>
-            <p class="price">12 €</p>
+            <p class="price">10 €</p>
             <p class="plan-info">Drop in anytime. No commitment required.</p>
             <ul>
                 <li>1 session with certified instructor</li>
                 <li>Mat included</li>
                 <li>Valid immediately</li>
             </ul>
-            <a href="<?= $loggedIn ? '/actions/subscribe.php?plan=pilates-1' : '/pages/login.php' ?>" class="plan-btn <?= $loggedIn ? '' : 'plan-btn--outline' ?>">
+            <a href="<?= $loggedIn ? '/pages/confirm-purchase.php?plan=classes-1' : '/actions/login.php' ?>" class="plan-btn">
                 <?= $loggedIn ? 'Buy 1 Class' : 'Login to Buy' ?>
             </a>
         </article>
         <article class="plan plan-popular">
             <span class="popular-badge">BEST VALUE</span>
             <h2>5 CLASSES</h2>
-            <p class="price">50 €</p>
+            <p class="price">40 €</p>
             <p class="plan-info">Best for getting started with a routine.</p>
             <ul>
                 <li>5 sessions to use flexibly</li>
                 <li>All locations</li>
                 <li>Valid for 3 months</li>
             </ul>
-            <a href="<?= $loggedIn ? '/actions/subscribe.php?plan=pilates-5' : '/pages/login.php' ?>" class="plan-btn <?= $loggedIn ? '' : 'plan-btn--outline' ?>">
+            <a href="<?= $loggedIn ? '/pages/confirm-purchase.php?plan=classes-5' : '/actions/login.php' ?>" class="plan-btn">
                 <?= $loggedIn ? 'Buy 5 Classes' : 'Login to Buy' ?>
             </a>
         </article>
         <article class="plan">
             <h2>10 CLASSES</h2>
-            <p class="price">90 €</p>
+            <p class="price">75 €</p>
             <p class="plan-info">Commit to your practice and save.</p>
             <ul>
                 <li>10 sessions at your pace</li>
                 <li>Priority booking</li>
                 <li>Valid for 6 months</li>
             </ul>
-            <a href="<?= $loggedIn ? '/actions/subscribe.php?plan=pilates-10' : '/pages/login.php' ?>" class="plan-btn <?= $loggedIn ? '' : 'plan-btn--outline' ?>">
+            <a href="<?= $loggedIn ? '/pages/confirm-purchase.php?plan=classes-10' : '/actions/login.php' ?>" class="plan-btn">
                 <?= $loggedIn ? 'Buy 10 Classes' : 'Login to Buy' ?>
             </a>
         </article>
@@ -136,7 +136,7 @@
                 <li>Bike reserved for you</li>
                 <li>Valid immediately</li>
             </ul>
-            <a href="<?= $loggedIn ? '/actions/subscribe.php?plan=cycling-1' : '/pages/login.php' ?>" class="plan-btn <?= $loggedIn ? '' : 'plan-btn--outline' ?>">
+            <a href="<?= $loggedIn ? '/pages/confirm-purchase.php?plan=classes-1' : '/actions/login.php' ?>" class="plan-btn">
                 <?= $loggedIn ? 'Buy 1 Class' : 'Login to Buy' ?>
             </a>
         </article>
@@ -150,7 +150,7 @@
                 <li>All locations</li>
                 <li>Valid for 3 months</li>
             </ul>
-            <a href="<?= $loggedIn ? '/actions/subscribe.php?plan=cycling-5' : '/pages/login.php' ?>" class="plan-btn <?= $loggedIn ? '' : 'plan-btn--outline' ?>">
+            <a href="<?= $loggedIn ? '/pages/confirm-purchase.php?plan=classes-5' : '/actions/login.php' ?>" class="plan-btn">
                 <?= $loggedIn ? 'Buy 5 Classes' : 'Login to Buy' ?>
             </a>
         </article>
@@ -163,7 +163,7 @@
                 <li>Performance metrics included</li>
                 <li>Valid for 6 months</li>
             </ul>
-            <a href="<?= $loggedIn ? '/actions/subscribe.php?plan=cycling-10' : '/pages/login.php' ?>" class="plan-btn <?= $loggedIn ? '' : 'plan-btn--outline' ?>">
+            <a href="<?= $loggedIn ? '/pages/confirm-purchase.php?plan=classes-10' : '/actions/login.php' ?>" class="plan-btn">
                 <?= $loggedIn ? 'Buy 10 Classes' : 'Login to Buy' ?>
             </a>
         </article>
@@ -171,23 +171,51 @@
 </section>
 
 
-<section class="type-section type-section--info" id="section-pt">
+<section class="type-section" id="section-pt">
     <img src="../images/personal-training.png" alt="Personal Training section">
     <h3>Personal Training</h3>
     <p class="credits-universal-note"><i class="fa fa-circle-info"></i> Book Personal Training sessions using your class credits. <a href="/pages/schedule.php">View schedule →</a></p>
     <div>
-        <div class="info-card">
-            <h4>1-on-1 Focus</h4>
-            <p>Dedicated coach attention tailored exclusively to your goals and fitness level.</p>
-        </div>
-        <div class="info-card">
-            <h4>Custom Programming</h4>
-            <p>Every session is built around you — strength, weight loss, mobility, or performance.</p>
-        </div>
-        <div class="info-card">
-            <h4>Progress Tracking</h4>
-            <p>Regular assessments and plan adjustments to keep you on the fastest path to results.</p>
-        </div>
+        <article class="plan">
+            <h2>1 CLASS</h2>
+            <p class="price">10 €</p>
+            <p class="plan-info">Private session with dedicated coach attention.</p>
+            <ul>
+                <li>1-on-1 focus</li>
+                <li>Goal-based programming</li>
+                <li>All locations</li>
+            </ul>
+            <a href="<?= $loggedIn ? '/pages/confirm-purchase.php?plan=classes-1' : '/actions/login.php' ?>" class="plan-btn">
+                <?= $loggedIn ? 'Buy 1 Class' : 'Login to Buy' ?>
+            </a>
+        </article>
+        <article class="plan plan-popular">
+            <span class="popular-badge">MOST POPULAR</span>
+            <h2>5 CLASSES</h2>
+            <p class="price">40 €</p>
+            <p class="plan-info">Build consistency with a personalised programme.</p>
+            <ul>
+                <li>Custom plan</li>
+                <li>Weekly adjustments</li>
+                <li>Nutrition guidance</li>
+            </ul>
+            <a href="<?= $loggedIn ? '/pages/confirm-purchase.php?plan=classes-5' : '/actions/login.php' ?>" class="plan-btn">
+                <?= $loggedIn ? 'Buy 5 Classes' : 'Login to Buy' ?>
+            </a>
+        </article>
+        <article class="plan">
+            <h2>10 CLASSES</h2>
+            <p class="price">75 €</p>
+            <p class="plan-info">Full commitment — track progress and see real results.</p>
+            <ul>
+                <li>Monthly assessments</li>
+                <li>Performance metrics</li>
+                <li>Priority booking</li>
+            </ul>
+            <a href="<?= $loggedIn ? '/pages/confirm-purchase.php?plan=classes-10' : '/actions/login.php' ?>" class="plan-btn">
+                <?= $loggedIn ? 'Buy 10 Classes' : 'Login to Buy' ?>
+            </a>
+        </article>
     </div>
 </section>
 
