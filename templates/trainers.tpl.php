@@ -22,14 +22,6 @@
 
 <main class="trainers-page">
 
-    <section class="trainers-hero">
-        <h1>Our Trainers</h1>
-        <p>
-            Meet the people who help you train harder,
-            move better, and stay consistent.
-        </p>
-    </section>
-
     <section class="trainers-filters filter-bar">
         <span class="filter-label"><i class="fa fa-sliders"></i> Filter</span>
 
@@ -51,6 +43,14 @@
             <i class="fa fa-xmark"></i> Clear
         </button>
         <span class="filter-count" id="trainer-filter-count"></span>
+    </section>
+
+    <section class="trainers-hero">
+        <h1>Our Trainers</h1>
+        <p>
+            Meet the people who help you train harder,
+            move better, and stay consistent.
+        </p>
     </section>
 
     <section class="trainers-grid">

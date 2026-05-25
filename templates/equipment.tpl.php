@@ -1,10 +1,5 @@
 <?php function drawEquipment(array $equipment): void { ?>
 <main class="equipment-page">
-    <section class="equipment-hero">
-        <h1>Equipment</h1>
-        <p>Check the current state of our machines and training areas.</p>
-    </section>
-
     <section class="equipment-filters filter-bar">
         <span class="filter-label"><i class="fa fa-sliders"></i> Filter</span>
 
@@ -35,6 +30,11 @@
             <i class="fa fa-xmark"></i> Clear
         </button>
         <span class="filter-count" id="equipment-filter-count"></span>
+    </section>
+
+    <section class="equipment-hero">
+        <h1>Equipment</h1>
+        <p>Check the current state of our machines and training areas.</p>
     </section>
 
     <section class="equipment-grid">

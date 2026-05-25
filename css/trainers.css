@@ -1,7 +1,7 @@
 .trainers-page {
     min-height: 100vh;
     background: linear-gradient(to bottom, black, #2a2a2a, black);
-    padding-top: 120px;
+    padding-top: 5.625rem;
     font-family: 'League Gothic', sans-serif;
 }
 
