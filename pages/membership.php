@@ -23,6 +23,6 @@ if ($session->isLoggedIn()) {
     <p class="subscribe-success">Your plan has been activated successfully!</p>
 <?php endif; ?>
 
-<?php drawMemberships($session); ?>
+<?php drawMemberships($session, $classesRemaining); ?>
 
 <?php drawFooter(); ?>

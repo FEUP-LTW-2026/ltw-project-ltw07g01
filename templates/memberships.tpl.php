@@ -1,4 +1,4 @@
-<?php function drawMemberships(object $session) { ?>
+<?php function drawMemberships(object $session, ?int $classesRemaining = null) { ?>
 
 <div class="banner">
     <h2>MEMBERSHIPS</h2>
@@ -12,6 +12,17 @@
         <a href="#section-cycling">CYCLING</a>
     </h3>
 </div>
+
+<?php if ($classesRemaining !== null): ?>
+<div class="credits-balance-banner">
+    <i class="fa fa-ticket"></i>
+    <?php if ($classesRemaining > 0): ?>
+        You have <strong><?= $classesRemaining ?> class credit<?= $classesRemaining !== 1 ? 's' : '' ?></strong> remaining — use them in any group class.
+    <?php else: ?>
+        You have <strong>no class credits</strong>. Purchase a pack below to book group classes.
+    <?php endif; ?>
+</div>
+<?php endif; ?>
 
 <section class="type-section" id="section-gym">
     <img src="../images/bigGuy.jpg" alt="Gym section">
@@ -55,6 +66,7 @@
 <section class="type-section" id="section-pilates">
     <img src="../images/pilatu.jpg" alt="Pilates section">
     <h3>Pilates</h3>
+    <p class="credits-universal-note"><i class="fa fa-circle-info"></i> Credits from any class pack work across <strong>all group classes</strong> — Yoga, Pilates, Cycling, Personal Training, and Strength &amp; Conditioning.</p>
     <div>
         <article class="plan">
             <h2>1 CLASS</h2>
@@ -93,6 +105,7 @@
 <section class="type-section" id="section-cycling">
     <img src="../images/cycling.jpg" alt="Cycling section">
     <h3>Cycling</h3>
+    <p class="credits-universal-note"><i class="fa fa-circle-info"></i> Credits from any class pack work across <strong>all group classes</strong> — Yoga, Pilates, Cycling, Personal Training, and Strength &amp; Conditioning.</p>
     <div>
         <article class="plan">
             <h2>1 CLASS</h2>
