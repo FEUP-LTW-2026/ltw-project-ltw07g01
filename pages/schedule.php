@@ -46,7 +46,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && $role ===
 
     if (!$cl || $cl['enrolled'] >= $cl['capacity']) { echo json_encode(['ok' => false, 'error' => 'full']); exit; }
 
+    $s = $db->prepare('SELECT classes_remaining FROM memberships WHERE client_id = ?');
+    $s->execute([$userId]);
+    $mem = $s->fetch();
+    if (!$mem || (int)$mem['classes_remaining'] <= 0) {
+        echo json_encode(['ok' => false, 'error' => 'no_credits']);
+        exit;
+    }
+
     $db->prepare('INSERT INTO client_classes (client_id, class_id) VALUES (?,?)')->execute([$userId, $classId]);
+    $db->prepare('UPDATE memberships SET classes_remaining = classes_remaining - 1 WHERE client_id = ?')->execute([$userId]);
     $newEnrolled = (int)$cl['enrolled'] + 1;
     echo json_encode([
         'ok' => true,

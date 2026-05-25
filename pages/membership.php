@@ -7,7 +7,12 @@ require_once('../templates/common.tpl.php');
 require_once('../templates/memberships.tpl.php');
 $db = getDatabaseConnection();
 
+$classesRemaining = null;
 if ($session->isLoggedIn()) {
+    $s = $db->prepare('SELECT classes_remaining FROM memberships WHERE client_id = ?');
+    $s->execute([$session->getId()]);
+    $mem = $s->fetch();
+    if ($mem) $classesRemaining = (int)$mem['classes_remaining'];
     drawDashHeader($session, $db, 'membership', ['membership']);
 } else {
     drawHeader($session, ['membership']);
