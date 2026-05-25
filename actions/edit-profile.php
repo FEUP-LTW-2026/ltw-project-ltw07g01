@@ -3,20 +3,18 @@ declare(strict_types=1);
 require_once('../utils/session.php');
 $session = new Session();
 
-//if (!$session->isLoggedIn()) {
-//  header('Location: login.php');
-//    exit;
-//}
+if (!$session->isLoggedIn()) {
+  header('Location: login.php');
+   exit;
+}
 
-$userId = 3; //user de teste
 
 require_once('../database/connection.db.php');
 require_once('../templates/common.tpl.php');
 
 $db = getDatabaseConnection();
-//$userId = $session->getId();
+$userId = $session->getId();
 
-// buscar dados atuais
 $stmt = $db->prepare(
     'SELECT u.username, u.email, u.first_name, u.last_name, u.profile_photo, u.bio, u.created_at, c.preferred_gym_id, c.archetype_id, c.body_weight, c.height, c.selected_badges,
             gl.name AS gym_name, gl.city AS gym_city,
@@ -37,18 +35,15 @@ if (!$user) {
 
 $selectedBadgeCodes = array_filter(array_map('trim', explode(',', $user['selected_badges'] ?? '')));
 
-// buscar todos os gyms 
 $stmt = $db->prepare('SELECT id, name, city FROM gym_locations ORDER BY city, name');
 $stmt->execute();
 $gyms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// buscar todos os archetypes 
 $stmt = $db->prepare('SELECT id, name FROM archetypes ORDER BY name');
 $stmt->execute();
 $archetypeOptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $validArchetypeIds = array_column($archetypeOptions, 'id');
 
-// processar form 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstName = trim($_POST['first_name'] ?? '');
     $lastName = trim($_POST['last_name'] ?? '');
@@ -66,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newPassword = $_POST['new_password'] ?? '';
     $confirmPassword = $_POST['confirm_password'] ?? '';
 
-    // Validações básicas
     if (empty($firstName) || empty($lastName) || empty($email) || empty($username)) {
         $error = 'First name, last name, email and username are required.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -78,7 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($archetypeId !== null && !in_array($archetypeId, $validArchetypeIds, true)) {
         $error = 'Invalid archetype selected.';
     } else {
-        // check username uniqueness
         $stmt = $db->prepare('SELECT id FROM users WHERE username = :username AND id != :id');
         $stmt->execute([':username' => $username, ':id' => $userId]);
         if ($stmt->fetch()) {
@@ -86,7 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    //password change validation
     if (!isset($error) && $newPassword !== '') {
         $stmt = $db->prepare('SELECT password_hash FROM users WHERE id = :id');
         $stmt->execute([':id' => $userId]);
@@ -100,7 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // profile photo
     $newPhotoPath = null;
     if (!isset($error) && isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
         $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
@@ -123,7 +114,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!isset($error)) {
-        // users update
         $userFields = 'first_name = :first, last_name = :last, email = :email, username = :username, bio = :bio';
         $userParams = [':first' => $firstName, ':last' => $lastName, ':email' => $email, ':username' => $username, ':bio' => $bio, ':id' => $userId];
 
@@ -139,7 +129,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $db->prepare("UPDATE users SET {$userFields} WHERE id = :id");
         $stmt->execute($userParams);
 
-        // atualizar clients
         $stmt = $db->prepare('UPDATE clients SET archetype_id = :arch, preferred_gym_id = :gym, body_weight = :weight, height = :height, selected_badges = :selected_badges WHERE user_id = :id');
         $stmt->execute([
             ':arch' => $archetypeId ?: null,
@@ -150,12 +139,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':id' => $userId
         ]);
 
-        header('Location: profile.php');
+        header('Location: /pages/profile.php');
         exit;
     }
 }
 
-// valores atuais
 $fullName = $user['first_name'] . ' ' . $user['last_name'];
 $memberSince = (new DateTime($user['created_at']))->format('F Y');
 $homeGym = $user['gym_name'] ? 'Cubo Gym - ' . $user['gym_city'] . ', ' . $user['gym_name'] : 'No gym selected';
@@ -164,9 +152,8 @@ $archetype = $user['archetype'] ?? 'NO ARCHETYPE';
 $bio = $user['bio'] ?? '';
 $bodyWeight = $user['body_weight'] ?? '';
 $height = $user['height'] ?? '';
-$memberTag = 'MEMBER'; // Simplificado
+$memberTag = 'MEMBER';
 
-// estatísticas para badges
 $stmt = $db->prepare('SELECT COUNT(*) FROM gym_visits WHERE client_id = :id');
 $stmt->execute([':id' => $userId]);
 $totalVisits = (int)$stmt->fetchColumn();
@@ -316,8 +303,6 @@ $selectedBadgesDisplay = array_filter($availableBadges, function ($badge) use ($
             </div>
 
             <div class="badge-picker">
-                <!-- DISPLAY BADGES: moved below Metrics -->
-                <!-- Placeholder: badge picker will be rendered after Metrics -->
             </div>
 
             <div class="metrics-section">
@@ -334,7 +319,6 @@ $selectedBadgesDisplay = array_filter($availableBadges, function ($badge) use ($
                 </div>
             </div>
 
-            <!-- display dos badges -->
             <div class="display-badges-section">
                 <h3>DISPLAY BADGES</h3>
                 <p class="detail-label">Select which earned badges should appear on your profile.</p>

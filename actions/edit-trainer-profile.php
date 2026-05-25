@@ -10,7 +10,6 @@ require_once(__DIR__ . '/../templates/common.tpl.php');
 
 $db = getDatabaseConnection();
 
-// --- Dados do trainer ---
 $stmt = $db->prepare(
     'SELECT u.username, u.email, u.first_name, u.last_name, u.profile_photo,
             t.bio, t.certifications
@@ -26,27 +25,22 @@ if (!$user) {
     exit;
 }
 
-// --- All class types (specializations) ---
 $stmt = $db->prepare('SELECT id, name FROM class_types ORDER BY name');
 $stmt->execute();
 $allSpecializations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// --- Current specializations ---
 $stmt = $db->prepare('SELECT class_type_id FROM trainer_specializations WHERE trainer_id = :id');
 $stmt->execute([':id' => $userId]);
 $currentSpecIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-// --- All gyms ---
 $stmt = $db->prepare('SELECT id, name, city FROM gym_locations ORDER BY city, name');
 $stmt->execute();
 $allGyms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// --- Current trainer gyms ---
 $stmt = $db->prepare('SELECT gym_id FROM trainer_locations WHERE trainer_id = :id');
 $stmt->execute([':id' => $userId]);
 $currentGymIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-// --- POST ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstName       = trim($_POST['first_name'] ?? '');
     $lastName        = trim($_POST['last_name'] ?? '');
@@ -92,7 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Photo upload
     $newPhotoPath = null;
     if (!isset($error) && isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
         $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
@@ -142,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtGym->execute([':tid' => $userId, ':gid' => $gymId]);
         }
 
-        header('Location: trainer-profile.php');
+        header('Location: /pages/trainer-profile.php');
         exit;
     }
 
@@ -185,7 +178,6 @@ $certifications = $user['certifications'] ?? '';
         <form method="post" enctype="multipart/form-data" class="edit-form">
             <input type="file" id="profile_photo" name="profile_photo" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none">
 
-            <!-- Basic info -->
             <div class="profile-details">
                 <div class="detail-item">
                     <label class="detail-label" for="first_name">First Name</label>
@@ -209,7 +201,6 @@ $certifications = $user['certifications'] ?? '';
                 </div>
             </div>
 
-            <!-- Specializations -->
             <div class="specializations-section">
                 <h3>SPECIALIZATIONS</h3>
                 <p class="detail-label">Select all areas you are qualified to teach.</p>
@@ -224,14 +215,12 @@ $certifications = $user['certifications'] ?? '';
                 </div>
             </div>
 
-            <!-- Certifications -->
             <div class="certifications-edit-section">
                 <h3>CERTIFICATIONS</h3>
                 <p class="detail-label">Enter one certification per line.</p>
                 <textarea name="certifications" class="detail-input bio-textarea" rows="6" placeholder="e.g. NASM Certified Personal Trainer&#10;ACE Group Fitness Instructor"><?= htmlspecialchars($certifications) ?></textarea>
             </div>
 
-            <!-- Gym locations -->
             <div class="gyms-section">
                 <h3>GYM LOCATIONS</h3>
                 <p class="detail-label">Select the gyms where you work.</p>
@@ -246,7 +235,6 @@ $certifications = $user['certifications'] ?? '';
                 </div>
             </div>
 
-            <!-- Password -->
             <div class="password-section">
                 <h3>CHANGE PASSWORD</h3>
                 <p class="detail-label">Leave blank to keep your current password.</p>
