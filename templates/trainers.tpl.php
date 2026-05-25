@@ -1,4 +1,24 @@
 <?php function drawTrainersPage(Session $session, array $trainers): void { ?>
+<?php
+    $allGyms = [];
+    $allClasses = [];
+
+    foreach ($trainers as $trainer) {
+        foreach (explode(',', $trainer['gyms'] ?? '') as $gym) {
+            $gym = trim($gym);
+            if ($gym !== '') $allGyms[$gym] = true;
+        }
+        foreach (explode(',', $trainer['class_types'] ?? '') as $class) {
+            $class = trim($class);
+            if ($class !== '') $allClasses[$class] = true;
+        }
+    }
+
+    $allGyms = array_keys($allGyms);
+    $allClasses = array_keys($allClasses);
+    sort($allGyms);
+    sort($allClasses);
+?>
 
 <main class="trainers-page">
 
@@ -8,6 +28,29 @@
             Meet the people who help you train harder,
             move better, and stay consistent.
         </p>
+    </section>
+
+    <section class="trainers-filters filter-bar">
+        <span class="filter-label"><i class="fa fa-sliders"></i> Filter</span>
+
+        <select class="filter-select" id="trainer-filter-gym">
+            <option value="all">All gyms</option>
+            <?php foreach ($allGyms as $gym): ?>
+                <option value="<?= htmlspecialchars($gym) ?>"><?= htmlspecialchars($gym) ?></option>
+            <?php endforeach; ?>
+        </select>
+
+        <select class="filter-select" id="trainer-filter-class">
+            <option value="all">All classes</option>
+            <?php foreach ($allClasses as $class): ?>
+                <option value="<?= htmlspecialchars($class) ?>"><?= htmlspecialchars($class) ?></option>
+            <?php endforeach; ?>
+        </select>
+
+        <button class="filter-clear" id="trainer-filter-clear" hidden>
+            <i class="fa fa-xmark"></i> Clear
+        </button>
+        <span class="filter-count" id="trainer-filter-count"></span>
     </section>
 
     <section class="trainers-grid">
@@ -33,6 +76,8 @@
             ?>
             <<?= $cardTag ?>
                 class="trainer-card"
+                data-gyms="<?= htmlspecialchars(implode('|', array_map('trim', $gyms))) ?>"
+                data-classes="<?= htmlspecialchars(implode('|', array_map('trim', $classes))) ?>"
                 <?= $cardHref ?>>
                 <img class="trainer-photo"
                      src="<?= htmlspecialchars($photo) ?>"
@@ -89,4 +134,5 @@
         <?php endforeach; ?>
     </section>
 </main>
+<script src="../js/trainers.js"></script>
 <?php } ?>

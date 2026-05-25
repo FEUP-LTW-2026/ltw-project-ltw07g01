@@ -22,31 +22,6 @@
     font-size: 1.75rem;
 }
 
-.equipment-filters {
-    display: flex;
-    justify-content: center;
-    gap: 1.5625rem;
-    padding: 0 10% 1.25rem;
-}
-
-
-
-.equipment-filters select:focus {
-    outline: none;
-    border-color: #00bfa6;
-    box-shadow: none;
-}
-
-.equipment-filters select {
-    padding: 0.75rem 1.25rem;
-    text-align: center;
-    background-color: black;
-    border: 0.125rem solid #00bfa6;
-    color: white;
-    font-family: 'League Gothic', sans-serif;
-    font-size: 1.375rem;
-}
-
 .equipment-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -92,10 +67,6 @@
 }
 
 @media (max-width: 56.25rem) {
-    .equipment-filters {
-        flex-direction: column;
-    }
-
     .equipment-grid {
         grid-template-columns: 1fr;
     }
