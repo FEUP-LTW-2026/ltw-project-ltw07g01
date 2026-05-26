@@ -73,11 +73,18 @@ require_once(__DIR__ . '/../utils/session.php');
         }
         if ($role === 'trainer') {
             $profileUrl = '/pages/trainer-profile.php?id=' . $userId;
+        } elseif ($role === 'admin') {
+            $profileUrl = '/pages/admin-profile.php';
         }
     }
 
-    if ($bodyClass === '' && $role === 'trainer') $bodyClass = 'trainer-theme';
-    if ($bodyClass === '' && $role === 'admin')   $bodyClass = 'admin-theme';
+    // garante tema do viewer no body, independte do bodyClass
+    if ($role === 'trainer' && strpos($bodyClass, 'trainer-theme') === false) {
+        $bodyClass = trim('trainer-theme ' . $bodyClass);
+    }
+    if ($role === 'admin' && strpos($bodyClass, 'admin-theme') === false) {
+        $bodyClass = trim('admin-theme ' . $bodyClass);
+    }
     ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -120,7 +127,8 @@ require_once(__DIR__ . '/../utils/session.php');
             </div>
         </div>
         <nav class="nav-popup-links">
-            <a href="/pages/dashboard.php"  class="nav-popup-link <?= $activePage === 'home'       ? 'active' : '' ?>"><i class="fa fa-home"></i> Home</a>
+            <a href="/pages/dashboard.php" class="nav-popup-link <?= $activePage === 'home' ? 'active' : '' ?>"><i class="fa fa-home"></i> Home</a>
+            <?php if ($role !== 'admin'): ?>
             <a href="<?= htmlspecialchars($profileUrl) ?>" class="nav-popup-link <?= $activePage === 'profile'    ? 'active' : '' ?>"><i class="fa fa-user"></i> Profile</a>
             <a href="/pages/schedule.php"   class="nav-popup-link <?= $activePage === 'schedule'   ? 'active' : '' ?>"><i class="fa fa-calendar"></i> Schedule</a>
             <a href="/pages/trainers.php"   class="nav-popup-link <?= $activePage === 'trainers'   ? 'active' : '' ?>"><i class="fa fa-users"></i> Trainers</a>
@@ -128,6 +136,14 @@ require_once(__DIR__ . '/../utils/session.php');
             <a href="/pages/locations.php"  class="nav-popup-link <?= $activePage === 'locations'  ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
             <a href="/pages/membership.php" class="nav-popup-link <?= $activePage === 'membership' ? 'active' : '' ?>"><i class="fa fa-id-card"></i> Membership</a>
             <a href="/pages/about.php"      class="nav-popup-link <?= $activePage === 'about'      ? 'active' : '' ?>"><i class="fa fa-circle-info"></i> About Us</a>
+            <?php else: ?>
+            <a href="/pages/admin-profile.php" class="nav-popup-link <?= $activePage === 'profile'   ? 'active' : '' ?>"><i class="fa fa-user-shield"></i> Profile</a>
+            <hr class="nav-popup-divider">
+            <a href="/pages/admin-members.php" class="nav-popup-link <?= $activePage === 'admin-members' ? 'active' : '' ?>"><i class="fa fa-users"></i> Members</a>
+            <a href="/pages/trainers.php"      class="nav-popup-link <?= $activePage === 'trainers'     ? 'active' : '' ?>"><i class="fa fa-chalkboard-teacher"></i> Trainers</a>
+            <a href="/pages/schedule.php"      class="nav-popup-link <?= $activePage === 'schedule'     ? 'active' : '' ?>"><i class="fa fa-calendar-days"></i> Classes</a>
+            <a href="/pages/equipment.php"     class="nav-popup-link <?= $activePage === 'equipment'    ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
+            <?php endif; ?>
             <hr class="nav-popup-divider">
             <a href="/actions/logout.php" class="nav-popup-link nav-popup-link--logout"><i class="fa fa-right-from-bracket"></i> Logout</a>
         </nav>

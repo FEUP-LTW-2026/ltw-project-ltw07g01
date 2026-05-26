@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'First name, last name, email and username are required.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Invalid email format.';
-    } elseif (!preg_match('/^\w{3,30}$/', $username)) {
+    } elseif (!preg_match('/^[\w.]{3,30}$/', $username)) {
         $error = 'Username must be 3–30 characters (letters, numbers, underscores only).';
     } else {
         $stmt = $db->prepare('SELECT id FROM users WHERE username = :username AND id != :id');

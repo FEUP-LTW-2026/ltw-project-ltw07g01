@@ -742,16 +742,16 @@ main.profile-page {
     width: 100%;
 }
 
-body.trainer-theme {
+.trainer-theme {
     --accent: #7c3aed;
 }
 
-body.trainer-theme .btn-save-changes {
+.trainer-theme .btn-save-changes {
     background: #7c3aed;
     color: #fff;
 }
 
-body.trainer-theme .btn-save-changes:hover {
+.trainer-theme .btn-save-changes:hover {
     background: #6d28d9;
 }
 

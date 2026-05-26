@@ -362,9 +362,9 @@ if (!empty($_GET['ajax'])) {
     exit;
 }
 ?>
-<?php drawDashHeader($session, $db, 'profile', ['schedule'], 'trainer-theme profile-body'); ?>
+<?php drawDashHeader($session, $db, 'profile', ['schedule'], 'profile-body'); ?>
 
-<main class="profile-page">
+<main class="profile-page trainer-theme">
     <aside class="sidebar-container">
         <section class="profile-card">
             <div class="profile-info">

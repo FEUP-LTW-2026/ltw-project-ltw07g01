@@ -278,73 +278,61 @@ if ($role === 'trainer') {
 
 
 if ($role === 'admin') {
+    $totalMembers     = (int)$db->query('SELECT COUNT(*) FROM clients')->fetchColumn();
+    $totalTrainers    = (int)$db->query('SELECT COUNT(*) FROM trainers')->fetchColumn();
+    $totalGyms        = (int)$db->query('SELECT COUNT(*) FROM gym_locations')->fetchColumn();
+    $totalEquip       = (int)$db->query('SELECT COUNT(*) FROM equipment')->fetchColumn();
+    $unavailableEquip = (int)$db->query('SELECT COUNT(*) FROM equipment WHERE is_available = 0')->fetchColumn();
+    $upcomingClassesCount = (int)$db->query("SELECT COUNT(*) FROM classes WHERE schedule > datetime('now')")->fetchColumn();
 
-    $stmt = $db->prepare('SELECT COUNT(*) FROM clients');
-    $stmt->execute();
-    $totalMembers = (int)$stmt->fetchColumn();
-
-    $stmt = $db->prepare('SELECT COUNT(*) FROM trainers');
-    $stmt->execute();
-    $totalTrainers = (int)$stmt->fetchColumn();
-
-    $stmt = $db->prepare('SELECT COUNT(*) FROM classes WHERE schedule > datetime(\'now\')');
-    $stmt->execute();
-    $upcomingClassesCount = (int)$stmt->fetchColumn();
-
-    $stmt = $db->prepare('SELECT COUNT(*) FROM gym_locations');
-    $stmt->execute();
-    $totalGyms = (int)$stmt->fetchColumn();
-
-    $stmt = $db->prepare(
-        'SELECT COUNT(*) FROM gym_visits
-         WHERE checked_in >= datetime(\'now\', \'-7 days\')'
-    );
+    $stmt = $db->prepare("SELECT COUNT(*) FROM gym_visits WHERE checked_in >= datetime('now', '-7 days')");
     $stmt->execute();
     $visitsThisWeek = (int)$stmt->fetchColumn();
 
-    $stmt = $db->prepare(
-        'SELECT COUNT(*) FROM memberships
-         WHERE gym_start >= datetime(\'now\', \'-30 days\')'
-    );
+    $stmt = $db->prepare("SELECT COUNT(*) FROM memberships WHERE gym_start >= datetime('now', '-30 days')");
     $stmt->execute();
     $newMemberships = (int)$stmt->fetchColumn();
 
-    $stmt = $db->prepare(
+    $popularClasses = $db->query(
         'SELECT ct.name, COUNT(cc.client_id) AS enrollments
          FROM client_classes cc
          JOIN classes cl ON cl.id = cc.class_id
          JOIN class_types ct ON ct.id = cl.class_type_id
-         GROUP BY ct.name
-         ORDER BY enrollments DESC
-         LIMIT 5'
-    );
-    $stmt->execute();
-    $popularClasses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+         GROUP BY ct.name ORDER BY enrollments DESC LIMIT 5'
+    )->fetchAll(PDO::FETCH_ASSOC);
 
-    $stmt = $db->prepare(
-        'SELECT u.first_name, u.last_name, u.username, u.profile_photo, u.created_at
-         FROM users u
-         JOIN clients c ON c.user_id = u.id
-         ORDER BY u.created_at DESC
-         LIMIT 5'
-    );
-    $stmt->execute();
-    $recentMembers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $recentReviews = $db->query(
+        'SELECT r.rating, r.comment, u.username, ct.name AS class_name
+         FROM reviews r
+         JOIN users u ON u.id = r.client_id
+         JOIN classes cl ON cl.id = r.class_id
+         JOIN class_types ct ON ct.id = cl.class_type_id
+         ORDER BY r.created_at DESC LIMIT 8'
+    )->fetchAll(PDO::FETCH_ASSOC);
 
-    $stmt = $db->prepare(
-        'SELECT gl.name, gl.city, COUNT(gv.id) AS visit_count
+    $gymStats = $db->query(
+        'SELECT gl.name, gl.city, COUNT(DISTINCT gv.id) AS visit_count
          FROM gym_locations gl
          LEFT JOIN gym_visits gv ON gv.gym_id = gl.id
-         GROUP BY gl.id
-         ORDER BY visit_count DESC'
-    );
-    $stmt->execute();
-    $gymStats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+         GROUP BY gl.id ORDER BY visit_count DESC'
+    )->fetchAll(PDO::FETCH_ASSOC);
+
+    $nextClasses = $db->query(
+        "SELECT c.schedule, c.capacity, ct.name AS class_type,
+                gl.name AS gym_name, gl.city AS gym_city,
+                u.first_name AS tr_first, u.last_name AS tr_last,
+                (SELECT COUNT(*) FROM client_classes cc WHERE cc.class_id = c.id) AS enrolled
+         FROM classes c
+         LEFT JOIN class_types ct ON ct.id = c.class_type_id
+         LEFT JOIN gym_locations gl ON gl.id = c.gym_id
+         LEFT JOIN users u ON u.id = c.trainer_id
+         WHERE c.schedule > datetime('now') ORDER BY c.schedule ASC LIMIT 5"
+    )->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
-<?php drawDashHeader($session, $db, 'home', in_array($role, ['client', 'trainer']) ? ['schedule'] : []); ?>
+<?php drawDashHeader($session, $db, 'home', $role === 'admin' ? [] : ['schedule']); ?>
 
-<main class="dashboard-page dashboard-<?= $role ?>">
+<main class="<?= $role === 'admin' ? 'admin-page' : 'dashboard-page dashboard-' . $role ?>">
 
     
     <div class="dash-header">
@@ -357,7 +345,6 @@ if ($role === 'admin') {
 
 <?php if ($role === 'client'): ?>
 
-    <!-- Stats row -->
     <div class="dash-stats-row">
         <div class="dash-stat-card">
             <span class="dash-stat-icon"><i class="fa fa-person-running"></i></span>
@@ -548,14 +535,14 @@ if ($role === 'admin') {
     </div><!-- /.dash-grid-2 -->
 
 <?php
-// construir o objeto SC para o js do modal - tem de ter o mesmo formato que no schedule.php
+// obj SC p/ o modal - mesmo formato do schedule.php
 $dashTypeColors = [
     'Yoga' => '#a78bfa', 'Cycling' => '#60a5fa', 'Pilates' => '#f472b6',
     'HIIT' => '#fb923c', 'Personal Training' => '#34d399', 'Spin' => '#22d3ee',
     'Strength & Conditioning' => '#fbbf24', 'Zumba' => '#a3e635', 'Boxing' => '#f87171',
 ];
 $dashClassesForSC = [];
-// juntamos as upcoming e as recentes para o modal funcionar em ambas
+// merge upcoming+recentes p/ modal funconar nas 2 listas
 foreach (array_merge($upcomingClasses, $recentClasses) as $c) {
     $dashClassesForSC[(int)$c['id']] = [
         'id'           => (int)$c['id'],
@@ -587,7 +574,6 @@ foreach (array_merge($upcomingClasses, $recentClasses) as $c) {
 
 <?php if ($role === 'trainer'): ?>
 
-    <!-- Stats row -->
     <div class="dash-stats-row">
         <div class="dash-stat-card">
             <span class="dash-stat-icon"><i class="fa fa-users"></i></span>
@@ -730,57 +716,56 @@ foreach ($trainerClasses as $c) {
 
 <?php if ($role === 'admin'): ?>
 
-    <div class="dash-stats-row dash-stats-row--admin">
+    <div class="dash-stats-row dash-stats-row--admin" style="margin-bottom:1.75rem">
         <div class="dash-stat-card">
             <span class="dash-stat-icon"><i class="fa fa-users"></i></span>
-            <div>
-                <span class="dash-stat-value"><?= $totalMembers ?></span>
-                <span class="dash-stat-label">Total Members</span>
-            </div>
+            <div><span class="dash-stat-value"><?= $totalMembers ?></span><span class="dash-stat-label">Members</span></div>
         </div>
         <div class="dash-stat-card">
-            <span class="dash-stat-icon"><i class="fa fa-dumbbell"></i></span>
-            <div>
-                <span class="dash-stat-value"><?= $totalTrainers ?></span>
-                <span class="dash-stat-label">Trainers</span>
-            </div>
+            <span class="dash-stat-icon"><i class="fa fa-chalkboard-teacher"></i></span>
+            <div><span class="dash-stat-value"><?= $totalTrainers ?></span><span class="dash-stat-label">Trainers</span></div>
         </div>
         <div class="dash-stat-card">
-            <span class="dash-stat-icon"><i class="fa fa-calendar"></i></span>
-            <div>
-                <span class="dash-stat-value"><?= $upcomingClassesCount ?></span>
-                <span class="dash-stat-label">Upcoming Classes</span>
-            </div>
+            <span class="dash-stat-icon"><i class="fa fa-calendar-days"></i></span>
+            <div><span class="dash-stat-value"><?= $upcomingClassesCount ?></span><span class="dash-stat-label">Upcoming Classes</span></div>
         </div>
         <div class="dash-stat-card">
             <span class="dash-stat-icon"><i class="fa fa-location-dot"></i></span>
-            <div>
-                <span class="dash-stat-value"><?= $totalGyms ?></span>
-                <span class="dash-stat-label">Gym Locations</span>
-            </div>
+            <div><span class="dash-stat-value"><?= $totalGyms ?></span><span class="dash-stat-label">Gym Locations</span></div>
         </div>
         <div class="dash-stat-card">
             <span class="dash-stat-icon"><i class="fa fa-rotate"></i></span>
-            <div>
-                <span class="dash-stat-value"><?= $visitsThisWeek ?></span>
-                <span class="dash-stat-label">Visits This Week</span>
-            </div>
+            <div><span class="dash-stat-value"><?= $visitsThisWeek ?></span><span class="dash-stat-label">Visits This Week</span></div>
         </div>
         <div class="dash-stat-card">
             <span class="dash-stat-icon"><i class="fa fa-user-plus"></i></span>
-            <div>
-                <span class="dash-stat-value"><?= $newMemberships ?></span>
-                <span class="dash-stat-label">New Members (30d)</span>
-            </div>
+            <div><span class="dash-stat-value"><?= $newMemberships ?></span><span class="dash-stat-label">New Members (30d)</span></div>
         </div>
+    </div>
+
+    <div class="admin-mgmt-grid" style="margin-bottom:1.75rem">
+        <a href="/pages/admin-members.php" class="admin-mgmt-card">
+            <i class="fa fa-users"></i><strong>Members</strong>
+            <span>Create, edit and remove member accounts</span>
+        </a>
+        <a href="/pages/trainers.php" class="admin-mgmt-card">
+            <i class="fa fa-chalkboard-teacher"></i><strong>Trainers</strong>
+            <span>Manage trainers, specializations and gyms</span>
+        </a>
+        <a href="/pages/schedule.php" class="admin-mgmt-card">
+            <i class="fa fa-calendar-days"></i><strong>Classes</strong>
+            <span>Create and edit the class catalog</span>
+        </a>
+        <a href="/pages/equipment.php" class="admin-mgmt-card">
+            <i class="fa fa-dumbbell"></i><strong>Equipment</strong>
+            <span>Add items and toggle availability</span>
+        </a>
     </div>
 
     <div class="dash-grid-3">
 
         <section class="dash-card">
-            <div class="dash-card-header">
-                <h2><i class="fa fa-building"></i> Gym Locations</h2>
-            </div>
+            <div class="dash-card-header"><h2><i class="fa fa-building"></i> Gym Locations</h2></div>
             <ul class="dash-gym-list">
                 <?php foreach ($gymStats as $gym): ?>
                 <li class="dash-gym-item">
@@ -791,30 +776,26 @@ foreach ($trainerClasses as $c) {
                     <span class="gym-visit-badge"><?= $gym['visit_count'] ?> visits</span>
                 </li>
                 <?php endforeach; ?>
+                <?php if (empty($gymStats)): ?>
+                <li style="padding:1rem;color:var(--text-dim);font-size:.85rem">No gyms registered.</li>
+                <?php endif; ?>
             </ul>
         </section>
 
         <section class="dash-card">
-            <div class="dash-card-header">
-                <h2><i class="fa fa-fire"></i> Popular Classes</h2>
-            </div>
+            <div class="dash-card-header"><h2><i class="fa fa-fire"></i> Popular Classes</h2></div>
             <?php if (empty($popularClasses)): ?>
                 <div class="dash-empty"><span><i class="fa fa-chart-bar"></i></span><p>No data yet.</p></div>
             <?php else: ?>
-                <?php
-                $maxEnroll = max(array_column($popularClasses, 'enrollments'));
-                ?>
+                <?php $maxEnroll = max(array_column($popularClasses, 'enrollments')); ?>
                 <ul class="dash-popular-list">
                     <?php foreach ($popularClasses as $i => $pc):
-                        $pct = $maxEnroll > 0 ? round(($pc['enrollments'] / $maxEnroll) * 100) : 0;
-                    ?>
+                        $pct = $maxEnroll > 0 ? round(($pc['enrollments'] / $maxEnroll) * 100) : 0; ?>
                     <li class="dash-popular-item">
                         <span class="popular-rank">#<?= $i + 1 ?></span>
                         <div class="popular-info">
                             <span><?= htmlspecialchars($pc['name']) ?></span>
-                            <div class="popular-bar">
-                                <div class="popular-fill" style="width:<?= $pct ?>%"></div>
-                            </div>
+                            <div class="popular-bar"><div class="popular-fill" style="width:<?= $pct ?>%"></div></div>
                         </div>
                         <span class="popular-count"><?= $pc['enrollments'] ?></span>
                     </li>
@@ -825,21 +806,27 @@ foreach ($trainerClasses as $c) {
 
         <section class="dash-card">
             <div class="dash-card-header">
-                <h2><i class="fa fa-user-plus"></i> Recent Members</h2>
+                <h2><i class="fa fa-star"></i> Class Reviews</h2>
+                <a href="/pages/schedule.php" class="dash-card-link">Manage</a>
             </div>
-            <?php if (empty($recentMembers)): ?>
-                <div class="dash-empty"><span><i class="fa fa-user"></i></span><p>No members yet.</p></div>
+            <?php if (empty($recentReviews)): ?>
+                <div class="dash-empty"><span><i class="fa fa-comments"></i></span><p>No reviews yet.</p></div>
             <?php else: ?>
-                <ul class="dash-student-list">
-                    <?php foreach ($recentMembers as $m): ?>
-                    <li class="dash-student-item">
-                        <img src="<?= htmlspecialchars($m['profile_photo'] ?? '../images/profile_pic.webp') ?>"
-                             alt="<?= htmlspecialchars($m['username']) ?>" class="student-avatar">
-                        <div>
-                            <strong><?= htmlspecialchars($m['first_name'] . ' ' . $m['last_name']) ?></strong>
-                            <span>@<?= htmlspecialchars($m['username']) ?></span>
+                <ul class="dash-review-list">
+                    <?php foreach ($recentReviews as $rv): ?>
+                    <li class="dash-review-item">
+                        <div class="dash-review-header">
+                            <span class="dash-review-user">@<?= htmlspecialchars($rv['username']) ?></span>
+                            <span class="dash-review-class"><?= htmlspecialchars($rv['class_name']) ?></span>
+                            <span class="dash-review-stars">
+                                <?php for ($s = 1; $s <= 5; $s++): ?>
+                                <i class="fa fa-star" style="color:<?= $s <= $rv['rating'] ? '#f59e0b' : '#333' ?>;font-size:.7rem"></i>
+                                <?php endfor; ?>
+                            </span>
                         </div>
-                        <span class="student-date"><?= (new DateTime($m['created_at']))->format('d M') ?></span>
+                        <?php if ($rv['comment']): ?>
+                        <p class="dash-review-comment"><?= htmlspecialchars($rv['comment']) ?></p>
+                        <?php endif; ?>
                     </li>
                     <?php endforeach; ?>
                 </ul>
@@ -848,7 +835,40 @@ foreach ($trainerClasses as $c) {
 
     </div>
 
-<?php endif; ?>
+    <?php if (!empty($nextClasses)): ?>
+    <section class="dash-card" style="margin-top:1.5rem">
+        <div class="dash-card-header">
+            <h2><i class="fa fa-calendar-check"></i> Upcoming Classes</h2>
+            <a href="/pages/schedule.php" class="dash-card-link">Manage</a>
+        </div>
+        <div class="admin-table-wrap" style="border:none;border-radius:0;background:transparent">
+            <table class="admin-table">
+                <thead><tr><th>Type</th><th>Gym</th><th>Trainer</th><th>Date &amp; Time</th><th>Enrolled</th></tr></thead>
+                <tbody>
+                    <?php foreach ($nextClasses as $nc): ?>
+                    <tr>
+                        <td><span class="admin-badge admin-badge--active"><?= htmlspecialchars($nc['class_type'] ?? '—') ?></span></td>
+                        <td class="admin-dim"><?= $nc['gym_city'] ? htmlspecialchars($nc['gym_city'] . ' — ' . $nc['gym_name']) : '—' ?></td>
+                        <td class="admin-dim"><?= $nc['tr_first'] ? htmlspecialchars($nc['tr_first'] . ' ' . $nc['tr_last']) : '—' ?></td>
+                        <td class="admin-dim"><?= date('d M, H:i', strtotime($nc['schedule'])) ?></td>
+                        <td class="admin-dim"><?= $nc['enrolled'] ?>/<?= $nc['capacity'] ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <?php endif; ?>
+
+    <?php if ($unavailableEquip > 0): ?>
+    <div class="admin-alert admin-alert--err" style="margin-top:1.5rem">
+        <i class="fa fa-triangle-exclamation"></i>
+        <?= $unavailableEquip ?> equipment item<?= $unavailableEquip !== 1 ? 's' : '' ?> marked as unavailable.
+        <a href="/pages/equipment.php" style="color:inherit;margin-left:.5rem;text-decoration:underline">Review &rarr;</a>
+    </div>
+    <?php endif; ?>
+
+<?php endif; /* end admin */ ?>
 
 </main>
 

@@ -1,11 +1,21 @@
 main.sc-page {
-    padding: 2.5rem 1.5rem 5rem;
-    max-width: 68.75rem;
+    padding: 2.5rem 2.5rem 5rem;
+    max-width: 120rem;
     margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 main.sc-has-navbar {
     padding-top: 2.5rem;
+}
+
+@media (min-width: 80rem) {
+    main.sc-page { padding-left: 4rem; padding-right: 4rem; }
+}
+
+@media (max-width: 40rem) {
+    main.sc-page { padding-left: 1rem; padding-right: 1rem; }
 }
 
 /* ------------------------------------------------------------------
@@ -439,7 +449,7 @@ main.sc-has-navbar {
     background: #1a1a1a;
 }
 
-/* a largura é definida inline via js quando carrega os dados */
+/* largura definda inline pelo js */
 .sc-cap-fill {
     height: 100%;
     border-radius: inherit;
@@ -583,7 +593,7 @@ main.sc-has-navbar {
     backdrop-filter: blur(0.1875rem);
 }
 
-/* o painel começa fora do ecra (translateX 100%) e entra com transição */
+/* painel entra de fora do ecra com transiçao */
 .sc-modal-panel {
     position: absolute;
     top: 0;
@@ -634,7 +644,7 @@ main.sc-has-navbar {
     background: linear-gradient(160deg, rgba(255,255,255,0.025) 0%, transparent 100%);
 }
 
-/* linha colorida no topo do header com a cor do tipo de aula */
+/* linha colorida c/ a cor do tipo de aula */
 .sc-modal-header::before {
     content: '';
     position: absolute;
@@ -992,6 +1002,7 @@ main.sc-has-navbar {
     margin: 0;
     font-style: italic;
 }
+
 
 @media (max-width: 40rem) {
     .sc-days-strip {
