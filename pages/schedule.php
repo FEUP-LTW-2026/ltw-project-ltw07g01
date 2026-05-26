@@ -15,9 +15,10 @@ if ($userId) {
         if ($s->fetch()) { $role = $r; break; }
     }
 }
+$requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 // admin: criar / editar / apagar aula
-if ($role === 'admin' && $_SERVER['REQUEST_METHOD'] === 'POST' && empty($_GET['ajax'])) {
+if ($role === 'admin' && $requestMethod === 'POST' && empty($_GET['ajax'])) {
     $action = $_POST['_action'] ?? '';
 
     if ($action === 'create') {
@@ -57,7 +58,7 @@ if ($role === 'admin' && $_SERVER['REQUEST_METHOD'] === 'POST' && empty($_GET['a
 }
 
 // ajax: review
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? '') === 'review' && $role === 'client') {
+if ($requestMethod === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? '') === 'review' && $role === 'client') {
     header('Content-Type: application/json');
     $classId = (int)($_POST['class_id'] ?? 0);
     $rating  = (int)($_POST['rating'] ?? 0);
@@ -83,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && ($_POST['
 }
 
 // ajax: cancelar
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? '') === 'cancel' && $role === 'client') {
+if ($requestMethod === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? '') === 'cancel' && $role === 'client') {
     header('Content-Type: application/json');
     $classId = (int)($_POST['class_id'] ?? 0);
     if ($classId <= 0) { echo json_encode(['ok' => false, 'error' => 'invalid']); exit; }
@@ -105,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && ($_POST['
 }
 
 // ajax: reservar
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && $role === 'client') {
+if ($requestMethod === 'POST' && !empty($_POST['ajax']) && $role === 'client') {
     header('Content-Type: application/json');
     $classId = (int)($_POST['class_id'] ?? 0);
     if ($classId <= 0) { echo json_encode(['ok' => false, 'error' => 'invalid']); exit; }
@@ -144,7 +145,7 @@ $defaultDay = ($weekOffset === 0 && $today >= $weekMon && $today <= $weekSun)
     ? $today->format('Y-m-d')
     : $weekMon->format('Y-m-d');
 
-$stmt = $db->prepare('
+$stmt = $db->prepare("
     SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min, cl.capacity,
            cl.class_type_id, cl.gym_id, cl.trainer_id,
            gl.name AS gym_name, gl.city AS gym_city,
@@ -166,9 +167,10 @@ $stmt = $db->prepare('
     LEFT JOIN users u ON u.id = t.user_id
     LEFT JOIN reviews my_rev ON my_rev.class_id = cl.id AND my_rev.client_id = :uid
     WHERE date(cl.schedule) BETWEEN :start AND :end
+    AND ct.name IN ('Pilates', 'Cycling', 'Personal Training')
     AND (:trainer_filter IS NULL OR cl.trainer_id = :trainer_filter)
     ORDER BY cl.schedule ASC
-');
+");
 $stmt->execute([
     ':start'          => $weekMon->format('Y-m-d'),
     ':end'            => $weekSun->format('Y-m-d'),
@@ -191,7 +193,7 @@ if ($role === 'client') {
 
 $classTypes = $gymList = $trainers = [];
 if ($role === 'admin') {
-    $classTypes = $db->query('SELECT id, name FROM class_types ORDER BY name')->fetchAll(PDO::FETCH_ASSOC);
+    $classTypes = $db->query("SELECT id, name FROM class_types WHERE name IN ('Pilates', 'Cycling', 'Personal Training') ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
     $gymList    = $db->query('SELECT id, name, city FROM gym_locations ORDER BY city, name')->fetchAll(PDO::FETCH_ASSOC);
     $trainers   = $db->query('SELECT u.id, u.first_name, u.last_name FROM users u JOIN trainers t ON t.user_id=u.id ORDER BY u.first_name')->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -210,23 +212,15 @@ foreach ($allClasses as $c) {
 }
 
 $typeColors = [
-    'Yoga'                    => '#a78bfa',
     'Cycling'                 => '#60a5fa',
     'Pilates'                 => '#f472b6',
-    'HIIT'                    => '#fb923c',
     'Personal Training'       => '#34d399',
-    'Spin'                    => '#22d3ee',
-    'Strength & Conditioning' => '#fbbf24',
-    'Zumba'                   => '#a3e635',
-    'Boxing'                  => '#f87171',
 ];
 
 $typeDescriptions = [
-    'Yoga'                    => 'A mind-body practice combining physical postures, breathing and meditation to improve flexibility, strength and mental clarity.',
     'Cycling'                 => 'High-energy indoor cycling set to motivating music. Builds cardiovascular endurance and lower-body power.',
     'Pilates'                 => 'Low-impact exercise focusing on core strength, posture and controlled movement. Suitable for all fitness levels.',
     'Personal Training'       => 'One-on-one session tailored to your specific goals with dedicated coach guidance and personalised programming.',
-    'Strength & Conditioning' => 'Compound lifts and functional movements to build muscle, improve athletic performance and increase overall body strength.',
 ];
 
 function typeColor(string $n, array $m): string { return $m[$n] ?? '#888'; }

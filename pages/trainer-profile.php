@@ -55,11 +55,12 @@ $trainerGyms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 $stmt = $db->prepare(
-    'SELECT ct.id, ct.name
+    "SELECT ct.id, ct.name
      FROM trainer_specializations ts
      JOIN class_types ct ON ct.id = ts.class_type_id
      WHERE ts.trainer_id = :id
-     ORDER BY ct.name'
+       AND ct.name IN ('Pilates', 'Cycling', 'Personal Training')
+     ORDER BY ct.name"
 );
 $stmt->execute([':id' => $userId]);
 $specializations = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -90,7 +91,7 @@ $defaultDay = ($weekOffset === 0 && $today >= $weekMon && $today <= $weekSun)
     ? $today->format('Y-m-d')
     : $weekMon->format('Y-m-d');
 
-$stmt = $db->prepare('
+$stmt = $db->prepare("
     SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min, cl.capacity,
            cl.trainer_id,
            gl.name AS gym_name, gl.city AS gym_city,
@@ -113,8 +114,9 @@ $stmt = $db->prepare('
     LEFT JOIN reviews my_rev ON my_rev.class_id = cl.id AND my_rev.client_id = :uid
     WHERE date(cl.schedule) BETWEEN :start AND :end
       AND cl.trainer_id = :trainer_id
+      AND ct.name IN ('Pilates', 'Cycling', 'Personal Training')
     ORDER BY cl.schedule ASC
-');
+");
 $stmt->execute([
     ':start'      => $weekMon->format('Y-m-d'),
     ':end'        => $weekSun->format('Y-m-d'),
@@ -141,19 +143,15 @@ $weekTypes = array_values(array_unique(array_column($allClasses, 'class_name')))
 sort($weekTypes);
 
 $typeColors = [
-    'Yoga'                    => '#a78bfa',
     'Cycling'                 => '#60a5fa',
     'Pilates'                 => '#f472b6',
     'Personal Training'       => '#34d399',
-    'Strength & Conditioning' => '#fbbf24',
 ];
 
 $typeDescriptions = [
-    'Yoga'                    => 'A mind-body practice combining physical postures, breathing and meditation to improve flexibility, strength and mental clarity.',
     'Cycling'                 => 'High-energy indoor cycling set to motivating music. Builds cardiovascular endurance and lower-body power.',
     'Pilates'                 => 'Low-impact exercise focusing on core strength, posture and controlled movement. Suitable for all fitness levels.',
     'Personal Training'       => 'One-on-one session tailored to your specific goals with dedicated coach guidance and personalised programming.',
-    'Strength & Conditioning' => 'Compound lifts and functional movements to build muscle, improve athletic performance and increase overall body strength.',
 ];
 
 function typeColor(string $n, array $m): string { return $m[$n] ?? '#888'; }
