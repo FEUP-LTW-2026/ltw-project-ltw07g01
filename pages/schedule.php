@@ -17,7 +17,25 @@ if ($userId) {
 }
 $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
-// admin/trainer: criar aula; admin: editar/apagar qualquer aula
+$trainerClassTypeIds = [];
+$trainerGymIds = [];
+if ($role === 'trainer') {
+    $s = $db->prepare('SELECT class_type_id FROM trainer_specializations WHERE trainer_id = ?');
+    $s->execute([$userId]);
+    $trainerClassTypeIds = array_map('intval', $s->fetchAll(PDO::FETCH_COLUMN));
+
+    $s = $db->prepare('SELECT gym_id FROM trainer_locations WHERE trainer_id = ?');
+    $s->execute([$userId]);
+    $trainerGymIds = array_map('intval', $s->fetchAll(PDO::FETCH_COLUMN));
+}
+
+function trainerCanUseClassOption(string $role, int $classTypeId, int $gymId, array $trainerClassTypeIds, array $trainerGymIds): bool {
+    if ($role !== 'trainer') return true;
+    return in_array($classTypeId, $trainerClassTypeIds, true)
+        && in_array($gymId, $trainerGymIds, true);
+}
+
+// admin/trainer: criar aula; trainer só edita/apaga aulas próprias
 if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && empty($_GET['ajax'])) {
     $action = $_POST['_action'] ?? '';
 
@@ -28,30 +46,39 @@ if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && 
         $schedule    = trim($_POST['schedule']        ?? '');
         $duration    = (int)($_POST['duration_min']  ?? 0);
         $capacity    = (int)($_POST['capacity']       ?? 0);
-        if ($classTypeId && $gymId && $schedule && $duration > 0 && $capacity > 0) {
+        if ($classTypeId && $gymId && $schedule && $duration > 0 && $capacity > 0 && trainerCanUseClassOption($role ?? '', $classTypeId, $gymId, $trainerClassTypeIds, $trainerGymIds)) {
             $db->prepare('INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity) VALUES (?,?,?,?,?,?)')
                ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity]);
         }
         header('Location: /pages/schedule.php'); exit;
 
-    } elseif ($action === 'update' && $role === 'admin') {
+    } elseif ($action === 'update') {
         $targetId    = (int)($_POST['target_id']     ?? 0);
         $classTypeId = (int)($_POST['class_type_id'] ?? 0);
         $gymId       = (int)($_POST['gym_id']        ?? 0);
-        $trainerId   = (int)($_POST['trainer_id']    ?? 0) ?: null;
+        $trainerId   = $role === 'trainer' ? $userId : ((int)($_POST['trainer_id'] ?? 0) ?: null);
         $schedule    = trim($_POST['schedule']        ?? '');
         $duration    = (int)($_POST['duration_min']  ?? 0);
         $capacity    = (int)($_POST['capacity']       ?? 0);
-        if ($targetId && $classTypeId && $gymId && $schedule && $duration > 0 && $capacity > 0) {
-            $db->prepare('UPDATE classes SET class_type_id=?, gym_id=?, trainer_id=?, schedule=?, duration_min=?, capacity=? WHERE id=?')
-               ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity, $targetId]);
+        if ($targetId && $classTypeId && $gymId && $schedule && $duration > 0 && $capacity > 0 && trainerCanUseClassOption($role ?? '', $classTypeId, $gymId, $trainerClassTypeIds, $trainerGymIds)) {
+            if ($role === 'trainer') {
+                $db->prepare('UPDATE classes SET class_type_id=?, gym_id=?, trainer_id=?, schedule=?, duration_min=?, capacity=? WHERE id=? AND trainer_id=?')
+                   ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity, $targetId, $userId]);
+            } else {
+                $db->prepare('UPDATE classes SET class_type_id=?, gym_id=?, trainer_id=?, schedule=?, duration_min=?, capacity=? WHERE id=?')
+                   ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity, $targetId]);
+            }
         }
         header('Location: /pages/schedule.php'); exit;
 
-    } elseif ($action === 'delete' && $role === 'admin') {
+    } elseif ($action === 'delete') {
         $targetId = (int)($_POST['target_id'] ?? 0);
         if ($targetId) {
-            $db->prepare('DELETE FROM classes WHERE id=?')->execute([$targetId]);
+            if ($role === 'trainer') {
+                $db->prepare('DELETE FROM classes WHERE id=? AND trainer_id=?')->execute([$targetId, $userId]);
+            } else {
+                $db->prepare('DELETE FROM classes WHERE id=?')->execute([$targetId]);
+            }
         }
         header('Location: /pages/schedule.php'); exit;
     }
@@ -193,8 +220,17 @@ if ($role === 'client') {
 
 $classTypes = $gymList = $trainers = [];
 if (in_array($role, ['admin', 'trainer'], true)) {
-    $classTypes = $db->query("SELECT id, name FROM class_types WHERE name IN ('Pilates', 'Cycling', 'Personal Training') ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
-    $gymList    = $db->query('SELECT id, name, city FROM gym_locations ORDER BY city, name')->fetchAll(PDO::FETCH_ASSOC);
+    if ($role === 'trainer') {
+        $classTypes = $trainerClassTypeIds
+            ? $db->query("SELECT id, name FROM class_types WHERE name IN ('Pilates', 'Cycling', 'Personal Training') AND id IN (" . implode(',', array_map('intval', $trainerClassTypeIds)) . ") ORDER BY name")->fetchAll(PDO::FETCH_ASSOC)
+            : [];
+        $gymList = $trainerGymIds
+            ? $db->query('SELECT id, name, city FROM gym_locations WHERE id IN (' . implode(',', array_map('intval', $trainerGymIds)) . ') ORDER BY city, name')->fetchAll(PDO::FETCH_ASSOC)
+            : [];
+    } else {
+        $classTypes = $db->query("SELECT id, name FROM class_types WHERE name IN ('Pilates', 'Cycling', 'Personal Training') ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
+        $gymList    = $db->query('SELECT id, name, city FROM gym_locations ORDER BY city, name')->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 if ($role === 'admin') {
     $trainers   = $db->query('SELECT u.id, u.first_name, u.last_name FROM users u JOIN trainers t ON t.user_id=u.id ORDER BY u.first_name')->fetchAll(PDO::FETCH_ASSOC);
@@ -376,7 +412,7 @@ $buildDynamicHTML = function() use ($days, $classesByDay, $today, $enrolledIds, 
                             </span>
                         </div>
 
-                        <?php if ($role === 'admin'): ?>
+                        <?php if (in_array($role, ['admin', 'trainer'], true)): ?>
                         <div class="sc-card-actions" onclick="event.stopPropagation()">
                             <button class="sc-details-btn" onclick="openEditModal(<?= $cls['id'] ?>)">
                                 <i class="fa fa-pen"></i> Edit
@@ -447,6 +483,8 @@ if (!empty($_GET['ajax'])) {
                 return [
                     'id'           => (int)$c['id'],
                     'class_name'   => $c['class_name'],
+                    'class_type_id'=> (int)$c['class_type_id'],
+                    'gym_id'       => (int)$c['gym_id'],
                     'color'        => $typeColors[$c['class_name']] ?? '#888',
                     'schedule'     => $c['schedule'],
                     'duration_min' => (int)$c['duration_min'],
@@ -537,7 +575,7 @@ drawDashHeader($session, $db, 'schedule', $scheduleCss);
         <?php elseif ($role === 'trainer'): ?>
         <div>
             <h1 class="sc-title">My Schedule</h1>
-            <p class="sc-subtitle">Create classes assigned to you and follow your upcoming week</p>
+            <p class="sc-subtitle">Create, edit and remove your assigned classes</p>
         </div>
         <div class="sc-week-stats">
             <div class="sc-stat"><span id="statClasses"><?= $totalClasses ?></span><small>classes</small></div>
@@ -722,6 +760,8 @@ var SC = {
                 return [
                     'id'           => (int)$c['id'],
                     'class_name'   => $c['class_name'],
+                    'class_type_id'=> (int)$c['class_type_id'],
+                    'gym_id'       => (int)$c['gym_id'],
                     'color'        => $typeColors[$c['class_name']] ?? '#888',
                     'schedule'     => $c['schedule'],
                     'duration_min' => (int)$c['duration_min'],
@@ -928,15 +968,24 @@ var SC = {
     var editBackdrop = document.getElementById('editModalBackdrop');
     var editClose    = document.getElementById('editModalClose');
 
-    window.openEditModal = function () {
-        document.getElementById('editModalLabel').textContent = 'New Class';
-        document.getElementById('editAction').value = 'create';
-        document.getElementById('editTargetId').value = '';
-        document.getElementById('editClassType').value = '';
-        document.getElementById('editGymId').value = '';
-        document.getElementById('editSchedule').value = '';
-        document.getElementById('editDuration').value = '';
-        document.getElementById('editCapacity').value = '';
+    window.openEditModal = function (classId) {
+        var cls = classId ? SC.classes[classId] : null;
+        document.getElementById('editModalLabel').textContent = cls ? 'Edit Class' : 'New Class';
+        document.getElementById('editAction').value = cls ? 'update' : 'create';
+        document.getElementById('editTargetId').value = cls ? classId : '';
+        document.getElementById('editClassType').value = cls ? cls.class_type_id : '';
+        document.getElementById('editGymId').value = cls ? cls.gym_id : '';
+        document.getElementById('editDuration').value = cls ? cls.duration_min : '';
+        document.getElementById('editCapacity').value = cls ? cls.capacity : '';
+        if (cls && cls.schedule) {
+            var d = new Date(cls.schedule);
+            var pad = function(n) { return String(n).padStart(2, '0'); };
+            document.getElementById('editSchedule').value =
+                d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate())
+                + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+        } else {
+            document.getElementById('editSchedule').value = '';
+        }
         editModal.setAttribute('aria-hidden', 'false');
         editModal.classList.add('sc-modal--open');
         document.body.style.overflow = 'hidden';

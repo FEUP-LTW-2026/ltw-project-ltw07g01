@@ -3,12 +3,23 @@ declare(strict_types=1);
 require_once(__DIR__ . '/../utils/session.php');
 $session = new Session();
 
-$userId = 2; // trainer de teste (ana.silva)
+if (!$session->isLoggedIn()) {
+    header('Location: /actions/login.php');
+    exit;
+}
 
 require_once(__DIR__ . '/../database/connection.db.php');
 require_once(__DIR__ . '/../templates/common.tpl.php');
 
 $db = getDatabaseConnection();
+$userId = (int)$session->getId();
+
+$stmt = $db->prepare('SELECT 1 FROM trainers WHERE user_id = :id');
+$stmt->execute([':id' => $userId]);
+if (!$stmt->fetch()) {
+    header('Location: /pages/profile.php');
+    exit;
+}
 
 $stmt = $db->prepare(
     'SELECT u.username, u.email, u.first_name, u.last_name, u.profile_photo,
@@ -135,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtGym->execute([':tid' => $userId, ':gid' => $gymId]);
         }
 
-        header('Location: /pages/trainer-profile.php');
+        header('Location: /pages/trainer-profile.php?id=' . $userId);
         exit;
     }
 
@@ -254,7 +265,7 @@ $certifications = $user['certifications'] ?? '';
 
             <div class="profile-actions">
                 <button type="submit" class="btn-save-changes">Save Changes</button>
-                <a href="../pages/trainer-profile.php" class="btn-cancel">Cancel</a>
+                <a href="../pages/trainer-profile.php?id=<?= $userId ?>" class="btn-cancel">Cancel</a>
             </div>
         </form>
     </div>

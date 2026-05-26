@@ -377,7 +377,7 @@ footer .footer-info p {
     font-weight: 600;
 }
 
-/* Shared class creation/editing modal */
+/* class creation modal */
 .class-editor-modal .sc-modal-panel {
     width: min(36rem, 100vw);
 }
