@@ -16,7 +16,7 @@ if ($session->isLoggedIn()) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email']);
+    $login    = trim($_POST['email']);
     $password = $_POST['password'];
 
     $db = getDatabaseConnection();
@@ -24,10 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $db->prepare('
         SELECT id, first_name, last_name, password_hash
         FROM users
-        WHERE email = ?
+        WHERE email = ? OR username = ?
     ');
 
-    $stmt->execute([$email]);
+    $stmt->execute([$login, $login]);
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password_hash'])) {

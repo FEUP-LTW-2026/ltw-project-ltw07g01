@@ -5,6 +5,13 @@
     font-family: 'League Gothic', sans-serif;
 }
 
+.admin-header {
+  
+    padding-top: 20px;
+    padding-inline: 20px;
+    text-align: left;
+}
+
 .trainers-hero {
     text-align: center;
     padding: 20px 10% 40px;
