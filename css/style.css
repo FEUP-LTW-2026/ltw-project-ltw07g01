@@ -377,6 +377,54 @@ footer .footer-info p {
     font-weight: 600;
 }
 
+/* Shared class creation/editing modal */
+.class-editor-modal .sc-modal-panel {
+    width: min(36rem, 100vw);
+}
+
+.class-editor-modal .sc-modal-body {
+    padding-bottom: 1.25rem;
+}
+
+.class-editor-fields {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+    gap: 1rem;
+}
+
+.class-editor-fields .admin-field {
+    min-width: 0;
+}
+
+.class-editor-fields .admin-field label {
+    color: var(--text-dim);
+}
+
+.class-editor-fields .admin-field input,
+.class-editor-fields .admin-field select {
+    min-height: 2.75rem;
+    background: #0f0f0f;
+    border-color: #2b2b2b;
+}
+
+.class-editor-fields .admin-field input:focus,
+.class-editor-fields .admin-field select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0.1875rem color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.class-editor-modal .sc-modal-footer {
+    justify-content: flex-end;
+}
+
+.class-editor-modal .sc-modal-book-btn {
+    width: auto;
+    min-width: 9rem;
+    padding-inline: 1.5rem;
+    background: var(--accent);
+}
+
 @media (max-width: 40rem) {
     .filter-bar,
     .sc-filter-bar {

@@ -1,4 +1,10 @@
+.admin-theme,
+.trainer-theme {
+    --admin-accent: var(--accent);
+}
+
 .admin-page {
+    --admin-accent: var(--accent);
     padding: 6.625rem 2.5rem 3rem;
     max-width: 120rem;
     width: 100%;

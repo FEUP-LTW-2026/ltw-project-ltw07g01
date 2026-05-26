@@ -17,14 +17,14 @@ if ($userId) {
 }
 $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
-// admin: criar / editar / apagar aula
-if ($role === 'admin' && $requestMethod === 'POST' && empty($_GET['ajax'])) {
+// admin/trainer: criar aula; admin: editar/apagar qualquer aula
+if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && empty($_GET['ajax'])) {
     $action = $_POST['_action'] ?? '';
 
     if ($action === 'create') {
         $classTypeId = (int)($_POST['class_type_id'] ?? 0);
         $gymId       = (int)($_POST['gym_id']        ?? 0);
-        $trainerId   = (int)($_POST['trainer_id']    ?? 0) ?: null;
+        $trainerId   = $role === 'trainer' ? $userId : ((int)($_POST['trainer_id'] ?? 0) ?: null);
         $schedule    = trim($_POST['schedule']        ?? '');
         $duration    = (int)($_POST['duration_min']  ?? 0);
         $capacity    = (int)($_POST['capacity']       ?? 0);
@@ -34,7 +34,7 @@ if ($role === 'admin' && $requestMethod === 'POST' && empty($_GET['ajax'])) {
         }
         header('Location: /pages/schedule.php'); exit;
 
-    } elseif ($action === 'update') {
+    } elseif ($action === 'update' && $role === 'admin') {
         $targetId    = (int)($_POST['target_id']     ?? 0);
         $classTypeId = (int)($_POST['class_type_id'] ?? 0);
         $gymId       = (int)($_POST['gym_id']        ?? 0);
@@ -48,7 +48,7 @@ if ($role === 'admin' && $requestMethod === 'POST' && empty($_GET['ajax'])) {
         }
         header('Location: /pages/schedule.php'); exit;
 
-    } elseif ($action === 'delete') {
+    } elseif ($action === 'delete' && $role === 'admin') {
         $targetId = (int)($_POST['target_id'] ?? 0);
         if ($targetId) {
             $db->prepare('DELETE FROM classes WHERE id=?')->execute([$targetId]);
@@ -192,9 +192,11 @@ if ($role === 'client') {
 }
 
 $classTypes = $gymList = $trainers = [];
-if ($role === 'admin') {
+if (in_array($role, ['admin', 'trainer'], true)) {
     $classTypes = $db->query("SELECT id, name FROM class_types WHERE name IN ('Pilates', 'Cycling', 'Personal Training') ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
     $gymList    = $db->query('SELECT id, name, city FROM gym_locations ORDER BY city, name')->fetchAll(PDO::FETCH_ASSOC);
+}
+if ($role === 'admin') {
     $trainers   = $db->query('SELECT u.id, u.first_name, u.last_name FROM users u JOIN trainers t ON t.user_id=u.id ORDER BY u.first_name')->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -484,7 +486,10 @@ if (!empty($_GET['ajax'])) {
     exit;
 }
 ?>
-<?php drawDashHeader($session, $db, 'schedule', $role === 'admin' ? ['schedule', 'admin'] : ['schedule']); ?>
+<?php
+$scheduleCss = in_array($role, ['admin', 'trainer'], true) ? ['schedule', 'admin'] : ['schedule'];
+drawDashHeader($session, $db, 'schedule', $scheduleCss);
+?>
 
 <div class="sc-filter-bar" id="scFilterBar">
     <span class="sc-filter-label"><i class="fa fa-sliders"></i> Filter</span>
@@ -525,7 +530,19 @@ if (!empty($_GET['ajax'])) {
         <div class="sc-week-stats">
             <div class="sc-stat"><span id="statClasses"><?= $totalClasses ?></span><small>classes</small></div>
             <div class="sc-stat"><span id="statSpots"><?= $totalEnrolled ?></span><small>enrolled</small></div>
-            <button class="btn-admin-primary" onclick="openEditModal(null)" style="align-self:center">
+            <button class="btn-admin-primary sc-create-class-btn" onclick="openEditModal(null)">
+                <i class="fa fa-plus"></i> New Class
+            </button>
+        </div>
+        <?php elseif ($role === 'trainer'): ?>
+        <div>
+            <h1 class="sc-title">My Schedule</h1>
+            <p class="sc-subtitle">Create classes assigned to you and follow your upcoming week</p>
+        </div>
+        <div class="sc-week-stats">
+            <div class="sc-stat"><span id="statClasses"><?= $totalClasses ?></span><small>classes</small></div>
+            <div class="sc-stat"><span id="statSpots"><?= $totalSpots ?></span><small>spots open</small></div>
+            <button class="btn-admin-primary sc-create-class-btn" onclick="openEditModal(null)">
                 <i class="fa fa-plus"></i> New Class
             </button>
         </div>
@@ -562,9 +579,9 @@ if (!empty($_GET['ajax'])) {
 
 </main>
 
-<?php if ($role === 'admin'): ?>
-<!-- modal criar/editar (admin) -->
-<div class="sc-modal" id="editModal" aria-hidden="true">
+<?php if (in_array($role, ['admin', 'trainer'], true)): ?>
+<!-- modal criar/editar -->
+<div class="sc-modal class-editor-modal" id="editModal" aria-hidden="true">
     <div class="sc-modal-backdrop" id="editModalBackdrop"></div>
     <div class="sc-modal-panel" id="editModalPanel">
         <button class="sc-modal-close" id="editModalClose"><i class="fa fa-xmark"></i></button>
@@ -576,7 +593,7 @@ if (!empty($_GET['ajax'])) {
             <form method="POST" id="editForm">
                 <input type="hidden" name="_action" id="editAction" value="create">
                 <input type="hidden" name="target_id" id="editTargetId" value="">
-                <div class="admin-form-grid" style="margin-bottom:1rem">
+                <div class="class-editor-fields">
                     <div class="admin-field">
                         <label>Class Type</label>
                         <select name="class_type_id" id="editClassType" required>
@@ -595,6 +612,7 @@ if (!empty($_GET['ajax'])) {
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <?php if ($role === 'admin'): ?>
                     <div class="admin-field">
                         <label>Trainer <span style="font-weight:400;text-transform:none">(optional)</span></label>
                         <select name="trainer_id" id="editTrainerId">
@@ -604,6 +622,7 @@ if (!empty($_GET['ajax'])) {
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <?php endif; ?>
                     <div class="admin-field">
                         <label>Date &amp; Time</label>
                         <input type="datetime-local" name="schedule" id="editSchedule" required>
@@ -631,7 +650,9 @@ if (!empty($_GET['ajax'])) {
 .sc-details-btn--danger { color: #ef4444; border-color: transparent; }
 .sc-details-btn--danger:hover { background: rgba(239,68,68,.15); border-color: #ef4444; }
 </style>
-<?php else: ?>
+<?php endif; ?>
+
+<?php if ($role !== 'admin'): ?>
 <!-- modal de detalhe (client/trainer) -->
 <div class="sc-modal" id="scModal" aria-hidden="true">
     <div class="sc-modal-backdrop" id="scModalBackdrop"></div>
@@ -894,6 +915,41 @@ var SC = {
 
     editClose.addEventListener('click', closeEditModal);
     editBackdrop.addEventListener('click', closeEditModal);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeEditModal(); });
+})();
+</script>
+<?php elseif ($role === 'trainer'): ?>
+<script src="../js/schedule.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    var editModal    = document.getElementById('editModal');
+    var editBackdrop = document.getElementById('editModalBackdrop');
+    var editClose    = document.getElementById('editModalClose');
+
+    window.openEditModal = function () {
+        document.getElementById('editModalLabel').textContent = 'New Class';
+        document.getElementById('editAction').value = 'create';
+        document.getElementById('editTargetId').value = '';
+        document.getElementById('editClassType').value = '';
+        document.getElementById('editGymId').value = '';
+        document.getElementById('editSchedule').value = '';
+        document.getElementById('editDuration').value = '';
+        document.getElementById('editCapacity').value = '';
+        editModal.setAttribute('aria-hidden', 'false');
+        editModal.classList.add('sc-modal--open');
+        document.body.style.overflow = 'hidden';
+    };
+
+    function closeEditModal() {
+        editModal.setAttribute('aria-hidden', 'true');
+        editModal.classList.remove('sc-modal--open');
+        document.body.style.overflow = '';
+    }
+
+    if (editClose) editClose.addEventListener('click', closeEditModal);
+    if (editBackdrop) editBackdrop.addEventListener('click', closeEditModal);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeEditModal(); });
 })();
 </script>
