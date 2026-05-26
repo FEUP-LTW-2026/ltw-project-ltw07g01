@@ -96,7 +96,7 @@ if ($isAdmin) {
         $byGym[$key]['items'][] = $eq;
     }
 
-    drawDashHeader($session, $db, 'equipment', ['admin']);
+    drawDashHeader($session, $db, 'equipment', ['equipment']);
     ?>
 
     <main class="admin-page">
@@ -154,13 +154,13 @@ if ($isAdmin) {
         </div>
 
         <?php foreach ($byGym as $gymData): ?>
-        <div class="admin-table-wrap" style="margin-bottom:1.25rem">
-            <div style="padding:.75rem 1.125rem;background:#0d0d0d;border-bottom:1px solid #1e1e1e;display:flex;align-items:center;justify-content:space-between;">
-                <span style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);">
-                    <i class="fa fa-location-dot" style="color:var(--admin-accent)"></i>
+        <div class="admin-table-wrap admin-table-wrap--spaced">
+            <div class="equip-gym-header">
+                <span class="equip-gym-name">
+                    <i class="fa fa-location-dot"></i>
                     <?= htmlspecialchars($gymData['gym_city'] . ' — ' . $gymData['gym_name']) ?>
                 </span>
-                <span style="font-size:.75rem;color:var(--text-dim)"><?= count($gymData['items']) ?> item<?= count($gymData['items']) !== 1 ? 's' : '' ?></span>
+                <span class="equip-gym-count"><?= count($gymData['items']) ?> item<?= count($gymData['items']) !== 1 ? 's' : '' ?></span>
             </div>
             <table class="admin-table">
                 <thead>
@@ -181,14 +181,14 @@ if ($isAdmin) {
                                 <a href="/pages/equipment.php?edit=<?= $eq['id'] ?>" class="btn-admin-sm" title="Edit">
                                     <i class="fa fa-pen"></i>
                                 </a>
-                                <form method="POST" style="display:inline">
+                                <form method="POST" class="form-inline">
                                     <input type="hidden" name="_action" value="toggle">
                                     <input type="hidden" name="target_id" value="<?= $eq['id'] ?>">
                                     <button type="submit" class="btn-admin-sm btn-admin-sm--ok" title="Toggle availability">
                                         <i class="fa fa-<?= $eq['is_available'] ? 'toggle-on' : 'toggle-off' ?>"></i>
                                     </button>
                                 </form>
-                                <form method="POST" style="display:inline"
+                                <form method="POST" class="form-inline"
                                       onsubmit="return confirm('Remove <?= htmlspecialchars(addslashes($eq['name'])) ?>?')">
                                     <input type="hidden" name="_action" value="delete">
                                     <input type="hidden" name="target_id" value="<?= $eq['id'] ?>">

@@ -330,7 +330,7 @@ if ($role === 'admin') {
     )->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
-<?php drawDashHeader($session, $db, 'home', $role === 'admin' ? ['admin'] : ['schedule']); ?>
+<?php drawDashHeader($session, $db, 'home', ['schedule']); ?>
 
 <main class="<?= $role === 'admin' ? 'admin-page' : 'dashboard-page dashboard-' . $role ?>">
 

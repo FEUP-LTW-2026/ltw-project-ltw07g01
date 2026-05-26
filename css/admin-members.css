@@ -1,79 +1,3 @@
-.equipment-page {
-    min-height: 100vh;
-    background: linear-gradient(to bottom, black, #2a2a2a, black);
-    padding-top: 5.625rem;
-    font-family: 'League Gothic', sans-serif;
-}
-
-.equipment-hero {
-    text-align: center;
-    padding: 3.75rem 10%;
-}
-
-.equipment-hero h1 {
-    color: #00bfa6;
-    font-size: 5.625rem;
-    font-weight: normal;
-    padding-bottom: 1.25rem;
-}
-
-.equipment-hero p {
-    color: white;
-    font-size: 1.75rem;
-}
-
-.equipment-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2.1875rem;
-    padding: 2.5rem 10% 5.625rem;
-}
-
-
-.equipment-card {
-    background-color: #d9d9d9;
-    padding: 2.1875rem;
-    border-left: 0.5rem solid #00bfa6;
-}
-
-.equipment-card h2 {
-    color: #4f4f4f;
-    font-size: 2.625rem;
-    font-weight: normal;
-}
-
-.equipment-card p {
-    color: #4f4f4f;
-    font-size: 1.5rem;
-    margin: 0.625rem 0;
-}
-
-.status {
-    display: inline-block;
-    margin-top: 1.25rem;
-    padding: 0.5rem 1.25rem;
-    border-radius: 2.5rem;
-    font-size: 1.375rem;
-}
-
-.status.available {
-    color: #00bfa6;
-    border: 0.125rem solid #00bfa6;
-}
-
-.status.unavailable {
-    color: #ff4d4d;
-    border: 0.125rem solid #ff4d4d;
-}
-
-@media (max-width: 56.25rem) {
-    .equipment-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-
-/* -- Admin -- */
 .admin-header {
     display: flex;
     align-items: flex-start;
@@ -215,9 +139,6 @@
 .btn-admin-sm--danger { color: #ef4444; border-color: #2a2a2a; }
 .btn-admin-sm--danger:hover { background: #ef444422; border-color: #ef4444; }
 
-.btn-admin-sm--ok { color: #34d399; }
-.btn-admin-sm--ok:hover { background: #34d39922; border-color: #34d399; }
-
 .admin-empty {
     text-align: center;
     color: var(--text-dim);
@@ -234,27 +155,34 @@
     .admin-form-grid { grid-template-columns: 1fr; }
 }
 
-.admin-table-wrap--spaced { margin-bottom: 1.25rem; }
+#membershipSection,
+#promoteSection { display: none; }
 
-.equip-gym-header {
-    padding: .75rem 1.125rem;
+.admin-label-block { margin-bottom: .5rem; display: block; }
+
+.admin-form-grid--flush { padding: 0; }
+
+.admin-optional { font-weight: 400; text-transform: none; }
+
+.admin-promote-section {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #1e1e1e;
+}
+
+.btn-admin-ghost--warn { color: var(--admin-accent); border-color: rgba(245,158,11,.13); }
+
+.admin-search-bar { margin-bottom: .75rem; }
+
+.admin-search-bar input {
+    width: 100%;
+    padding: .6rem .875rem;
     background: #0d0d0d;
-    border-bottom: 1px solid #1e1e1e;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    border: 1px solid #1e1e1e;
+    border-radius: .375rem;
+    color: #e5e5e5;
+    font-size: .875rem;
+    outline: none;
 }
-
-.equip-gym-name {
-    font-size: .8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--text-dim);
-}
-
-.equip-gym-name i { color: var(--admin-accent); }
-
-.equip-gym-count { font-size: .75rem; color: var(--text-dim); }
 
 .form-inline { display: inline; }

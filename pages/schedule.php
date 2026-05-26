@@ -417,7 +417,7 @@ $buildDynamicHTML = function() use ($days, $classesByDay, $today, $enrolledIds, 
                             <button class="sc-details-btn" onclick="openEditModal(<?= $cls['id'] ?>)">
                                 <i class="fa fa-pen"></i> Edit
                             </button>
-                            <form method="POST" style="display:inline"
+                            <form method="POST" class="form-inline"
                                   onsubmit="return confirm('Delete this class? All enrollments will also be removed.')">
                                 <input type="hidden" name="_action" value="delete">
                                 <input type="hidden" name="target_id" value="<?= $cls['id'] ?>">
@@ -525,8 +525,7 @@ if (!empty($_GET['ajax'])) {
 }
 ?>
 <?php
-$scheduleCss = in_array($role, ['admin', 'trainer'], true) ? ['schedule', 'admin'] : ['schedule'];
-drawDashHeader($session, $db, 'schedule', $scheduleCss);
+drawDashHeader($session, $db, 'schedule', ['schedule']);
 ?>
 
 <div class="sc-filter-bar" id="scFilterBar">
@@ -623,7 +622,7 @@ drawDashHeader($session, $db, 'schedule', $scheduleCss);
     <div class="sc-modal-backdrop" id="editModalBackdrop"></div>
     <div class="sc-modal-panel" id="editModalPanel">
         <button class="sc-modal-close" id="editModalClose"><i class="fa fa-xmark"></i></button>
-        <div class="sc-modal-header" style="--modal-color:var(--accent)">
+        <div class="sc-modal-header">
             <span class="sc-modal-type" id="editModalLabel">New Class</span>
             <h2 class="sc-modal-title">Class Details</h2>
         </div>
@@ -652,7 +651,7 @@ drawDashHeader($session, $db, 'schedule', $scheduleCss);
                     </div>
                     <?php if ($role === 'admin'): ?>
                     <div class="admin-field">
-                        <label>Trainer <span style="font-weight:400;text-transform:none">(optional)</span></label>
+                        <label>Trainer <span class="admin-optional">(optional)</span></label>
                         <select name="trainer_id" id="editTrainerId">
                             <option value="">— no trainer —</option>
                             <?php foreach ($trainers as $tr): ?>
@@ -727,7 +726,7 @@ drawDashHeader($session, $db, 'schedule', $scheduleCss);
             </div>
             <div class="sc-modal-cap-wrap">
                 <div class="sc-cap-bar sc-cap-bar--lg">
-                    <div class="sc-cap-fill" id="scModalCapFill" style="width:0%"></div>
+                    <div class="sc-cap-fill" id="scModalCapFill"></div>
                 </div>
                 <span id="scModalCapLabel"></span>
             </div>

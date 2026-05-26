@@ -199,10 +199,10 @@
             <?php if ($isAdmin): ?>
                 </a>
                 <div class="admin-trainer-actions">
-                    <a href="/pages/trainers.php?edit=<?= (int)$trainer['id'] ?>" class="btn-admin-ghost" style="font-size:.8rem;padding:.4rem .875rem">
+                    <a href="/pages/trainers.php?edit=<?= (int)$trainer['id'] ?>" class="btn-admin-ghost btn-admin-ghost--sm"
                         <i class="fa fa-pen"></i> Edit
                     </a>
-                    <form method="POST" style="margin:0"
+                    <form method="POST"
                           onsubmit="return confirm('Remove <?= htmlspecialchars(addslashes($trainer['first_name'])) ?>? This cannot be undone.')">
                         <input type="hidden" name="_action" value="delete">
                         <input type="hidden" name="target_id" value="<?= (int)$trainer['id'] ?>">

@@ -129,7 +129,7 @@ $members = $db->query(
      ORDER BY u.created_at DESC'
 )->fetchAll(PDO::FETCH_ASSOC);
 
-drawDashHeader($session, $db, 'admin-members', ['admin']);
+drawDashHeader($session, $db, 'admin-members', ['admin-members']);
 ?>
 
 <main class="admin-page">
@@ -179,9 +179,9 @@ drawDashHeader($session, $db, 'admin-members', ['admin']);
             </div>
 
             <!-- membership - visivel so na edicao -->
-            <div class="admin-field admin-field--full" id="membershipSection" style="display:none">
-                <label style="margin-bottom:.5rem;display:block">Membership</label>
-                <div class="admin-form-grid" style="padding:0">
+            <div class="admin-field admin-field--full" id="membershipSection">
+                <label class="admin-label-block">Membership</label>
+                <div class="admin-form-grid admin-form-grid--flush">
                     <div class="admin-field">
                         <label>Plan</label>
                         <select name="gym_plan" id="f_plan">
@@ -196,7 +196,7 @@ drawDashHeader($session, $db, 'admin-members', ['admin']);
                         <input type="date" name="gym_start" id="f_start">
                     </div>
                     <div class="admin-field">
-                        <label>End Date <span style="font-weight:400;text-transform:none">(optional)</span></label>
+                        <label>End Date <span class="admin-optional">(optional)</span></label>
                         <input type="date" name="gym_end" id="f_end">
                     </div>
                 </div>
@@ -210,26 +210,21 @@ drawDashHeader($session, $db, 'admin-members', ['admin']);
             </div>
         </form>
 
-        <!-- promover a trainer - so aparece na edicao -->
-        <div id="promoteSection" style="display:none;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid #1e1e1e">
-            <p style="font-size:.82rem;color:var(--text-dim);margin:0 0 .75rem">
-                <i class="fa fa-triangle-exclamation" style="color:#f59e0b"></i>
-                Promoting removes the member's plan and class history and grants trainer access.
-            </p>
+        <!-- promover a trainer, so aparece na edicao -->
+        <div id="promoteSection" class="admin-promote-section">
             <form method="POST" id="promoteForm"
                   onsubmit="return confirm('Promote this member to trainer? This cannot be undone.')">
                 <input type="hidden" name="_action" value="promote">
                 <input type="hidden" name="target_id" id="promoteTargetId" value="">
-                <button type="submit" class="btn-admin-ghost" style="color:#f59e0b;border-color:#f59e0b22">
+                <button type="submit" class="btn-admin-ghost btn-admin-ghost--warn">
                     <i class="fa fa-arrow-up-right-dots"></i> Promote to Trainer
                 </button>
             </form>
         </div>
     </div>
 
-    <div class="admin-search-bar" style="margin-bottom:.75rem">
-        <input type="search" id="memberSearch" placeholder="Search by name, username or email…"
-               style="width:100%;padding:.6rem .875rem;background:#0d0d0d;border:1px solid #1e1e1e;border-radius:.375rem;color:#e5e5e5;font-size:.875rem;outline:none;">
+    <div class="admin-search-bar">
+        <input type="search" id="memberSearch" placeholder="Search by name, username or email…">
     </div>
     <div class="admin-table-wrap">
         <table class="admin-table">
@@ -270,7 +265,7 @@ drawDashHeader($session, $db, 'admin-members', ['admin']);
                             <a href="/pages/profile.php?id=<?= $m['id'] ?>" class="btn-admin-sm" title="View profile">
                                 <i class="fa fa-eye"></i>
                             </a>
-                            <form method="POST" style="display:inline"
+                            <form method="POST" class="form-inline"
                                   onsubmit="return confirm('Remove <?= htmlspecialchars(addslashes($m['first_name'])) ?>? This cannot be undone.')">
                                 <input type="hidden" name="_action" value="delete">
                                 <input type="hidden" name="target_id" value="<?= $m['id'] ?>">
@@ -333,8 +328,8 @@ function editMember(id, first, last, email, plan, gymStart, gymEnd) {
     document.getElementById('formSubmit').innerHTML   = '<i class="fa fa-save"></i> Save';
     document.getElementById('usernameField').style.display  = 'none';
     document.getElementById('passwordField').style.display  = 'none';
-    document.getElementById('membershipSection').style.display = '';
-    document.getElementById('promoteSection').style.display   = '';
+    document.getElementById('membershipSection').style.display = 'flex';
+    document.getElementById('promoteSection').style.display   = 'block';
     document.getElementById('promoteTargetId').value          = id;
     document.getElementById('f_first').value  = first;
     document.getElementById('f_last').value   = last;
