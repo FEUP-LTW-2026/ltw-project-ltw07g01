@@ -33,6 +33,10 @@ main.profile-page {
     padding: 7.5rem 1.875rem 1.875rem 1.875rem;
 }
 
+main.profile-page:not(.trainer-theme) {
+    --accent: #00bfa6;
+}
+
 @media (min-width: 68.75rem) {
     main.profile-page {
         grid-template-columns: 23.75rem 1fr;
@@ -263,6 +267,23 @@ main.profile-page {
     flex-direction: column;
     gap: 0.625rem;
 }
+
+.profile-back-btn {
+    padding: 20px;
+    position: fixed;
+    top: 5rem;
+    left: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+}
+
+.profile-back-btn:hover {
+    color: var(--accent);
+}
+
 
 .btn-save-changes,
 .btn-cancel {

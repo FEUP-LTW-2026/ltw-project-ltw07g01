@@ -144,7 +144,7 @@ $stmt->execute();
 $trainers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if ($session->isLoggedIn()) {
-    drawDashHeader($session, $db, 'trainers', ['trainers']);
+    drawDashHeader($session, $db, 'trainers', $isAdmin ? ['trainers', 'admin'] : ['trainers']);
 } else {
     drawHeader($session, ['trainers']);
 }

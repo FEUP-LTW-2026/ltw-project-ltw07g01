@@ -96,7 +96,7 @@ if ($isAdmin) {
         $byGym[$key]['items'][] = $eq;
     }
 
-    drawDashHeader($session, $db, 'equipment', []);
+    drawDashHeader($session, $db, 'equipment', ['admin']);
     ?>
 
     <main class="admin-page">

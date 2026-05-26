@@ -490,7 +490,7 @@ if (!empty($_GET['ajax'])) {
     exit;
 }
 ?>
-<?php drawDashHeader($session, $db, 'schedule', ['schedule']); ?>
+<?php drawDashHeader($session, $db, 'schedule', $role === 'admin' ? ['schedule', 'admin'] : ['schedule']); ?>
 
 <div class="sc-filter-bar" id="scFilterBar">
     <span class="sc-filter-label"><i class="fa fa-sliders"></i> Filter</span>

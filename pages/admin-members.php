@@ -129,7 +129,7 @@ $members = $db->query(
      ORDER BY u.created_at DESC'
 )->fetchAll(PDO::FETCH_ASSOC);
 
-drawDashHeader($session, $db, 'admin-members', []);
+drawDashHeader($session, $db, 'admin-members', ['admin']);
 ?>
 
 <main class="admin-page">
@@ -227,6 +227,10 @@ drawDashHeader($session, $db, 'admin-members', []);
         </div>
     </div>
 
+    <div class="admin-search-bar" style="margin-bottom:.75rem">
+        <input type="search" id="memberSearch" placeholder="Search by name, username or email…"
+               style="width:100%;padding:.6rem .875rem;background:#0d0d0d;border:1px solid #1e1e1e;border-radius:.375rem;color:#e5e5e5;font-size:.875rem;outline:none;">
+    </div>
     <div class="admin-table-wrap">
         <table class="admin-table">
             <thead>
@@ -288,6 +292,14 @@ drawDashHeader($session, $db, 'admin-members', []);
 </main>
 
 <script>
+document.getElementById('memberSearch').addEventListener('input', function() {
+    var q = this.value.toLowerCase();
+    document.querySelectorAll('.admin-table tbody tr').forEach(function(row) {
+        var text = row.textContent.toLowerCase();
+        row.style.display = (!q || text.includes(q)) ? '' : 'none';
+    });
+});
+
 function toggleForm() {
     var f = document.getElementById('memberForm');
     f.hidden = !f.hidden;
