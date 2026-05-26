@@ -48,6 +48,23 @@ main.sc-has-navbar {
     padding-top: 3.75rem;
     display: flex;
     gap: 0.75rem;
+    align-items: stretch;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.sc-week-stats .sc-create-class-btn {
+    align-self: stretch;
+    min-height: 3.75rem;
+    padding-inline: 1.25rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 65%, transparent);
+    background: var(--accent);
+    box-shadow: 0 0.625rem 1.75rem color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.sc-week-stats .sc-create-class-btn:hover {
+    opacity: 0.95;
+    transform: translateY(-0.125rem);
 }
 
 .sc-stat {
@@ -1028,5 +1045,10 @@ main.sc-has-navbar {
 
     .sc-modal-info-grid {
         grid-template-columns: 1fr;
+    }
+
+    .sc-week-stats .sc-create-class-btn {
+        width: 100%;
+        justify-content: center;
     }
 }

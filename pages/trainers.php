@@ -122,11 +122,11 @@ if ($isAdmin && isset($_GET['edit'])) {
 
 $classTypes = $gymList = [];
 if ($isAdmin) {
-    $classTypes = $db->query('SELECT id, name FROM class_types ORDER BY name')->fetchAll(PDO::FETCH_ASSOC);
+    $classTypes = $db->query("SELECT id, name FROM class_types WHERE name IN ('Pilates', 'Cycling', 'Personal Training') ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
     $gymList    = $db->query('SELECT id, name, city FROM gym_locations ORDER BY city, name')->fetchAll(PDO::FETCH_ASSOC);
 }
 
-$stmt = $db->prepare('
+$stmt = $db->prepare("
     SELECT u.id, u.first_name, u.last_name, u.username, u.profile_photo,
            t.bio, t.certifications,
            GROUP_CONCAT(DISTINCT gl.name) AS gyms,
@@ -137,9 +137,10 @@ $stmt = $db->prepare('
     LEFT JOIN gym_locations gl ON gl.id = tl.gym_id
     LEFT JOIN trainer_specializations ts ON ts.trainer_id = t.user_id
     LEFT JOIN class_types ct ON ct.id = ts.class_type_id
+        AND ct.name IN ('Pilates', 'Cycling', 'Personal Training')
     GROUP BY u.id
     ORDER BY u.first_name, u.last_name
-');
+");
 $stmt->execute();
 $trainers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

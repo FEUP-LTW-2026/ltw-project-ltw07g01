@@ -77,7 +77,7 @@
 <section class="type-section" id="section-pilates">
     <img src="../images/pilatu.jpg" alt="Pilates section">
     <h3>Pilates</h3>
-    <p class="credits-universal-note"><i class="fa fa-circle-info"></i> Credits from any class pack work across <strong>all group classes</strong> — Yoga, Pilates, Cycling, Personal Training, and Strength &amp; Conditioning.</p>
+    <p class="credits-universal-note"><i class="fa fa-circle-info"></i> Credits from any class pack work across <strong>all group classes</strong> — Pilates, Cycling, and Personal Training.</p>
     <div>
         <article class="plan">
             <h2>1 CLASS</h2>
@@ -125,7 +125,7 @@
 <section class="type-section" id="section-cycling">
     <img src="../images/cycling.jpg" alt="Cycling section">
     <h3>Cycling</h3>
-    <p class="credits-universal-note"><i class="fa fa-circle-info"></i> Credits from any class pack work across <strong>all group classes</strong> — Yoga, Pilates, Cycling, Personal Training, and Strength &amp; Conditioning.</p>
+    <p class="credits-universal-note"><i class="fa fa-circle-info"></i> Credits from any class pack work across <strong>all group classes</strong> — Pilates, Cycling, and Personal Training.</p>
     <div>
         <article class="plan">
             <h2>1 CLASS</h2>
