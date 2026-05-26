@@ -363,7 +363,9 @@ if (!empty($_GET['ajax'])) {
 }
 ?>
 <?php drawDashHeader($session, $db, 'profile', ['schedule'], 'profile-body'); ?>
-
+<?php if (!$isOwnProfile): ?>
+<a class="profile-back-btn" href="#" onclick="history.back(); return false;" title="Go back"><i class="fa fa-arrow-left"></i></a>
+<?php endif; ?>
 <main class="profile-page trainer-theme">
     <aside class="sidebar-container">
         <section class="profile-card">

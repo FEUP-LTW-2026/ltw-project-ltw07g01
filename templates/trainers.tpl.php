@@ -37,7 +37,8 @@
     </div>
 
     <?php if ($msg): ?>
-    <div class="admin-alert admin-alert--ok"><i class="fa fa-circle-check"></i> <?= $msg ?></div>
+    <div class="admin-alert admin-alert--ok" id="trainerMsg"><i class="fa fa-circle-check"></i> <?= $msg ?></div>
+    <script>setTimeout(function(){ var el = document.getElementById('trainerMsg'); if(el){ el.style.transition='opacity .4s'; el.style.opacity='0'; setTimeout(function(){ el.remove(); }, 420); } }, 3500);</script>
     <?php endif; ?>
     <?php if ($error): ?>
     <div class="admin-alert admin-alert--err"><i class="fa fa-triangle-exclamation"></i> <?= htmlspecialchars($error) ?></div>

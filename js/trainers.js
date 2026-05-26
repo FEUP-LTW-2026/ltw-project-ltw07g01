@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const classFilter = document.getElementById('trainer-filter-class');
     const clearButton = document.getElementById('trainer-filter-clear');
     const count = document.getElementById('trainer-filter-count');
-    const cards = document.querySelectorAll('.trainer-card');
+    const cards = document.querySelectorAll('[data-gyms]');
 
     function trainerHasValue(card, dataKey, value) {
         if (value === 'all') return true;

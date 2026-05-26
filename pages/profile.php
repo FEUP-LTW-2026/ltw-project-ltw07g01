@@ -209,7 +209,9 @@ if ($totalGymMinutes >= 6000) {
 }
 ?>
 <?php drawDashHeader($session, $db, 'profile', [], 'profile-body'); ?>
-
+<?php if (!$isOwnProfile): ?>
+<a class="profile-back-btn" href="#" onclick="history.back(); return false;" title="Go back"><i class="fa fa-arrow-left"></i></a>
+<?php endif; ?>
 <main class="profile-page">
     <aside class="sidebar-container">
         <section class="profile-card">
