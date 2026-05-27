@@ -543,6 +543,11 @@ var SC = {
                     var spots = cls.capacity - data.enrolled;
                     spotsEl.textContent = data.enrolled + '/' + cls.capacity + (spots > 0 ? ' · ' + spots + ' left' : '');
                 }
+                var capFill = document.getElementById('capfill-' + enrollClassId);
+                if (capFill && cls) {
+                    var fillPct = cls.capacity > 0 ? Math.round((data.enrolled / cls.capacity) * 100) : 0;
+                    capFill.style.width = fillPct + '%';
+                }
                 if (!document.querySelector('.sc-enroll-item')) {
                     document.getElementById('enrollModalBody').innerHTML = '<p class="sc-enroll-empty"><i class="fa fa-users"></i> No one enrolled yet.</p>';
                 }

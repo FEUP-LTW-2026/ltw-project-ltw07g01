@@ -53,6 +53,18 @@
                 <?php endif; ?>
             </div>
         </section>
+        <?php if ($isOwnProfile): ?>
+        <div class="membership-actions">
+            <a href="../pages/membership.php" class="btn-update-membership">
+                <i class="fa fa-arrow-up-right-dots"></i> Update Membership
+            </a>
+            <?php if ($memberTag !== 'NO MEMBERSHIP'): ?>
+            <button class="btn-cancel-membership" id="btnCancelSub" onclick="cancelSubscription()">
+                <i class="fa fa-ban"></i> Cancel Membership
+            </button>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
     </aside>
 
     <div class="main-content">
@@ -208,6 +220,30 @@
     document.getElementById('stats-range').addEventListener('change', function () {
         updateChart(this.value);
     });
+
+    window.cancelSubscription = function () {
+        if (!confirm('Are you sure you want to cancel your membership? Your gym plan will be deactivated immediately.')) return;
+        var btn = document.getElementById('btnCancelSub');
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Cancelling…'; }
+        fetch('profile.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'ajax=1&action=cancel_subscription',
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (!data.ok) {
+                if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa fa-ban"></i> Cancel Membership'; }
+                return;
+            }
+            if (btn) btn.remove();
+            var tagEl = document.querySelector('.member-tag');
+            if (tagEl) tagEl.textContent = 'NO MEMBERSHIP';
+        })
+        .catch(function () {
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa fa-ban"></i> Cancel Membership'; }
+        });
+    };
 }());
 </script>
 <?php drawFooter();
