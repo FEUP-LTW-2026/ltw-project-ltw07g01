@@ -22,6 +22,22 @@ $isAdmin = (bool)$s->fetch();
 $msg   = '';
 $error = '';
 
+if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && ($_POST['_action'] ?? '') === 'toggle') {
+    $targetId = (int)($_POST['target_id'] ?? 0);
+    if ($targetId) {
+        $db->prepare('UPDATE equipment SET is_available = NOT is_available WHERE id=?')->execute([$targetId]);
+        $s = $db->prepare('SELECT is_available FROM equipment WHERE id=?');
+        $s->execute([$targetId]);
+        $row = $s->fetch();
+        header('Content-Type: application/json');
+        echo json_encode(['ok' => true, 'is_available' => (bool)$row['is_available']]);
+    } else {
+        header('Content-Type: application/json');
+        echo json_encode(['ok' => false]);
+    }
+    exit;
+}
+
 if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['_action'] ?? '';
 
@@ -182,13 +198,10 @@ if ($isAdmin) {
                                 <a href="/pages/equipment.php?edit=<?= $eq['id'] ?>" class="btn-admin-sm" title="Edit">
                                     <i class="fa fa-pen"></i>
                                 </a>
-                                <form method="POST" class="form-inline">
-                                    <input type="hidden" name="_action" value="toggle">
-                                    <input type="hidden" name="target_id" value="<?= $eq['id'] ?>">
-                                    <button type="submit" class="btn-admin-sm btn-admin-sm--ok" title="Toggle availability">
-                                        <i class="fa fa-<?= $eq['is_available'] ? 'toggle-on' : 'toggle-off' ?>"></i>
-                                    </button>
-                                </form>
+                                <button class="btn-admin-sm btn-admin-sm--ok" title="Toggle availability"
+                                        onclick="toggleEquip(<?= $eq['id'] ?>, this)">
+                                    <i class="fa fa-<?= $eq['is_available'] ? 'toggle-on' : 'toggle-off' ?>"></i>
+                                </button>
                                 <form method="POST" class="form-inline"
                                       onsubmit="return confirm('Remove <?= htmlspecialchars(addslashes($eq['name'])) ?>?')">
                                     <input type="hidden" name="_action" value="delete">
@@ -222,6 +235,25 @@ if ($isAdmin) {
         f.hidden = false;
         document.getElementById('formTitle').textContent = 'Add Equipment';
         f.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function toggleEquip(id, btn) {
+        var fd = new FormData();
+        fd.append('_action', 'toggle');
+        fd.append('target_id', id);
+        fd.append('ajax', '1');
+        fetch('/pages/equipment.php', { method: 'POST', body: fd })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (!data.ok) return;
+                var avail = data.is_available;
+                var icon = btn.querySelector('i');
+                icon.className = 'fa fa-' + (avail ? 'toggle-on' : 'toggle-off');
+                var row = btn.closest('tr');
+                var badge = row.querySelector('.admin-badge');
+                badge.className = 'admin-badge admin-badge--' + (avail ? 'active' : 'inactive');
+                badge.textContent = avail ? 'Available' : 'Unavailable';
+            });
     }
     </script>
 

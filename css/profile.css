@@ -37,7 +37,7 @@ main.profile-page:not(.trainer-theme) {
     --accent: #00bfa6;
 }
 
-body.admin-theme main.profile-page:not(.trainer-theme) {
+body.admin-theme main.admin-profile-page {
     --accent: #e11d48;
 }
 

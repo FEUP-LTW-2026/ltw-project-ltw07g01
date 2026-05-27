@@ -1,6 +1,6 @@
 <?php function drawAdminProfilePage(Session $session, PDO $db, array $user, string $profilePhoto, string $fullName): void { ?>
 
-<main class="profile-page">
+<main class="profile-page admin-profile-page">
     <aside class="sidebar-container">
         <section class="profile-card">
             <div class="profile-info">
