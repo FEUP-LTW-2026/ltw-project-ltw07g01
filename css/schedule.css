@@ -661,6 +661,7 @@ main.sc-has-navbar {
     border-bottom: 0.0625rem solid #1a1a1a;
     position: relative;
     background: linear-gradient(160deg, rgba(255,255,255,0.025) 0%, transparent 100%);
+    --modal-color: var(--accent);
 }
 
 /* linha colorida c/ a cor do tipo de aula */
@@ -884,7 +885,7 @@ main.sc-has-navbar {
 
 .sc-modal-cancel-btn {
     width: 100%;
-    border: 1.5px solid #ef4444;
+    border: 0.09375rem solid #ef4444;
     border-radius: 0.75rem;
     background: transparent;
     color: #ef4444;
@@ -949,7 +950,7 @@ main.sc-has-navbar {
 .sc-review-comment {
     width: 100%;
     background: var(--card-bg);
-    border: 1px solid var(--border);
+    border: 0.0625rem solid var(--border);
     border-radius: 0.5rem;
     color: var(--text-main);
     font-size: 0.9rem;
@@ -1057,7 +1058,6 @@ main.sc-has-navbar {
 
 
 
-.sc-modal-header { --modal-color: var(--accent); }
 
 #scModalCapFill { width: 0%; }
 
@@ -1068,7 +1068,7 @@ main.sc-has-navbar {
 .sc-btn-group .sc-details-btn { margin-left: 0; }
 
 .sc-enroll-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.625rem; }
-.sc-enroll-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.625rem 0; border-bottom: 1px solid #1e1e1e; }
+.sc-enroll-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.625rem 0; border-bottom: 0.0625rem solid #1e1e1e; }
 .sc-enroll-item:last-child { border-bottom: none; }
 .sc-enroll-avatar { width: 2.25rem; height: 2.25rem; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: #111; }
 .sc-enroll-info { flex: 1; min-width: 0; }

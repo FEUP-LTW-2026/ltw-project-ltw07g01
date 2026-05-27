@@ -188,7 +188,7 @@
         <img src="../../images/personal-training.png" alt="Personal Training section">
         <h2>Personal Training</h2>
         <p class="credits-universal-note"><i class="fa fa-circle-info"></i> Book Personal Training sessions using your
-            class credits. <a href="/pages/schedule.php">View schedule →</a></p>
+            class credits.</p>
         <div>
             <article class="plan">
                 <h3>1 CLASS</h3>
