@@ -13,6 +13,9 @@ body {
     --accent: #00bfa6;
     --text-main: #ffffff;
     --text-dim: #8f8f8f;
+    --bg-color: #000000;
+    --card-bg: #000000;
+    --border: 0.0625rem solid #222;
 }
 
 header nav {

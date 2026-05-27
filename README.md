@@ -7,29 +7,30 @@ CUBO GYM is a modern fitness club offering gym, pilates, and cycling memberships
 **All users:**
 - [x] Register a new account.
 - [x] Log in and out.
-- [ ] Edit their profile, including name, username, password, and profile photo.
+- [x] Edit their profile, including name, username, password, and profile photo.
 
 **Members:**
-- [ ] Browse the schedule of available fitness classes, filtering by type, trainer, day, or time.
+- [x] Browse the schedule of available fitness classes, filtering by type, trainer, day, or time.
 - [x] Enroll in and cancel enrollment from upcoming classes, subject to capacity limits.
-- [ ] View trainer profiles, including their specializations and the classes they teach.
-- [ ] Check the current availability of equipment in the main training area.
-- [ ] Leave ratings and reviews for classes they have attended.
+- [x] View trainer profiles, including their specializations and the classes they teach.
+- [x] Check the current availability of equipment in the main training area.
+- [x] Leave ratings and reviews for classes they have attended.
 
 **Trainers:**
-- [ ] Manage their public profile, including bio, specializations, and certifications.
-- [ ] View the roster of members enrolled in their classes.
-- [ ] Track and manage their assigned class schedule.
+- [x] Manage their public profile, including bio, specializations, and certifications.
+- [x] View the roster of members enrolled in their classes.
+- [x] Track and manage their assigned class schedule.
 
 **Admins:**
-- [ ] Manage members and trainers (create, update, and deactivate accounts).
-- [ ] Manage the class catalog (create, edit, and remove classes) and assign trainers to them.
-- [ ] Manage equipment in the main training area (add, update availability status, and remove items).
-- [ ] Elevate a user to admin status.
-- [ ] Oversee and ensure the smooth operation of the entire system.
+- [x] Manage members and trainers (create, update, and deactivate accounts).
+- [x] Manage the class catalog (create, edit, and remove classes) and assign trainers to them.
+- [x] Manage equipment in the main training area (add, update availability status, and remove items).
+- [x] Elevate a user to admin status.
+- [x] Oversee and ensure the smooth operation of the entire system.
 
 **Extra:**
-- [ ] Something extra (e.g., personal training bookings, membership plans, waitlist, ...).
+- [x] Membership plans with flexible tiers (basic, pro, ultra) and class credits.
+- [x] Personalised workout plans for members.
 
 ## Running
 
@@ -42,4 +43,3 @@ CUBO GYM is a modern fitness club offering gym, pilates, and cycling memberships
 - admin / password123 (admin)
 - ana.silva / password123 (trainer)
 - joao.costa / password123 (member)
-

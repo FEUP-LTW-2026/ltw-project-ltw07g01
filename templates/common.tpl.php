@@ -98,6 +98,7 @@ require_once(__DIR__ . '/../utils/session.php');
     <link rel="stylesheet" href="../css/profile.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -133,8 +134,8 @@ require_once(__DIR__ . '/../utils/session.php');
             <hr class="nav-popup-divider">
             <a href="/pages/schedule.php"   class="nav-popup-link <?= $activePage === 'schedule'   ? 'active' : '' ?>"><i class="fa fa-calendar"></i> Schedule</a>
             <a href="/pages/trainers.php"   class="nav-popup-link <?= $activePage === 'trainers'   ? 'active' : '' ?>"><i class="fa fa-users"></i> Trainers</a>
-            <a href="/pages/equipment.php"  class="nav-popup-link <?= $activePage === 'equipment'  ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
-            <a href="/pages/locations.php"  class="nav-popup-link <?= $activePage === 'locations'  ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
+            <a href="/pages/equipment.php"     class="nav-popup-link <?= $activePage === 'equipment'    ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
+            <a href="/pages/locations.php"     class="nav-popup-link <?= $activePage === 'locations'    ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
             <a href="/pages/membership.php" class="nav-popup-link <?= $activePage === 'membership' ? 'active' : '' ?>"><i class="fa fa-id-card"></i> Membership</a>
             <a href="/pages/about.php"      class="nav-popup-link <?= $activePage === 'about'      ? 'active' : '' ?>"><i class="fa fa-circle-info"></i> About Us</a>
             <?php else: ?>
@@ -146,8 +147,10 @@ require_once(__DIR__ . '/../utils/session.php');
             <a href="/pages/equipment.php"     class="nav-popup-link <?= $activePage === 'equipment'    ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
             <a href="/pages/locations.php"     class="nav-popup-link <?= $activePage === 'locations'    ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
             <?php endif; ?>
+            <?php if ($userId): ?>
             <hr class="nav-popup-divider">
             <a href="/actions/logout.php" class="nav-popup-link nav-popup-link--logout"><i class="fa fa-right-from-bracket"></i> Logout</a>
+            <?php endif; ?>
         </nav>
     </div>
     <script src="../js/nav.js"></script>

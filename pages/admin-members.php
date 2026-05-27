@@ -140,6 +140,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+    } elseif ($action === 'promote_admin') {
+        $targetId = (int)($_POST['target_id'] ?? 0);
+        $isAjax   = !empty($_POST['_ajax']);
+        if ($targetId) {
+            $s = $db->prepare('SELECT 1 FROM clients WHERE user_id = ?');
+            $s->execute([$targetId]);
+            if ($s->fetch()) {
+                $db->prepare('DELETE FROM memberships WHERE client_id = ?')->execute([$targetId]);
+                $db->prepare('DELETE FROM client_classes WHERE client_id = ?')->execute([$targetId]);
+                $db->prepare('DELETE FROM clients WHERE user_id = ?')->execute([$targetId]);
+                $db->prepare('INSERT OR IGNORE INTO admins (user_id) VALUES (?)')->execute([$targetId]);
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['ok' => true]);
+                    exit;
+                }
+                header('Location: /pages/admin-members.php?msg=Member+promoted+to+admin.');
+                exit;
+            }
+        }
+        if ($isAjax) {
+            header('Content-Type: application/json');
+            echo json_encode(['ok' => false, 'error' => 'Member not found.']);
+            exit;
+        }
+
     } elseif ($action === 'delete') {
         $targetId = (int)($_POST['target_id'] ?? 0);
         if ($targetId) {

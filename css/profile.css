@@ -1,14 +1,7 @@
-:root {
-    --bg-color: #242323;
-    --card-bg: #000000;
-    --accent: #00bfa6;
-    --text-main: #ffffff;
-    --text-dim: #888888;
-    --border: 0.0625rem solid #222;
-}
-
 body {
-    background: linear-gradient( to bottom, var(--bg-color) 0%, grey 40%, var(--bg-color) 100%);
+    --bg-color: #242323;
+    --text-dim: #888888;
+    background: linear-gradient(to bottom, var(--bg-color) 0%, grey 40%, var(--bg-color) 100%);
     color: var(--text-main);
 }
 

@@ -101,6 +101,9 @@
                     <i class="fa fa-arrow-up-right-dots"></i> Promote to Trainer
                 </button>
             </form>
+            <button type="button" class="btn-admin-ghost btn-admin-ghost--warn" id="promoteAdminBtn">
+                <i class="fa fa-user-shield"></i> Promote to Admin
+            </button>
         </div>
     </div>
 
@@ -122,7 +125,7 @@
             </thead>
             <tbody>
                 <?php foreach ($members as $m): ?>
-                <tr>
+                <tr data-member-id="<?= $m['id'] ?>">
                     <td><?= htmlspecialchars($m['first_name'] . ' ' . $m['last_name']) ?></td>
                     <td class="admin-dim">@<?= htmlspecialchars($m['username']) ?></td>
                     <td><?= htmlspecialchars($m['email']) ?></td>
@@ -239,6 +242,52 @@ function editMember(id, first, last, email, plan, gymStart, gymEnd, photo, credi
 <?php if ($error): ?>
 document.getElementById('memberForm').hidden = false;
 <?php endif; ?>
+
+document.getElementById('promoteAdminBtn').addEventListener('click', function() {
+    var targetId = document.getElementById('promoteTargetId').value;
+    if (!confirm('Promote this member to admin? This cannot be undone.')) return;
+
+    var btn = this;
+    btn.disabled = true;
+
+    var data = new FormData();
+    data.append('_action', 'promote_admin');
+    data.append('target_id', targetId);
+    data.append('_ajax', '1');
+
+    var responsePromise = fetch('/pages/admin-members.php', { method: 'POST', body: data })
+        .then(function(r) { return r.json(); });
+
+    setTimeout(function() {
+        responsePromise.then(function(res) {
+            showMemberNotification(
+                res.ok ? 'Member promoted to admin successfully.' : (res.error || 'Error promoting member.'),
+                res.ok ? 'ok' : 'err'
+            );
+            if (res.ok) {
+                document.getElementById('memberForm').hidden = true;
+                var row = document.querySelector('tr[data-member-id="' + targetId + '"]');
+                if (row) row.remove();
+            } else {
+                btn.disabled = false;
+            }
+        }).catch(function() {
+            showMemberNotification('Network error. Please try again.', 'err');
+            btn.disabled = false;
+        });
+    }, 3000);
+});
+
+function showMemberNotification(msg, type) {
+    var existing = document.querySelector('.admin-alert--ajax');
+    if (existing) existing.remove();
+    var el = document.createElement('div');
+    el.className = 'admin-alert admin-alert--' + type + ' admin-alert--ajax';
+    el.innerHTML = '<i class="fa fa-' + (type === 'ok' ? 'circle-check' : 'triangle-exclamation') + '"></i> ' + msg;
+    var header = document.querySelector('.admin-header');
+    header.parentNode.insertBefore(el, header.nextSibling);
+    setTimeout(function() { el.remove(); }, 5000);
+}
 </script>
 
 <?php drawFooter();
