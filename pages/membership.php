@@ -20,9 +20,9 @@ WHERE client_id = :id');
     $mem = $s->fetch();
     if ($mem) {
         $classesRemaining = (int)$mem['classes_remaining'];
-    }    
+    }
     drawDashHeader($session, $db, 'membership', ['membership']);
-    
+
 } else {
     drawHeader($session, ['membership']);
 }
