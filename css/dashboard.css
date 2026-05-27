@@ -1050,3 +1050,12 @@ main.dashboard-page {
     .admin-table th,
     .admin-table td { padding: 0.625rem 0.75rem; }
 }
+
+.dash-stat-card:has(#dash-credits-value) {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+.dash-stat-card:has(#dash-credits-value):hover { border-color: var(--accent); }
+.dash-stat-card:has(#dash-credits-value) .dash-stat-icon,
+.dash-stat-card:has(#dash-credits-value) .dash-stat-value,
+.dash-stat-card:has(#dash-credits-value) .dash-stat-label { color: #fff; }

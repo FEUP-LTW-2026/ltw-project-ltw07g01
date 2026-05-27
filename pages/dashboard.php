@@ -88,6 +88,10 @@ if ($role === 'client') {
     $stmt->execute([':id' => $userId]);
     $clientData = $stmt->fetch();
 
+    $stmt = $db->prepare('SELECT COALESCE(SUM(classes_remaining), 0) FROM memberships WHERE client_id = :id');
+    $stmt->execute([':id' => $userId]);
+    $classCredits = (int)$stmt->fetchColumn();
+
     $stmt = $db->prepare(
         'SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min, cl.capacity,
                 gl.name AS gym_name, gl.city AS gym_city,
@@ -372,6 +376,13 @@ if ($role === 'admin') {
             <div>
                 <span class="dash-stat-value"><?= $earnedBadgeCount ?></span>
                 <span class="dash-stat-label">Badges Earned</span>
+            </div>
+        </div>
+        <div class="dash-stat-card">
+            <span class="dash-stat-icon"><i class="fa fa-ticket"></i></span>
+            <div>
+                <span class="dash-stat-value" id="dash-credits-value"><?= $classCredits ?></span>
+                <span class="dash-stat-label">Class Credits</span>
             </div>
         </div>
     </div>
