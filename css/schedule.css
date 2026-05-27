@@ -1107,3 +1107,10 @@ main.sc-has-navbar {
 .sc-modal-header { --modal-color: var(--accent); }
 
 #scModalCapFill { width: 0%; }
+
+.sc-stat:has(#dash-credits-value) {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+.sc-stat:has(#dash-credits-value) span,
+.sc-stat:has(#dash-credits-value) small { color: #fff; }
