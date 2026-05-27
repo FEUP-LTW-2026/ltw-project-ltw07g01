@@ -128,7 +128,10 @@ if ($requestMethod === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? 
     $s->execute([$classId]);
     $cl = $s->fetch();
     $newEnrolled = (int)$cl['enrolled'];
-    echo json_encode(['ok' => true, 'enrolled' => $newEnrolled, 'capacity' => (int)$cl['capacity'], 'spots' => (int)$cl['capacity'] - $newEnrolled]);
+    $cs = $db->prepare('SELECT COALESCE(SUM(classes_remaining), 0) FROM memberships WHERE client_id = ?');
+    $cs->execute([$userId]);
+    $newCredits = (int)$cs->fetchColumn();
+    echo json_encode(['ok' => true, 'enrolled' => $newEnrolled, 'capacity' => (int)$cl['capacity'], 'spots' => (int)$cl['capacity'] - $newEnrolled, 'credits' => $newCredits]);
     exit;
 }
 
@@ -151,7 +154,10 @@ if ($requestMethod === 'POST' && !empty($_POST['ajax']) && $role === 'client') {
     $db->prepare('INSERT INTO client_classes (client_id, class_id) VALUES (?,?)')->execute([$userId, $classId]);
     $db->prepare('UPDATE memberships SET classes_remaining = classes_remaining - 1 WHERE client_id = ?')->execute([$userId]);
     $newEnrolled = (int)$cl['enrolled'] + 1;
-    echo json_encode(['ok' => true, 'enrolled' => $newEnrolled, 'capacity' => (int)$cl['capacity'], 'spots' => (int)$cl['capacity'] - $newEnrolled]);
+    $cs = $db->prepare('SELECT COALESCE(SUM(classes_remaining), 0) FROM memberships WHERE client_id = ?');
+    $cs->execute([$userId]);
+    $newCredits = (int)$cs->fetchColumn();
+    echo json_encode(['ok' => true, 'enrolled' => $newEnrolled, 'capacity' => (int)$cl['capacity'], 'spots' => (int)$cl['capacity'] - $newEnrolled, 'credits' => $newCredits]);
     exit;
 }
 
@@ -239,6 +245,13 @@ if ($role === 'admin') {
 $totalClasses  = count($allClasses);
 $totalSpots    = array_sum(array_map(fn($c) => max(0, $c['capacity'] - $c['enrolled']), $allClasses));
 $totalEnrolled = array_sum(array_column($allClasses, 'enrolled'));
+
+$classCredits = 0;
+if ($role === 'client') {
+    $cs = $db->prepare('SELECT COALESCE(SUM(classes_remaining), 0) FROM memberships WHERE client_id = ?');
+    $cs->execute([$userId]);
+    $classCredits = (int)$cs->fetchColumn();
+}
 
 $weekTypes = array_values(array_unique(array_column($allClasses, 'class_name')));
 sort($weekTypes);
@@ -591,6 +604,7 @@ drawDashHeader($session, $db, 'schedule', ['schedule']);
         <div class="sc-week-stats">
             <div class="sc-stat"><span id="statClasses"><?= $totalClasses ?></span><small>classes</small></div>
             <div class="sc-stat"><span id="statSpots"><?= $totalSpots ?></span><small>spots open</small></div>
+            <div class="sc-stat"><span id="dash-credits-value"><?= $classCredits ?></span><small>credits</small></div>
         </div>
         <?php endif; ?>
     </div>

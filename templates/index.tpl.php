@@ -59,13 +59,11 @@
             <h2>Amazing Group Classes</h2>
             <div class="about-divider1"></div>
             <p>Join our group classes and train in a motivating and energetic environment. Our sessions are designed for all fitness levels, helping you stay consistent while improving strength, endurance, and overall performance.</p>
-            <a href="classes.php" class="card-button">View Classes</a>
         </div>
         <div class="card">
             <h2>Running Community</h2>
             <div class="about-divider"></div>
             <p>Take your workouts outside with our runs. Explore new routes, improve your stamina, and enjoy the energy of training in a dynamic group environment.</p>
-            <a href="runs.php" class="card-button">View Runs</a>
         </div>
         <div class="card">
             <h2>Membership Plans</h2>

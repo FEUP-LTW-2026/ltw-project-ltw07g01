@@ -234,6 +234,11 @@
                 SC.classes[classId].is_full = data.spots <= 0;
             }
 
+            if (data.credits !== undefined) {
+                var credEl = document.getElementById('dash-credits-value');
+                if (credEl) credEl.textContent = data.credits;
+            }
+
             if (currentModalId === classId) openModal(classId);
         })
         .catch(function () {
@@ -291,6 +296,11 @@
                 SC.classes[classId].enrolled  = data.enrolled;
                 SC.classes[classId].is_enrolled = false;
                 SC.classes[classId].is_full   = data.spots <= 0;
+            }
+
+            if (data.credits !== undefined) {
+                var credEl = document.getElementById('dash-credits-value');
+                if (credEl) credEl.textContent = data.credits;
             }
 
             if (currentModalId === classId) openModal(classId);

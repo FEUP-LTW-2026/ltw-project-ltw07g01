@@ -1,3 +1,70 @@
+function openEquipModal(card) {
+    var name     = card.dataset.name;
+    var gym      = card.dataset.gym;
+    var body     = card.dataset.body;
+    var status   = card.dataset.status;
+    var img      = card.dataset.img;
+    var muscles  = card.dataset.muscles;
+    var diagrams = card.dataset.diagrams;
+
+    document.getElementById('equipModalName').textContent  = name;
+    document.getElementById('equipModalGym').textContent   = gym;
+    document.getElementById('equipModalBody').textContent  = body;
+
+    var musclesWrap = document.getElementById('equipModalMusclesWrap');
+    var diagramsEl  = document.getElementById('equipModalDiagrams');
+
+    diagramsEl.innerHTML = '';
+    if (diagrams) {
+        diagrams.split(',').forEach(function(src) {
+            var imgEl = document.createElement('img');
+            imgEl.src = src.trim();
+            imgEl.alt = '';
+            diagramsEl.appendChild(imgEl);
+        });
+    }
+
+    if (muscles || diagrams) {
+        document.getElementById('equipModalMuscles').textContent = muscles;
+        musclesWrap.hidden = false;
+    } else {
+        musclesWrap.hidden = true;
+    }
+
+    var statusEl = document.getElementById('equipModalStatus');
+    if (status === 'available') {
+        statusEl.textContent  = 'Available';
+        statusEl.className    = 'equip-modal-status status available';
+    } else {
+        statusEl.textContent  = 'Out of service';
+        statusEl.className    = 'equip-modal-status status unavailable';
+    }
+
+    var imgWrap = document.getElementById('equipModalImgWrap');
+    var imgEl   = document.getElementById('equipModalImg');
+    if (img) {
+        imgEl.src        = img;
+        imgEl.alt        = name;
+        imgWrap.hidden   = false;
+    } else {
+        imgWrap.hidden   = true;
+    }
+
+    document.getElementById('equipModal').setAttribute('aria-hidden', 'false');
+    document.getElementById('equipModal').classList.add('open');
+    document.getElementById('equipModalBackdrop').classList.add('open');
+}
+
+function closeEquipModal() {
+    document.getElementById('equipModal').setAttribute('aria-hidden', 'true');
+    document.getElementById('equipModal').classList.remove('open');
+    document.getElementById('equipModalBackdrop').classList.remove('open');
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeEquipModal();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const locationFilter = document.getElementById('filter-location');
     const bodyFilter = document.getElementById('filter-body');

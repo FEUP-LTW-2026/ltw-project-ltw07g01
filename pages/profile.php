@@ -38,7 +38,7 @@ if (!$user) {
 
 
 $stmt = $db->prepare(
-    'SELECT gym_plan, gym_start, gym_end
+    'SELECT gym_plan, gym_start, gym_end, COALESCE(SUM(classes_remaining), 0) AS total_credits
      FROM memberships
      WHERE client_id = :id AND (gym_end IS NULL OR gym_end > CURRENT_TIMESTAMP)
      ORDER BY gym_start DESC
@@ -179,9 +179,12 @@ $archetype = $user['archetype'] ?? 'NO ARCHETYPE';
 $bio = $user['bio'] ?? '';
 $bodyWeight = $user['body_weight'] ?? 'N/A';
 $height = $user['height'] ?? 'N/A';
-$memberTag      = $membership
-    ? ($membership['gym_plan'] === 'ultra' ? 'ULTRA MEMBER' : 'MEMBER')
-    : 'NO MEMBERSHIP';
+$memberTag = match($membership['gym_plan'] ?? null) {
+    'ultra' => 'ULTRA MEMBER',
+    'pro'   => 'PRO MEMBER',
+    'basic' => 'BASIC MEMBER',
+    default => 'NO MEMBERSHIP',
+};
 
 
 $badges = [];
@@ -255,6 +258,10 @@ if ($totalGymMinutes >= 6000) {
             <div class="detail-item">
                 <span class="detail-label">Home Gym</span>
                 <p class="detail-value"><?= htmlspecialchars($homeGym) ?></p>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Class Credits</span>
+                <p class="detail-value"><?= (int)($membership['total_credits'] ?? 0) ?></p>
             </div>
         </div>
 
