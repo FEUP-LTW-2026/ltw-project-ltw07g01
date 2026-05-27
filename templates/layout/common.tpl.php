@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-require_once(__DIR__ . '/../utils/session.php');
+require_once(__DIR__ . '/../../utils/session.php');
 ?>
 
 <?php function drawHeader(Session $session, array $extraCss = []): void { ?>
@@ -13,7 +13,7 @@ require_once(__DIR__ . '/../utils/session.php');
     <?php foreach ($extraCss as $css): ?>
     <link rel="stylesheet" href="../css/<?= htmlspecialchars($css) ?>.css">
     <?php endforeach; ?>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -58,19 +58,19 @@ require_once(__DIR__ . '/../utils/session.php');
     <a href="<?= htmlspecialchars($profileUrl) ?>" class="<?= $lnk ?> <?= $activePage === 'profile' ? 'active' : '' ?>"><i class="fa fa-user-shield"></i> Profile</a>
     <hr class="<?= $div ?>">
     <a href="/pages/admin-members.php" class="<?= $lnk ?> <?= $activePage === 'admin-members' ? 'active' : '' ?>"><i class="fa fa-users"></i> Members</a>
-    <a href="/pages/trainers.php"      class="<?= $lnk ?> <?= $activePage === 'trainers'      ? 'active' : '' ?>"><i class="fa fa-chalkboard-teacher"></i> Trainers</a>
-    <a href="/pages/schedule.php"      class="<?= $lnk ?> <?= $activePage === 'schedule'      ? 'active' : '' ?>"><i class="fa fa-calendar-days"></i> Classes</a>
-    <a href="/pages/equipment.php"     class="<?= $lnk ?> <?= $activePage === 'equipment'     ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
-    <a href="/pages/locations.php"     class="<?= $lnk ?> <?= $activePage === 'locations'     ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
+    <a href="/pages/trainers.php" class="<?= $lnk ?> <?= $activePage === 'trainers'      ? 'active' : '' ?>"><i class="fa fa-chalkboard-teacher"></i> Trainers</a>
+    <a href="/pages/schedule.php" class="<?= $lnk ?> <?= $activePage === 'schedule'      ? 'active' : '' ?>"><i class="fa fa-calendar-days"></i> Classes</a>
+    <a href="/pages/equipment.php" class="<?= $lnk ?> <?= $activePage === 'equipment'     ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
+    <a href="/pages/locations.php" class="<?= $lnk ?> <?= $activePage === 'locations'     ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
     <?php else: ?>
     <a href="<?= htmlspecialchars($profileUrl) ?>" class="<?= $lnk ?> <?= $activePage === 'profile'    ? 'active' : '' ?>"><i class="fa fa-user"></i> Profile</a>
     <hr class="<?= $div ?>">
-    <a href="/pages/schedule.php"   class="<?= $lnk ?> <?= $activePage === 'schedule'   ? 'active' : '' ?>"><i class="fa fa-calendar"></i> Schedule</a>
-    <a href="/pages/trainers.php"   class="<?= $lnk ?> <?= $activePage === 'trainers'   ? 'active' : '' ?>"><i class="fa fa-users"></i> Trainers</a>
-    <a href="/pages/equipment.php"  class="<?= $lnk ?> <?= $activePage === 'equipment'  ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
-    <a href="/pages/locations.php"  class="<?= $lnk ?> <?= $activePage === 'locations'  ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
+    <a href="/pages/schedule.php" class="<?= $lnk ?> <?= $activePage === 'schedule'   ? 'active' : '' ?>"><i class="fa fa-calendar"></i> Schedule</a>
+    <a href="/pages/trainers.php" class="<?= $lnk ?> <?= $activePage === 'trainers'   ? 'active' : '' ?>"><i class="fa fa-users"></i> Trainers</a>
+    <a href="/pages/equipment.php" class="<?= $lnk ?> <?= $activePage === 'equipment'  ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
+    <a href="/pages/locations.php" class="<?= $lnk ?> <?= $activePage === 'locations'  ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
     <a href="/pages/membership.php" class="<?= $lnk ?> <?= $activePage === 'membership' ? 'active' : '' ?>"><i class="fa fa-id-card"></i> Membership</a>
-    <a href="/pages/about.php"      class="<?= $lnk ?> <?= $activePage === 'about'      ? 'active' : '' ?>"><i class="fa fa-circle-info"></i> About Us</a>
+    <a href="/pages/about.php" class="<?= $lnk ?> <?= $activePage === 'about'      ? 'active' : '' ?>"><i class="fa fa-circle-info"></i> About Us</a>
     <?php endif; ?>
     <hr class="<?= $div ?>">
     <a href="/actions/logout.php" class="<?= $lnk ?> <?= $lnk ?>--logout"><i class="fa fa-right-from-bracket"></i> Logout</a>
@@ -122,10 +122,10 @@ require_once(__DIR__ . '/../utils/session.php');
     <?php foreach ($extraCss as $css): ?>
     <link rel="stylesheet" href="../css/<?= htmlspecialchars($css) ?>.css">
     <?php endforeach; ?>
-    <link rel="stylesheet" href="../css/profile.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../../css/profile.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <link rel="stylesheet" href="../../css/admin.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -168,7 +168,7 @@ require_once(__DIR__ . '/../utils/session.php');
             <?php drawDashNavLinks($activePage, $profileUrl, 'nav-popup', $role ?? ''); ?>
         </nav>
     </div>
-    <script src="../js/nav.js"></script>
+    <script src="../../js/nav.js"></script>
 <?php } ?>
 
 <?php function drawFooter(): void { ?>

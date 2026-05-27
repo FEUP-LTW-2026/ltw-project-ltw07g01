@@ -2,8 +2,8 @@
 declare(strict_types=1);
 require_once('../utils/session.php');
 require_once('../database/connection.db.php');
-require_once('../templates/common.tpl.php');
-require_once('../templates/confirm-purchase.tpl.php');
+require_once('../templates/layout/common.tpl.php');
+require_once('../templates/actions/confirm-purchase.tpl.php');
 
 $session = new Session();
 $db = getDatabaseConnection();

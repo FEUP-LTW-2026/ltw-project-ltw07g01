@@ -9,8 +9,8 @@ if (!$session->isLoggedIn()) {
 }
 
 require_once(__DIR__ . '/../database/connection.db.php');
-require_once(__DIR__ . '/../templates/common.tpl.php');
-require_once(__DIR__ . '/../templates/edit-trainer-profile.tpl.php');
+require_once(__DIR__ . '/../templates/layout/common.tpl.php');
+require_once(__DIR__ . '/../templates/actions/edit-trainer-profile.tpl.php');
 
 $db = getDatabaseConnection();
 $userId = (int)$session->getId();

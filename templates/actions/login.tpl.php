@@ -1,7 +1,7 @@
 <?php function drawLoginPage(Session $session, string $error): void { ?>
 <main class="login-page">
     <div class="login-image">
-        <img src="../images/login.png" alt="CUBO GYM">
+        <img src="../../images/login.png" alt="CUBO GYM">
     </div>
 
     <section>

@@ -3,8 +3,8 @@ declare(strict_types=1);
 require_once('../utils/session.php');
 $session = new Session();
 require_once('../database/connection.db.php');
-require_once('../templates/common.tpl.php');
-require_once(__DIR__ . '/../templates/schedule.tpl.php');
+require_once(__DIR__ . '/../templates/layout/common.tpl.php');
+require_once(__DIR__ . '/../templates/pages/schedule.tpl.php');
 $db = getDatabaseConnection();
 
 $userId = $session->isLoggedIn() ? (int)$session->getId() : 0;
