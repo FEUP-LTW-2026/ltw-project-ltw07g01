@@ -171,6 +171,14 @@ $periodTotalFormatted = formatMinutes($periodMinutes);
 $totalWorkoutFormatted = formatMinutes($totalGymMinutes);
 $avgFormatted   = formatMinutes($avgMinutes);
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? '') === 'cancel_subscription' && $isOwnProfile) {
+    header('Content-Type: application/json');
+    $db->prepare("UPDATE memberships SET gym_plan = NULL, gym_end = datetime('now') WHERE client_id = ? AND (gym_end IS NULL OR gym_end > datetime('now'))")
+       ->execute([$currentUserId]);
+    echo json_encode(['ok' => true]);
+    exit;
+}
+
 if (!empty($_GET['ajax']) && $_GET['ajax'] === 'chart') {
     header('Content-Type: application/json');
     echo json_encode([

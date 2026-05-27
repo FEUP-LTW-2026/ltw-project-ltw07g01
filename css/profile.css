@@ -548,6 +548,55 @@ body.admin-theme main.admin-profile-page {
     color: var(--text-dim);
 }
 
+.membership-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.membership-actions .btn-update-membership,
+.membership-actions .btn-cancel-membership {
+    flex: 1;
+    margin-top: 0;
+}
+
+.btn-update-membership,
+.btn-cancel-membership {
+    border: none;
+    padding: 0.9375rem;
+    border-radius: 0.75rem;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 100;
+    display: block;
+    transition: 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-update-membership {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-update-membership:hover {
+    background: #00d4b3;
+}
+
+.btn-cancel-membership {
+    background: #e05252;
+    color: white;
+}
+
+.btn-cancel-membership:hover:not(:disabled) {
+    background: #c43c3c;
+}
+
+.btn-cancel-membership:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .btn-edit-profile {
     margin-top: 0.625rem;
     background: var(--text-main);
