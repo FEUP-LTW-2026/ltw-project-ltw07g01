@@ -5,6 +5,7 @@ $session = new Session();
 
 require_once(__DIR__ . '/../database/connection.db.php');
 require_once(__DIR__ . '/../templates/common.tpl.php');
+require_once(__DIR__ . '/../templates/profile.tpl.php');
 
 $db = getDatabaseConnection();
 $currentUserId = $session->isLoggedIn() ? (int)$session->getId() : 3; // 3 = test client fallback
@@ -169,6 +170,19 @@ function formatMinutes(int $mins): string {
 $periodTotalFormatted = formatMinutes($periodMinutes);
 $totalWorkoutFormatted = formatMinutes($totalGymMinutes);
 $avgFormatted   = formatMinutes($avgMinutes);
+
+if (!empty($_GET['ajax']) && $_GET['ajax'] === 'chart') {
+    header('Content-Type: application/json');
+    echo json_encode([
+        'minutesByDay' => $minutesByDay,
+        'labels'       => $daysLabels,
+        'times'        => array_map('formatMinutes', $minutesByDay),
+        'periodTotal'  => $periodTotalFormatted,
+        'avg'          => $avgFormatted,
+        'periodLabel'  => $periodLabel,
+    ]);
+    exit;
+}
 $fullName       = $user['first_name'] . ' ' . $user['last_name'];
 $memberSince    = (new DateTime($user['created_at']))->format('F Y');
 $homeGym        = $user['gym_name']
@@ -184,171 +198,5 @@ $memberTag      = $membership
     : 'NO MEMBERSHIP';
 
 
-$badges = [];
-
-if ($classesAttended >= 20) {
-    $badges[] = ['icon' => '<i class="fa fa-book"></i>', 'title' => 'A+ Student: 20 classes attended'];
-} elseif ($classesAttended >= 1) {
-    $badges[] = ['icon' => '<i class="fa fa-graduation-cap"></i>', 'title' => 'Newbie: 1st class attended'];
-}
-
-if ($totalVisits >= 100) {
-    $badges[] = ['icon' => '<i class="fa fa-trophy"></i>', 'title' => 'Century Club: 100 gym visits'];
-} elseif ($totalVisits >= 50) {
-    $badges[] = ['icon' => '<i class="fa fa-dumbbell"></i>', 'title' => 'Iron Regular: 50 gym visits'];
-} elseif ($totalVisits >= 10) {
-    $badges[] = ['icon' => '<i class="fa fa-compass"></i>', 'title' => 'Gym Explorer: 10 gym visits'];
-}
-
-if ($totalGymMinutes >= 6000) {
-    $badges[] = ['icon' => '<i class="fa fa-crown"></i>', 'title' => 'Time Champion: 100+ hours at the gym'];
-} elseif ($totalGymMinutes >= 3000) {
-    $badges[] = ['icon' => '<i class="fa fa-shield-halved"></i>', 'title' => 'Gym Warrior: 50+ hours at the gym'];
-} elseif ($totalGymMinutes >= 1200) {
-    $badges[] = ['icon' => '<i class="fa fa-bolt"></i>', 'title' => 'Endurance Builder: 20+ hours at the gym'];
-}
-?>
-<?php drawDashHeader($session, $db, 'profile', [], 'profile-body'); ?>
-<?php if (!$isOwnProfile): ?>
-<a class="profile-back-btn" href="#" onclick="history.back(); return false;" title="Go back"><i class="fa fa-arrow-left"></i></a>
-<?php endif; ?>
-<main class="profile-page">
-    <aside class="sidebar-container">
-        <section class="profile-card">
-            <div class="profile-info">
-                <figure class="profile-avatar">
-                    <img src="<?= htmlspecialchars($profilePhoto) ?>" alt="User Profile Picture">
-                </figure>
-                <div class="user-meta">
-                    <h2 class="user-name"><?= htmlspecialchars($fullName) ?></h2>
-                    <p class="user-handle">@<?= htmlspecialchars($user['username']) ?></p>
-                    <span class="member-tag"><?= htmlspecialchars($memberTag) ?></span>
-                </div>
-            </div>
-
-            <div class="user-identity">
-                <span class="archetype-tag"><?= htmlspecialchars($archetype) ?></span>
-                <?php if ($bio): ?>
-                    <p class="user-bio"><?= nl2br(htmlspecialchars($bio)) ?></p>
-                <?php else: ?>
-                    <p class="user-bio user-bio--empty">No bio yet.</p>
-                <?php endif; ?>
-            </div>
-        </section>
-    </aside>
-
-    <div class="main-content">
-
-        <div class="profile-details">
-            <div class="detail-item">
-                <span class="detail-label">Full Name</span>
-                <p class="detail-value"><?= htmlspecialchars($fullName) ?></p>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Email Address</span>
-                <p class="detail-value"><?= htmlspecialchars($user['email']) ?></p>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Member Since</span>
-                <p class="detail-value"><?= htmlspecialchars($memberSince) ?></p>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Home Gym</span>
-                <p class="detail-value"><?= htmlspecialchars($homeGym) ?></p>
-            </div>
-        </div>
-
-        <div class="metrics-section">
-            <h3>MY METRICS</h3>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <span class="metric-label">Body Weight</span>
-                    <span class="metric-value"><?= htmlspecialchars((string)$bodyWeight) ?></span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-label">Height</span>
-                    <span class="metric-value"><?= htmlspecialchars((string)$height) ?></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="hall-of-fame">
-            <h3>HALL OF FAME</h3>
-            <div class="stats-row">
-                <div class="stat-box">
-                    <span class="stat-number"><?= $totalVisits ?></span>
-                    <span class="stat-label">LIFE TIME VISITS</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-number"><?= $classesAttended ?></span>
-                    <span class="stat-label">CLASSES ATTENDED</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-number"><?= $earnedBadgeCount ?></span>
-                    <span class="stat-label">EARNED BADGES</span>
-                </div>
-            </div>
-
-            <div class="badge-container">
-                <?php foreach ($selectedBadges as $badge): ?>
-                    <span class="badge" title="<?= htmlspecialchars($badge['title']) ?>">
-                        <?= $badge['icon'] ?>
-                    </span>
-                <?php endforeach; ?>
-            </div>
-        </div>
-
-        <div class="stats-section">
-            <header class="stats-header">
-                <div class="header-titles">
-                    <h3>TIME SPENT TRAINING</h3>
-                    <p class="subtitle">Calculated via QR Check-in/out</p>
-                </div>
-                <form class="stats-filter-form" method="get">
-                    <label for="stats-range" class="stats-filter-label">Period</label>
-                    <select id="stats-range" name="days" class="stats-filter" onchange="this.form.submit()">
-                        <option value="7" <?= $daysRange === 7 ? 'selected' : '' ?>>Last 7 days</option>
-                        <option value="30" <?= $daysRange === 30 ? 'selected' : '' ?>>Last 30 days</option>
-                    </select>
-                </form>
-                <div class="chart-badge">
-                    <span class="chart-badge-label">Total Gym Time</span>
-                    <strong><?= htmlspecialchars($totalWorkoutFormatted) ?></strong>
-                </div>
-            </header>
-
-            <div class="chart-container">
-                <div class="chart">
-                    <?php foreach ($minutesByDay as $day => $mins):
-                        $height = $mins > 0 ? min(320, max(25, $mins * 2)) : 0;
-                        $time   = formatMinutes($mins);
-                    ?>
-                    <div class="bar-group">
-                        <div class="bar" style="height: <?= $height ?>px;" data-time="<?= htmlspecialchars($time) ?>"></div>
-                        <span class="day-label"><?= htmlspecialchars($daysLabels[$day]) ?></span>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-
-                <div class="chart-legend">
-                    <div class="legend-item">
-                        <span class="legend-label"><?= htmlspecialchars($periodLabel) ?> Total: </span>
-                        <strong><?= htmlspecialchars($periodTotalFormatted) ?></strong>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-label">Daily Avg: </span>
-                        <strong><?= htmlspecialchars($avgFormatted) ?></strong>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <?php if ($isOwnProfile): ?>
-        <div class="profile-actions">
-            <a href="../actions/edit-profile.php" class="btn-edit-profile">Edit Profile</a>
-        </div>
-        <?php endif; ?>
-    </div>
-</main>
-
-<?php drawFooter(); ?>
+drawDashHeader($session, $db, 'profile', [], 'profile-body');
+drawProfilePage($session, $db, $user, $isOwnProfile, $viewId, $currentUserId, $profilePhoto, $fullName, $memberSince, $homeGym, $archetype, (string)$bio, (string)$bodyWeight, (string)$height, $memberTag, $totalVisits, $classesAttended, $earnedBadgeCount, array_values($selectedBadges), $daysRange, $periodLabel, $minutesByDay, $daysLabels, $periodTotalFormatted, $totalWorkoutFormatted, $avgFormatted);

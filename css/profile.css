@@ -37,6 +37,13 @@ main.profile-page:not(.trainer-theme) {
     --accent: #00bfa6;
 }
 
+body.admin-theme main.profile-page:not(.trainer-theme) {
+    --accent: #e11d48;
+}
+
+.main-content .admin-alert { margin-bottom: 1.25rem; }
+.profile-file-input { display: none; }
+
 @media (min-width: 68.75rem) {
     main.profile-page {
         grid-template-columns: 23.75rem 1fr;

@@ -25,6 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($username === '' || $email === '' || $firstName === '' || $lastName === '' || $password === '') {
         $error = 'Please fill in all fields.';
+    } elseif (!preg_match('/^[\w.]{3,30}$/', $username)) {
+        $error = 'Username: 3–30 characters, letters, numbers, underscores or dots.';
     } elseif ($password !== $confirmPassword) {
         $error = 'Passwords do not match.';
     } else {

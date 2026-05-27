@@ -46,7 +46,7 @@
 
     <div class="admin-form-card" id="trainerForm" <?= ($editTrainer || $error) ? '' : 'hidden' ?>>
         <h2 id="formTitle"><?= $editTrainer ? 'Edit Trainer' : 'New Trainer' ?></h2>
-        <form method="POST" class="admin-form-grid">
+        <form method="POST" enctype="multipart/form-data" class="admin-form-grid">
             <input type="hidden" name="_action" value="<?= $editTrainer ? 'update' : 'create' ?>" id="formAction">
             <input type="hidden" name="target_id" value="<?= $editTrainer['id'] ?? '' ?>">
             <div class="admin-field">
@@ -103,6 +103,17 @@
                     <?php endforeach; ?>
                 </div>
             </div>
+            <div class="admin-field admin-field--full">
+                <label>Photo <span class="admin-optional">(optional)</span></label>
+                <div class="admin-photo-picker">
+                    <img class="admin-photo-preview" id="trainerPhotoPreview"
+                         src="<?= htmlspecialchars($editTrainer['profile_photo'] ?? '../images/profile_pic.webp') ?>" alt="">
+                    <label class="admin-photo-label">
+                        <i class="fa fa-camera"></i> Choose photo
+                        <input type="file" name="photo" accept="image/jpeg,image/png,image/webp,image/gif" class="profile-file-input">
+                    </label>
+                </div>
+            </div>
             <div class="admin-form-actions">
                 <button type="submit" class="btn-admin-primary">
                     <?= $editTrainer ? '<i class="fa fa-save"></i> Save' : '<i class="fa fa-plus"></i> Create' ?>
@@ -110,6 +121,19 @@
                 <a href="/pages/trainers.php" class="btn-admin-ghost">Cancel</a>
             </div>
         </form>
+
+        <?php if ($editTrainer): ?>
+        <div class="admin-promote-section">
+            <form method="POST"
+                  onsubmit="return confirm('Promote <?= htmlspecialchars(addslashes($editTrainer['first_name'])) ?> to admin? This cannot be undone.')">
+                <input type="hidden" name="_action" value="promote">
+                <input type="hidden" name="target_id" value="<?= (int)$editTrainer['id'] ?>">
+                <button type="submit" class="btn-admin-ghost btn-admin-ghost--warn">
+                    <i class="fa fa-arrow-up-right-dots"></i> Promote to Admin
+                </button>
+            </form>
+        </div>
+        <?php endif; ?>
     </div>
     <?php endif; ?>
 

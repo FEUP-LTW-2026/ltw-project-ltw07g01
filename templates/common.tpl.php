@@ -137,12 +137,14 @@ require_once(__DIR__ . '/../utils/session.php');
             <a href="/pages/membership.php" class="nav-popup-link <?= $activePage === 'membership' ? 'active' : '' ?>"><i class="fa fa-id-card"></i> Membership</a>
             <a href="/pages/about.php"      class="nav-popup-link <?= $activePage === 'about'      ? 'active' : '' ?>"><i class="fa fa-circle-info"></i> About Us</a>
             <?php else: ?>
-            <a href="/pages/admin-profile.php" class="nav-popup-link <?= $activePage === 'profile'   ? 'active' : '' ?>"><i class="fa fa-user-shield"></i> Profile</a>
+            <a href="/pages/admin-profile.php"      class="nav-popup-link <?= $activePage === 'profile'      ? 'active' : '' ?>"><i class="fa fa-user-shield"></i> Profile</a>
+            <a href="/actions/edit-admin-profile.php" class="nav-popup-link <?= $activePage === 'edit-profile' ? 'active' : '' ?>"><i class="fa fa-pen"></i> Edit Profile</a>
             <hr class="nav-popup-divider">
             <a href="/pages/admin-members.php" class="nav-popup-link <?= $activePage === 'admin-members' ? 'active' : '' ?>"><i class="fa fa-users"></i> Members</a>
             <a href="/pages/trainers.php"      class="nav-popup-link <?= $activePage === 'trainers'     ? 'active' : '' ?>"><i class="fa fa-chalkboard-teacher"></i> Trainers</a>
             <a href="/pages/schedule.php"      class="nav-popup-link <?= $activePage === 'schedule'     ? 'active' : '' ?>"><i class="fa fa-calendar-days"></i> Classes</a>
             <a href="/pages/equipment.php"     class="nav-popup-link <?= $activePage === 'equipment'    ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
+            <a href="/pages/locations.php"     class="nav-popup-link <?= $activePage === 'locations'    ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
             <?php endif; ?>
             <hr class="nav-popup-divider">
             <a href="/actions/logout.php" class="nav-popup-link nav-popup-link--logout"><i class="fa fa-right-from-bracket"></i> Logout</a>

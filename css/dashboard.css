@@ -845,7 +845,7 @@ main.dashboard-page {
 }
 
 @media (min-width: 56.25rem) {
-    .admin-mgmt-grid { grid-template-columns: repeat(4, 1fr); }
+    .admin-mgmt-grid { grid-template-columns: repeat(5, 1fr); }
 }
 
 .admin-mgmt-card {
@@ -1045,7 +1045,41 @@ main.dashboard-page {
 .admin-badge--active  { background: rgba(52,211,153,0.15); color: #34d399; }
 .admin-badge--inactive{ background: #1a1a1a; color: #555; }
 
+.admin-check-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.admin-check-label {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-radius: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.admin-check-label:has(input:checked) {
+    border-color: var(--admin-accent);
+    color: var(--text-main);
+}
+
+.admin-check-label input {
+    width: auto !important;
+    padding: 0 !important;
+    margin: 0;
+    accent-color: var(--admin-accent);
+}
+
 @media (max-width: 40rem) {
+    .admin-form-grid { grid-template-columns: 1fr; }
     .admin-table { font-size: 0.8rem; }
     .admin-table th,
     .admin-table td { padding: 0.625rem 0.75rem; }

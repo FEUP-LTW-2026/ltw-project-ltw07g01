@@ -55,6 +55,18 @@ if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 foreach (array_map('intval', (array)($_POST['gyms'] ?? [])) as $gId) {
                     if ($gId > 0) $db->prepare('INSERT OR IGNORE INTO trainer_locations (trainer_id, gym_id) VALUES (?,?)')->execute([$newId, $gId]);
                 }
+                $pf = $_FILES['photo'] ?? null;
+                if ($pf && $pf['error'] === UPLOAD_ERR_OK && $pf['size'] <= 5 * 1024 * 1024) {
+                    $ext = ['image/jpeg'=>'jpg','image/png'=>'png','image/webp'=>'webp','image/gif'=>'gif'];
+                    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($pf['tmp_name']);
+                    if (isset($ext[$mime])) {
+                        $fn = 'user_' . $newId . '_' . time() . '.' . $ext[$mime];
+                        if (move_uploaded_file($pf['tmp_name'], __DIR__ . '/../images/profile_photos/' . $fn)) {
+                            $db->prepare('UPDATE users SET profile_photo=? WHERE id=?')
+                               ->execute(['../images/profile_photos/' . $fn, $newId]);
+                        }
+                    }
+                }
                 header('Location: /pages/trainers.php?msg=Trainer+created.'); exit;
             }
         }
@@ -87,7 +99,34 @@ if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 foreach (array_map('intval', (array)($_POST['gyms'] ?? [])) as $gId) {
                     if ($gId > 0) $db->prepare('INSERT OR IGNORE INTO trainer_locations (trainer_id, gym_id) VALUES (?,?)')->execute([$targetId, $gId]);
                 }
+                $pf = $_FILES['photo'] ?? null;
+                if ($pf && $pf['error'] === UPLOAD_ERR_OK && $pf['size'] <= 5 * 1024 * 1024) {
+                    $ext = ['image/jpeg'=>'jpg','image/png'=>'png','image/webp'=>'webp','image/gif'=>'gif'];
+                    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($pf['tmp_name']);
+                    if (isset($ext[$mime])) {
+                        $fn = 'user_' . $targetId . '_' . time() . '.' . $ext[$mime];
+                        if (move_uploaded_file($pf['tmp_name'], __DIR__ . '/../images/profile_photos/' . $fn)) {
+                            $db->prepare('UPDATE users SET profile_photo=? WHERE id=?')
+                               ->execute(['../images/profile_photos/' . $fn, $targetId]);
+                        }
+                    }
+                }
                 header('Location: /pages/trainers.php?msg=Trainer+updated.'); exit;
+            }
+        }
+
+    } elseif ($action === 'promote') {
+        $targetId = (int)($_POST['target_id'] ?? 0);
+        if ($targetId) {
+            $s = $db->prepare('SELECT 1 FROM trainers WHERE user_id = ?');
+            $s->execute([$targetId]);
+            if ($s->fetch()) {
+                $db->prepare('DELETE FROM trainer_specializations WHERE trainer_id=?')->execute([$targetId]);
+                $db->prepare('DELETE FROM trainer_locations WHERE trainer_id=?')->execute([$targetId]);
+                $db->prepare('DELETE FROM trainers WHERE user_id=?')->execute([$targetId]);
+                $db->prepare('INSERT OR IGNORE INTO admins (user_id) VALUES (?)')->execute([$targetId]);
+                header('Location: /pages/admin-members.php?msg=Trainer+promoted+to+admin.');
+                exit;
             }
         }
 
@@ -107,7 +146,7 @@ $editSpecs   = [];
 $editGyms    = [];
 if ($isAdmin && isset($_GET['edit'])) {
     $editId = (int)$_GET['edit'];
-    $s = $db->prepare('SELECT u.id, u.first_name, u.last_name, u.email, u.username, t.bio, t.certifications FROM users u JOIN trainers t ON t.user_id = u.id WHERE u.id = ?');
+    $s = $db->prepare('SELECT u.id, u.first_name, u.last_name, u.email, u.username, u.profile_photo, t.bio, t.certifications FROM users u JOIN trainers t ON t.user_id = u.id WHERE u.id = ?');
     $s->execute([$editId]);
     $editTrainer = $s->fetch() ?: null;
     if ($editTrainer) {

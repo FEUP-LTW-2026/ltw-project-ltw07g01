@@ -165,7 +165,7 @@
 .admin-optional { font-weight: 400; text-transform: none; }
 
 .admin-promote-section {
-    margin-top: 1.25rem;
+    margin-top: 2.5rem;
     padding-top: 1.25rem;
     border-top: 1px solid #1e1e1e;
 }
@@ -186,3 +186,32 @@
 }
 
 .form-inline { display: inline; }
+
+/* photo picker */
+.admin-photo-picker { display: flex; align-items: center; gap: 1rem; }
+
+.admin-photo-preview {
+    width: 4.5rem;
+    height: 4.5rem;
+    object-fit: cover;
+    border-radius: 0.625rem;
+    border: 1px solid #2a2a2a;
+    flex-shrink: 0;
+    background: #111;
+}
+
+.admin-photo-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 0.5rem;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    padding: 0.5rem 0.875rem;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.admin-photo-label:hover { color: var(--text-main); border-color: var(--admin-accent); }
