@@ -203,13 +203,13 @@
             <button class="sc-modal-close" id="scModalClose"><i class="fa fa-xmark"></i></button>
             <div class="sc-modal-header" id="scModalHeader">
                 <span class="sc-modal-type" id="scModalType"></span>
-                <h2 class="sc-modal-title" id="scModalTitle"></h2>
+                <h2 class="sc-modal-title" id="scModalTitle">Class Details</h2>
                 <p class="sc-modal-datetime" id="scModalDatetime"></p>
             </div>
             <div class="sc-modal-body">
                 <div class="sc-modal-info-grid">
                     <div class="sc-modal-info-item" id="scModalTrainerItem">
-                        <img id="scModalTrainerAvatar" src="" alt="" class="sc-modal-trainer-avatar">
+                        <img id="scModalTrainerAvatar" src="/images/profile_pic.webp" alt="" class="sc-modal-trainer-avatar">
                         <div>
                             <small>Trainer</small>
                             <a class="sc-modal-trainer-link" id="scModalTrainerLink" href="#">

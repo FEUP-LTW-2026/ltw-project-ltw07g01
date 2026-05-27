@@ -4,18 +4,18 @@
     ?>
 
     <div class="banner">
-        <h2>MEMBERSHIPS</h2>
+        <h1>MEMBERSHIPS</h1>
         <p>Choose the right plan to achieve your goals</p>
     </div>
 
-    <div class="types-membership-container">
-        <h3 class="types-memberships">
+    <nav class="types-membership-container">
+        <div class="types-memberships">
             <a href="#section-gym">GYM</a>
             <a href="#section-pilates">PILATES</a>
             <a href="#section-cycling">CYCLING</a>
             <a href="#section-pt">PERSONAL TRAINING</a>
-        </h3>
-    </div>
+        </div>
+    </nav>
 
     <?php if ($classesRemaining !== null): ?>
     <div class="credits-balance-banner">
@@ -31,10 +31,10 @@
 
     <section class="type-section" id="section-gym">
         <img src="../../images/bigGuy.jpg" alt="Gym section">
-        <h3>Gym</h3>
+        <h2>Gym</h2>
         <div>
             <article class="plan">
-                <h2>BASIC</h2>
+                <h3>BASIC</h3>
                 <p class="price">29 €</p>
                 <p class="plan-info">The solid foundation for your transformation. Real results.</p>
                 <ul>
@@ -49,7 +49,7 @@
             </article>
             <article class="plan plan-popular">
                 <span class="popular-badge">MOST POPULAR</span>
-                <h2>PRO</h2>
+                <h3>PRO</h3>
                 <p class="price">39 €</p>
                 <p class="plan-info">Perfect balance between intense training and recovery.</p>
                 <ul>
@@ -63,7 +63,7 @@
                 </a>
             </article>
             <article class="plan">
-                <h2>ULTRA</h2>
+                <h3>ULTRA</h3>
                 <p class="price">49 €</p>
                 <p class="plan-info">Elite performance and full access. The sky is your limit.</p>
                 <ul>
@@ -81,12 +81,12 @@
 
     <section class="type-section" id="section-pilates">
         <img src="../../images/pilatu.jpg" alt="Pilates section">
-        <h3>Pilates</h3>
+        <h2>Pilates</h2>
         <p class="credits-universal-note"><i class="fa fa-circle-info"></i> Credits from any class pack work across
             <strong>all group classes</strong> — Pilates, Cycling, and Personal Training.</p>
         <div>
             <article class="plan">
-                <h2>1 CLASS</h2>
+                <h3>1 CLASS</h3>
                 <p class="price">10 €</p>
                 <p class="plan-info">Drop in anytime. No commitment required.</p>
                 <ul>
@@ -101,7 +101,7 @@
             </article>
             <article class="plan plan-popular">
                 <span class="popular-badge">BEST VALUE</span>
-                <h2>5 CLASSES</h2>
+                <h3>5 CLASSES</h3>
                 <p class="price">40 €</p>
                 <p class="plan-info">Best for getting started with a routine.</p>
                 <ul>
@@ -115,7 +115,7 @@
                 </a>
             </article>
             <article class="plan">
-                <h2>10 CLASSES</h2>
+                <h3>10 CLASSES</h3>
                 <p class="price">75 €</p>
                 <p class="plan-info">Commit to your practice and save.</p>
                 <ul>
@@ -133,12 +133,12 @@
 
     <section class="type-section" id="section-cycling">
         <img src="../../images/cycling.jpg" alt="Cycling section">
-        <h3>Cycling</h3>
+        <h2>Cycling</h2>
         <p class="credits-universal-note"><i class="fa fa-circle-info"></i> Credits from any class pack work across
             <strong>all group classes</strong> — Pilates, Cycling, and Personal Training.</p>
         <div>
             <article class="plan">
-                <h2>1 CLASS</h2>
+                <h3>1 CLASS</h3>
                 <p class="price">10 €</p>
                 <p class="plan-info">Jump on anytime. No strings attached.</p>
                 <ul>
@@ -153,7 +153,7 @@
             </article>
             <article class="plan plan-popular">
                 <span class="popular-badge">BEST VALUE</span>
-                <h2>5 CLASSES</h2>
+                <h3>5 CLASSES</h3>
                 <p class="price">40 €</p>
                 <p class="plan-info">Build the habit with a flexible pack.</p>
                 <ul>
@@ -167,7 +167,7 @@
                 </a>
             </article>
             <article class="plan">
-                <h2>10 CLASSES</h2>
+                <h3>10 CLASSES</h3>
                 <p class="price">75 €</p>
                 <p class="plan-info">Ride more, pay less. Your best value.</p>
                 <ul>
@@ -186,12 +186,12 @@
 
     <section class="type-section" id="section-pt">
         <img src="../../images/personal-training.png" alt="Personal Training section">
-        <h3>Personal Training</h3>
+        <h2>Personal Training</h2>
         <p class="credits-universal-note"><i class="fa fa-circle-info"></i> Book Personal Training sessions using your
             class credits. <a href="/pages/schedule.php">View schedule →</a></p>
         <div>
             <article class="plan">
-                <h2>1 CLASS</h2>
+                <h3>1 CLASS</h3>
                 <p class="price">10 €</p>
                 <p class="plan-info">Private session with dedicated coach attention.</p>
                 <ul>
@@ -206,7 +206,7 @@
             </article>
             <article class="plan plan-popular">
                 <span class="popular-badge">MOST POPULAR</span>
-                <h2>5 CLASSES</h2>
+                <h3>5 CLASSES</h3>
                 <p class="price">40 €</p>
                 <p class="plan-info">Build consistency with a personalised programme.</p>
                 <ul>
@@ -220,7 +220,7 @@
                 </a>
             </article>
             <article class="plan">
-                <h2>10 CLASSES</h2>
+                <h3>10 CLASSES</h3>
                 <p class="price">75 €</p>
                 <p class="plan-info">Full commitment — track progress and see real results.</p>
                 <ul>

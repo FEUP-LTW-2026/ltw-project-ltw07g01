@@ -3,13 +3,13 @@
 
     <main class="profile-page admin-profile-page">
         <aside class="sidebar-container">
-            <section class="profile-card">
+            <div class="profile-card">
                 <div class="profile-info">
                     <figure class="profile-avatar">
                         <img src="<?= htmlspecialchars($profilePhoto) ?>" alt="Profile photo">
                     </figure>
                     <div class="user-meta">
-                        <h2 class="user-name"><?= htmlspecialchars($fullName) ?></h2>
+                        <h1 class="user-name"><?= htmlspecialchars($fullName) ?></h1>
                         <p class="user-handle">@<?= htmlspecialchars($user['username']) ?></p>
                         <span class="member-tag">ADMIN</span>
                     </div>
@@ -17,7 +17,7 @@
                 <div class="user-identity">
                     <span class="archetype-tag"><i class="fa fa-user-shield"></i> Administrator</span>
                 </div>
-            </section>
+            </div>
         </aside>
 
         <div class="main-content">

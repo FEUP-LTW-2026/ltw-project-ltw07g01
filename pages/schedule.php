@@ -339,7 +339,7 @@ $buildDynamicHTML = function() use ($days, $classesByDay, $today, $enrolledIds, 
                 data-day="<?= $dayKey ?>">
             <span class="sc-day-name"><?= $day->format('D') ?></span>
             <span class="sc-day-num"><?= $day->format('j') ?></span>
-            <div class="sc-day-dots">
+            <span class="sc-day-dots">
                 <?php if (empty($dayClasses)): ?>
                     <span class="sc-dot sc-dot--empty"></span>
                 <?php else: ?>
@@ -347,7 +347,7 @@ $buildDynamicHTML = function() use ($days, $classesByDay, $today, $enrolledIds, 
                     <span class="sc-dot" style="background:<?= typeColor($tn, $typeColors) ?>"></span>
                     <?php endforeach; ?>
                 <?php endif; ?>
-            </div>
+            </span>
         </button>
         <?php endforeach; ?>
     </div>

@@ -62,11 +62,11 @@
                         </div>
                         <div class="admin-field">
                             <label>Start Date</label>
-                            <input type="date" name="gym_start" id="f_start">
+                            <input type="text" name="gym_start" id="f_start" pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
                         </div>
                         <div class="admin-field">
                             <label>End Date <span class="admin-optional">(optional)</span></label>
-                            <input type="date" name="gym_end" id="f_end">
+                            <input type="text" name="gym_end" id="f_end" pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
                         </div>
                         <div class="admin-field">
                             <label>Class Credits</label>

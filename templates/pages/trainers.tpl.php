@@ -159,7 +159,7 @@
             </div>
         <?php endif; ?>
 
-        <section class="trainers-filters filter-bar">
+        <div class="trainers-filters filter-bar">
             <span class="filter-label"><i class="fa fa-sliders"></i> Filter</span>
             <select class="filter-select" id="trainer-filter-gym">
                 <option value="all">All gyms</option>
@@ -177,7 +177,7 @@
                 <i class="fa fa-xmark"></i> Clear
             </button>
             <span class="filter-count" id="trainer-filter-count"></span>
-        </section>
+        </div>
 
         <?php if (!$isAdmin): ?>
             <section class="trainers-hero">
@@ -186,7 +186,7 @@
             </section>
         <?php endif; ?>
 
-        <section class="trainers-grid">
+        <div class="trainers-grid">
             <?php foreach ($trainers
 
             as $trainer):
@@ -266,7 +266,7 @@
         </<?= $isLogged ? 'a' : 'article' ?>>
     <?php endif; ?>
     <?php endforeach; ?>
-        </section>
+        </div>
     </main>
 
     <?php if ($isAdmin): ?>

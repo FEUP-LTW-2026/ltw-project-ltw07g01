@@ -7,7 +7,7 @@
             <p>Porto & Braga — find your nearest CUBO GYM</p>
         </section>
 
-        <section class="locations-grid">
+        <div class="locations-grid">
             <?php foreach ($locations as $loc): ?>
                 <article>
                     <div class="loc-header">
@@ -29,7 +29,7 @@
                     </ul>
                 </article>
             <?php endforeach; ?>
-        </section>
+        </div>
 
         <section class="locations-join">
             <h2>TRAIN ANYWHERE</h2>

@@ -14,7 +14,7 @@
             </div>
         </section>
 
-        <section class="stats">
+        <div class="stats">
             <div class="stat-card">
                 <img src="../../images/membros.png" alt="logo">
                 <p class="stat-number">+<span class="counter" data-target="10000">0</span></p>
@@ -38,7 +38,7 @@
                 <p class="stat-number">+<span class="counter" data-target="25">0</span> certified</p>
                 <p class="stat-text">personal trainers</p>
             </div>
-        </section>
+        </div>
 
         <section class="about">
             <div class="about-text">

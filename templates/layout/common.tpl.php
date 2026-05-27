@@ -145,16 +145,6 @@ require_once(__DIR__ . '/../../utils/session.php');
             <?php endif; ?>
         </div>
     </header>
-    <nav class="nav-sidebar">
-        <div class="nav-sidebar-user">
-            <img src="<?= htmlspecialchars($profilePhoto) ?>" alt="Profile" class="nav-sidebar-avatar">
-            <div>
-                <p class="nav-sidebar-name"><?= htmlspecialchars($fullName) ?></p>
-                <p class="nav-sidebar-handle"><?= $username ? '@' . htmlspecialchars($username) : '' ?></p>
-            </div>
-        </div>
-        <?php drawDashNavLinks($activePage, $profileUrl, 'nav-sidebar', $role ?? ''); ?>
-    </nav>
     <div class="nav-popup-backdrop" id="navBackdrop"></div>
     <div class="nav-popup" id="navPopup">
         <div class="nav-popup-user">
@@ -187,7 +177,7 @@ require_once(__DIR__ . '/../../utils/session.php');
         </div>
 
         <div class="footer-info">
-            <h3>INFO</h3>
+            <h2>INFO</h2>
             <p>MON-FRI — 6:00 - 22:30</p>
             <p>SAT — 9:00 - 20:00</p>
             <p>SUN — 10:00 - 18:00</p>
@@ -199,7 +189,7 @@ require_once(__DIR__ . '/../../utils/session.php');
         </div>
 
         <div class="footer-socials">
-            <h3>FOLLOW US</h3>
+            <h2>FOLLOW US</h2>
             <div class="social-icons">
                 <a href="#"><i class="fa-brands fa-instagram"></i></a>
                 <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
