@@ -5,8 +5,6 @@
    DB Server: SQLite
 ********************************************************************************/
 
-DROP TABLE IF EXISTS workout_sessions;
-DROP TABLE IF EXISTS workout_plans;
 DROP TABLE IF EXISTS gym_visits;
 DROP TABLE IF EXISTS client_classes;
 DROP TABLE IF EXISTS client_gyms;
@@ -33,7 +31,8 @@ CREATE TABLE gym_locations
     id      INTEGER PRIMARY KEY AUTOINCREMENT,
     name    TEXT NOT NULL,
     city    TEXT NOT NULL,
-    address TEXT
+    address TEXT,
+    photo   TEXT
 );
 
 CREATE TABLE class_types
@@ -231,30 +230,6 @@ CREATE TABLE gym_visits
         ON DELETE SET NULL ON UPDATE NO ACTION
 );
 
-CREATE TABLE workout_plans
-(
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    client_id  INTEGER NOT NULL,
-    name       TEXT    NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (client_id)
-        REFERENCES clients(user_id)
-        ON DELETE CASCADE ON UPDATE NO ACTION
-);
-
-CREATE TABLE workout_sessions
-(
-    id       INTEGER PRIMARY KEY AUTOINCREMENT,
-    plan_id  INTEGER NOT NULL,
-    type     TEXT    NOT NULL CHECK(type IN ('pilates', 'cycling', 'running')),
-    date     DATE    NOT NULL,
-    duration INTEGER,
-    notes    TEXT,
-    FOREIGN KEY (plan_id)
-        REFERENCES workout_plans(id)
-        ON DELETE CASCADE ON UPDATE NO ACTION
-);
-
 /*******************************************************************************
    Create Indexes
 ********************************************************************************/
@@ -269,8 +244,6 @@ CREATE INDEX IFK_reviews_client        ON reviews (client_id);
 CREATE INDEX IFK_reviews_class         ON reviews (class_id);
 CREATE INDEX IFK_gym_visits_client     ON gym_visits (client_id);
 CREATE INDEX IFK_gym_visits_gym        ON gym_visits (gym_id);
-CREATE INDEX IFK_workout_plans_client  ON workout_plans (client_id);
-CREATE INDEX IFK_workout_sessions_plan ON workout_sessions (plan_id);
 
 /*******************************************************************************
    Populate Tables
@@ -307,9 +280,9 @@ INSERT INTO trainers (user_id, bio, certifications)
 VALUES (2, 'Pilates instructor with 10 years experience.', 'ACE, Mat Pilates');
 
 INSERT INTO users (id, username, email, password_hash, first_name, last_name)
-VALUES (4, 'maria.fernandes', 'maria@cubogym.com',
+VALUES (4, 'mia.fernandes', 'maria@cubogym.com',
         '$2y$12$RLrV1W7DVRUuO64nGrcxKeM9yl8qIE7V86o3zswBXQyLg96ASGA26',
-        'Maria', 'Fernandes');
+        'Mia', 'Fernandes');
 
 INSERT INTO trainers (user_id, bio, certifications)
 VALUES (4, 'Certified personal trainer specializing in one-on-one coaching.', 'NASM-CPT, CSCS');
@@ -331,6 +304,10 @@ INSERT INTO client_gyms (client_id, gym_id, is_primary) VALUES (3, 1, 1);
 -- Membership para joao.costa
 INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, classes_remaining)
 VALUES (3, 'pro', '2024-01-15', '2025-01-15', 8);
+
+-- Membership para david
+INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, classes_remaining)
+VALUES (9999, 'pro', '2024-01-15', '2025-01-15', 8);
 
 -- Visitas ao ginásio
 INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
@@ -372,16 +349,56 @@ VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days'
 INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
 VALUES (3, 1, datetime('now', '-10 days', '+9 hours'), datetime('now', '-5 days', '+22 hours')); 
 
--- Equipment status
-INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Bench Press', 1, 'Chest', 1);
-INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Chest Press', 1, 'Chest', 0);
-INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Shoulder Press', 1, 'Shoulders', 1);
-INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Tricep Pushdown', 1, 'Triceps', 1);
-INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Bicep Curl Machine', 2, 'Biceps', 0);
-INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Leg Press', 2, 'Legs', 1);
-INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Leg Extension', 2, 'Legs', 1);
-INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Lat Pulldown', 3, 'Back', 1);
-INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Rowing Machine', 3, 'Back', 0);
+-- Equipment — Antas (gym_id=1)
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Bench Press',           1, 'Chest',     1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Chest Press',           1, 'Chest',     0);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Smith Machine',         1, 'Chest',     1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Cable Crossover',       1, 'Chest',     0);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Shoulder Press',        1, 'Shoulders', 1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Lateral Raise Machine', 1, 'Shoulders', 1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Tricep Pushdown',       1, 'Triceps',   1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Dip Machine',           1, 'Triceps',   1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Lat Pulldown',          1, 'Back',      1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Cable Row',             1, 'Back',      1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Seated Row',            1, 'Back',      1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Bicep Curl Machine',    1, 'Biceps',    1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Preacher Curl',         1, 'Biceps',    1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Leg Press',             1, 'Legs',      1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Leg Extension',         1, 'Legs',      0);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Leg Curl',              1, 'Legs',      1);
+
+-- Equipment — Matosinhos (gym_id=2)
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Bench Press',              2, 'Chest',     1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Pec Deck',                 2, 'Chest',     1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Smith Machine',            2, 'Chest',     0);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Shoulder Press',           2, 'Shoulders', 1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Cable Lateral Raise',      2, 'Shoulders', 1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Tricep Pushdown',          2, 'Triceps',   1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Overhead Tricep Extension',2, 'Triceps',   1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Dip Machine',              2, 'Triceps',   0);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Lat Pulldown',             2, 'Back',      1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Cable Row',                2, 'Back',      1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Seated Row',               2, 'Back',      1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Bicep Curl Machine',       2, 'Biceps',    0);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Leg Press',                2, 'Legs',      1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Leg Extension',            2, 'Legs',      1);
+
+-- Equipment — Braga (gym_id=3)
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Bench Press',              3, 'Chest',     1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Chest Press',              3, 'Chest',     1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Smith Machine',            3, 'Chest',     1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Pec Deck',                 3, 'Chest',     1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Shoulder Press',           3, 'Shoulders', 1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Lateral Raise Machine',    3, 'Shoulders', 0);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Tricep Pushdown',          3, 'Triceps',   1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Overhead Tricep Extension',3, 'Triceps',   1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Lat Pulldown',             3, 'Back',      1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Rowing Machine',           3, 'Back',      0);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Bicep Curl Machine',       3, 'Biceps',    1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Preacher Curl',            3, 'Biceps',    1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Leg Press',                3, 'Legs',      1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Leg Extension',            3, 'Legs',      1);
+INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES ('Leg Curl',                 3, 'Legs',      1);
 
 -- class_type_id: 1=Cycling 2=Pilates 3=Personal Training
 INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity)

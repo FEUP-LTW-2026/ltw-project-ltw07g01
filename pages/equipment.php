@@ -4,6 +4,7 @@ require_once(__DIR__ . '/../utils/session.php');
 require_once(__DIR__ . '/../database/connection.db.php');
 require_once(__DIR__ . '/../templates/common.tpl.php');
 require_once(__DIR__ . '/../templates/equipment.tpl.php');
+require_once(__DIR__ . '/../utils/equipment-data.php');
 
 $session = new Session();
 
@@ -181,13 +182,21 @@ if ($isAdmin) {
             </div>
             <table class="admin-table">
                 <thead>
-                    <tr><th>Name</th><th>Body Part</th><th>Status</th><th>Actions</th></tr>
+                    <tr><th>Name</th><th>Body Part</th><th>Target Muscles</th><th>Status</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
                     <?php foreach ($gymData['items'] as $eq): ?>
                     <tr>
                         <td><?= htmlspecialchars($eq['name']) ?></td>
                         <td class="admin-dim"><?= htmlspecialchars($eq['body_part']) ?></td>
+                        <td class="equip-admin-muscles">
+                            <?php foreach (array_map(fn($m) => '/images/equipment/muscles/' . $m . '.png', $equipmentMuscleDiagrams[$eq['name']] ?? []) as $mImg): ?>
+                            <img src="<?= htmlspecialchars($mImg) ?>" alt="" class="equip-admin-muscle-img">
+                            <?php endforeach; ?>
+                            <?php if (empty($equipmentMuscleDiagrams[$eq['name']] ?? [])): ?>
+                            <span class="admin-dim">—</span>
+                            <?php endif; ?>
+                        </td>
                         <td>
                             <span class="admin-badge admin-badge--<?= $eq['is_available'] ? 'active' : 'inactive' ?>">
                                 <?= $eq['is_available'] ? 'Available' : 'Unavailable' ?>
