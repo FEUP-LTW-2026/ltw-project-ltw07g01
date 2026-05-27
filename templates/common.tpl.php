@@ -49,17 +49,29 @@ require_once(__DIR__ . '/../utils/session.php');
     </header>
 <?php } ?>
 
-<?php function drawDashNavLinks(string $activePage, string $profileUrl, string $prefix): void {
+<?php function drawDashNavLinks(string $activePage, string $profileUrl, string $prefix, string $role = ''): void {
     $lnk = $prefix . '-link';
     $div = $prefix . '-divider';
 ?>
-    <a href="/pages/dashboard.php"  class="<?= $lnk ?> <?= $activePage === 'home'       ? 'active' : '' ?>"><i class="fa fa-home"></i> Home</a>
+    <a href="/pages/dashboard.php" class="<?= $lnk ?> <?= $activePage === 'home' ? 'active' : '' ?>"><i class="fa fa-home"></i> Home</a>
+    <?php if ($role === 'admin'): ?>
+    <a href="<?= htmlspecialchars($profileUrl) ?>" class="<?= $lnk ?> <?= $activePage === 'profile' ? 'active' : '' ?>"><i class="fa fa-user-shield"></i> Profile</a>
+    <hr class="<?= $div ?>">
+    <a href="/pages/admin-members.php" class="<?= $lnk ?> <?= $activePage === 'admin-members' ? 'active' : '' ?>"><i class="fa fa-users"></i> Members</a>
+    <a href="/pages/trainers.php"      class="<?= $lnk ?> <?= $activePage === 'trainers'      ? 'active' : '' ?>"><i class="fa fa-chalkboard-teacher"></i> Trainers</a>
+    <a href="/pages/schedule.php"      class="<?= $lnk ?> <?= $activePage === 'schedule'      ? 'active' : '' ?>"><i class="fa fa-calendar-days"></i> Classes</a>
+    <a href="/pages/equipment.php"     class="<?= $lnk ?> <?= $activePage === 'equipment'     ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
+    <a href="/pages/locations.php"     class="<?= $lnk ?> <?= $activePage === 'locations'     ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
+    <?php else: ?>
     <a href="<?= htmlspecialchars($profileUrl) ?>" class="<?= $lnk ?> <?= $activePage === 'profile'    ? 'active' : '' ?>"><i class="fa fa-user"></i> Profile</a>
+    <hr class="<?= $div ?>">
     <a href="/pages/schedule.php"   class="<?= $lnk ?> <?= $activePage === 'schedule'   ? 'active' : '' ?>"><i class="fa fa-calendar"></i> Schedule</a>
+    <a href="/pages/trainers.php"   class="<?= $lnk ?> <?= $activePage === 'trainers'   ? 'active' : '' ?>"><i class="fa fa-users"></i> Trainers</a>
     <a href="/pages/equipment.php"  class="<?= $lnk ?> <?= $activePage === 'equipment'  ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
     <a href="/pages/locations.php"  class="<?= $lnk ?> <?= $activePage === 'locations'  ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
     <a href="/pages/membership.php" class="<?= $lnk ?> <?= $activePage === 'membership' ? 'active' : '' ?>"><i class="fa fa-id-card"></i> Membership</a>
     <a href="/pages/about.php"      class="<?= $lnk ?> <?= $activePage === 'about'      ? 'active' : '' ?>"><i class="fa fa-circle-info"></i> About Us</a>
+    <?php endif; ?>
     <hr class="<?= $div ?>">
     <a href="/actions/logout.php" class="<?= $lnk ?> <?= $lnk ?>--logout"><i class="fa fa-right-from-bracket"></i> Logout</a>
 <?php } ?>
@@ -141,7 +153,7 @@ require_once(__DIR__ . '/../utils/session.php');
                 <p class="nav-sidebar-handle"><?= $username ? '@' . htmlspecialchars($username) : '' ?></p>
             </div>
         </div>
-        <?php drawDashNavLinks($activePage, $profileUrl, 'nav-sidebar'); ?>
+        <?php drawDashNavLinks($activePage, $profileUrl, 'nav-sidebar', $role ?? ''); ?>
     </nav>
     <div class="nav-popup-backdrop" id="navBackdrop"></div>
     <div class="nav-popup" id="navPopup">
@@ -153,7 +165,7 @@ require_once(__DIR__ . '/../utils/session.php');
             </div>
         </div>
         <nav class="nav-popup-links">
-            <?php drawDashNavLinks($activePage, $profileUrl, 'nav-popup'); ?>
+            <?php drawDashNavLinks($activePage, $profileUrl, 'nav-popup', $role ?? ''); ?>
         </nav>
     </div>
     <script src="../js/nav.js"></script>

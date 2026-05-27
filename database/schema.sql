@@ -305,10 +305,6 @@ INSERT INTO client_gyms (client_id, gym_id, is_primary) VALUES (3, 1, 1);
 INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, classes_remaining)
 VALUES (3, 'pro', '2024-01-15', '2025-01-15', 8);
 
--- Membership para david
-INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, classes_remaining)
-VALUES (9999, 'pro', '2024-01-15', '2025-01-15', 8);
-
 -- Visitas ao ginásio
 INSERT INTO gym_visits (client_id, gym_id, checked_in, checked_out)
 VALUES (3, 1, datetime('now', '-1 day', '+8 hours'), datetime('now', '-1 day', '+9 hours', '+30 minutes'));
