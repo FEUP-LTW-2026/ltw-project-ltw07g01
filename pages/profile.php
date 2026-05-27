@@ -179,9 +179,12 @@ $archetype = $user['archetype'] ?? 'NO ARCHETYPE';
 $bio = $user['bio'] ?? '';
 $bodyWeight = $user['body_weight'] ?? 'N/A';
 $height = $user['height'] ?? 'N/A';
-$memberTag      = $membership
-    ? ($membership['gym_plan'] === 'ultra' ? 'ULTRA MEMBER' : 'MEMBER')
-    : 'NO MEMBERSHIP';
+$memberTag = match($membership['gym_plan'] ?? null) {
+    'ultra' => 'ULTRA MEMBER',
+    'pro'   => 'PRO MEMBER',
+    'basic' => 'BASIC MEMBER',
+    default => 'NO MEMBERSHIP',
+};
 
 
 $badges = [];
