@@ -39,7 +39,7 @@ if (!$user) {
 
 
 $stmt = $db->prepare(
-    'SELECT gym_plan, gym_start, gym_end
+    'SELECT gym_plan, gym_start, gym_end, COALESCE(SUM(classes_remaining), 0) AS total_credits
      FROM memberships
      WHERE client_id = :id AND (gym_end IS NULL OR gym_end > CURRENT_TIMESTAMP)
      ORDER BY gym_start DESC
@@ -193,10 +193,15 @@ $archetype = $user['archetype'] ?? 'NO ARCHETYPE';
 $bio = $user['bio'] ?? '';
 $bodyWeight = $user['body_weight'] ?? 'N/A';
 $height = $user['height'] ?? 'N/A';
-$memberTag      = $membership
-    ? ($membership['gym_plan'] === 'ultra' ? 'ULTRA MEMBER' : 'MEMBER')
-    : 'NO MEMBERSHIP';
+$memberTag = match($membership['gym_plan'] ?? null) {
+    'ultra' => 'ULTRA MEMBER',
+    'pro'   => 'PRO MEMBER',
+    'basic' => 'BASIC MEMBER',
+    default => 'NO MEMBERSHIP',
+};
 
+
+$totalCredits = (int)($membership['total_credits'] ?? 0);
 
 drawDashHeader($session, $db, 'profile', [], 'profile-body');
-drawProfilePage($session, $db, $user, $isOwnProfile, $viewId, $currentUserId, $profilePhoto, $fullName, $memberSince, $homeGym, $archetype, (string)$bio, (string)$bodyWeight, (string)$height, $memberTag, $totalVisits, $classesAttended, $earnedBadgeCount, array_values($selectedBadges), $daysRange, $periodLabel, $minutesByDay, $daysLabels, $periodTotalFormatted, $totalWorkoutFormatted, $avgFormatted);
+drawProfilePage($session, $db, $user, $isOwnProfile, $viewId, $currentUserId, $profilePhoto, $fullName, $memberSince, $homeGym, $archetype, (string)$bio, (string)$bodyWeight, (string)$height, $memberTag, $totalVisits, $classesAttended, $earnedBadgeCount, array_values($selectedBadges), $daysRange, $periodLabel, $minutesByDay, $daysLabels, $periodTotalFormatted, $totalWorkoutFormatted, $avgFormatted, $totalCredits);

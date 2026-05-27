@@ -24,7 +24,8 @@
     array $daysLabels,
     string $periodTotalFormatted,
     string $totalWorkoutFormatted,
-    string $avgFormatted
+    string $avgFormatted,
+    int $totalCredits = 0
 ): void { ?>
 <?php if (!$isOwnProfile): ?>
 <a class="profile-back-btn" href="#" onclick="history.back(); return false;" title="Go back"><i class="fa fa-arrow-left"></i></a>
@@ -72,6 +73,10 @@
             <div class="detail-item">
                 <span class="detail-label">Home Gym</span>
                 <p class="detail-value"><?= htmlspecialchars($homeGym) ?></p>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Class Credits</span>
+                <p class="detail-value"><?= $totalCredits ?></p>
             </div>
         </div>
 

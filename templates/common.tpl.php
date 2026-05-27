@@ -130,6 +130,7 @@ require_once(__DIR__ . '/../utils/session.php');
             <a href="/pages/dashboard.php" class="nav-popup-link <?= $activePage === 'home' ? 'active' : '' ?>"><i class="fa fa-home"></i> Home</a>
             <?php if ($role !== 'admin'): ?>
             <a href="<?= htmlspecialchars($profileUrl) ?>" class="nav-popup-link <?= $activePage === 'profile'    ? 'active' : '' ?>"><i class="fa fa-user"></i> Profile</a>
+            <hr class="nav-popup-divider">
             <a href="/pages/schedule.php"   class="nav-popup-link <?= $activePage === 'schedule'   ? 'active' : '' ?>"><i class="fa fa-calendar"></i> Schedule</a>
             <a href="/pages/trainers.php"   class="nav-popup-link <?= $activePage === 'trainers'   ? 'active' : '' ?>"><i class="fa fa-users"></i> Trainers</a>
             <a href="/pages/equipment.php"  class="nav-popup-link <?= $activePage === 'equipment'  ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
@@ -138,7 +139,6 @@ require_once(__DIR__ . '/../utils/session.php');
             <a href="/pages/about.php"      class="nav-popup-link <?= $activePage === 'about'      ? 'active' : '' ?>"><i class="fa fa-circle-info"></i> About Us</a>
             <?php else: ?>
             <a href="/pages/admin-profile.php"      class="nav-popup-link <?= $activePage === 'profile'      ? 'active' : '' ?>"><i class="fa fa-user-shield"></i> Profile</a>
-            <a href="/actions/edit-admin-profile.php" class="nav-popup-link <?= $activePage === 'edit-profile' ? 'active' : '' ?>"><i class="fa fa-pen"></i> Edit Profile</a>
             <hr class="nav-popup-divider">
             <a href="/pages/admin-members.php" class="nav-popup-link <?= $activePage === 'admin-members' ? 'active' : '' ?>"><i class="fa fa-users"></i> Members</a>
             <a href="/pages/trainers.php"      class="nav-popup-link <?= $activePage === 'trainers'     ? 'active' : '' ?>"><i class="fa fa-chalkboard-teacher"></i> Trainers</a>

@@ -66,6 +66,10 @@
                         <label>End Date <span class="admin-optional">(optional)</span></label>
                         <input type="date" name="gym_end" id="f_end">
                     </div>
+                    <div class="admin-field">
+                        <label>Class Credits</label>
+                        <input type="number" name="classes_remaining" id="f_credits" min="0" value="0">
+                    </div>
                 </div>
             </div>
 
@@ -136,7 +140,7 @@
                     <td>
                         <div class="admin-row-actions">
                             <button class="btn-admin-sm" title="Edit"
-                                onclick="editMember(<?= $m['id'] ?>, <?= htmlspecialchars(json_encode($m['first_name'])) ?>, <?= htmlspecialchars(json_encode($m['last_name'])) ?>, <?= htmlspecialchars(json_encode($m['email'])) ?>, <?= htmlspecialchars(json_encode($m['gym_plan'] ?? '')) ?>, <?= htmlspecialchars(json_encode($m['gym_start'] ? date('Y-m-d', strtotime($m['gym_start'])) : '')) ?>, <?= htmlspecialchars(json_encode($m['gym_end'] ? date('Y-m-d', strtotime($m['gym_end'])) : '')) ?>, <?= htmlspecialchars(json_encode($m['profile_photo'] ?? '')) ?>)">
+                                onclick="editMember(<?= $m['id'] ?>, <?= htmlspecialchars(json_encode($m['first_name'])) ?>, <?= htmlspecialchars(json_encode($m['last_name'])) ?>, <?= htmlspecialchars(json_encode($m['email'])) ?>, <?= htmlspecialchars(json_encode($m['gym_plan'] ?? '')) ?>, <?= htmlspecialchars(json_encode($m['gym_start'] ? date('Y-m-d', strtotime($m['gym_start'])) : '')) ?>, <?= htmlspecialchars(json_encode($m['gym_end'] ? date('Y-m-d', strtotime($m['gym_end'])) : '')) ?>, <?= htmlspecialchars(json_encode($m['profile_photo'] ?? '')) ?>, <?= (int)$m['classes_remaining'] ?>)">
                                 <i class="fa fa-pen"></i>
                             </button>
                             <a href="/pages/profile.php?id=<?= $m['id'] ?>" class="btn-admin-sm" title="View profile">
@@ -193,14 +197,15 @@ function toggleForm() {
         document.getElementById('formSubmit').innerHTML   = '<i class="fa fa-plus"></i> Create';
         document.getElementById('usernameField').style.display  = '';
         document.getElementById('passwordField').style.display  = '';
-        document.getElementById('membershipSection').style.display = 'none';
+        document.getElementById('membershipSection').style.display = '';
         document.getElementById('promoteSection').style.display   = 'none';
         document.getElementById('formPhotoPreview').src = '../images/profile_pic.webp';
         ['f_first','f_last','f_email','f_username','f_password','f_start','f_end'].forEach(function(id){
             var el = document.getElementById(id);
             if (el) el.value = '';
         });
-        document.getElementById('f_plan').value = 'none';
+        document.getElementById('f_plan').value    = 'none';
+        document.getElementById('f_credits').value = '0';
     }
 }
 
@@ -208,7 +213,7 @@ function closeForm() {
     document.getElementById('memberForm').hidden = true;
 }
 
-function editMember(id, first, last, email, plan, gymStart, gymEnd, photo) {
+function editMember(id, first, last, email, plan, gymStart, gymEnd, photo, credits) {
     var f = document.getElementById('memberForm');
     f.hidden = false;
     document.getElementById('formTitle').textContent  = 'Edit Member';
@@ -224,9 +229,10 @@ function editMember(id, first, last, email, plan, gymStart, gymEnd, photo) {
     document.getElementById('f_first').value  = first;
     document.getElementById('f_last').value   = last;
     document.getElementById('f_email').value  = email;
-    document.getElementById('f_plan').value   = plan || 'none';
+    document.getElementById('f_plan').value    = plan || 'none';
     document.getElementById('f_start').value  = gymStart || '';
     document.getElementById('f_end').value    = gymEnd   || '';
+    document.getElementById('f_credits').value = credits !== undefined ? credits : 0;
     f.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 

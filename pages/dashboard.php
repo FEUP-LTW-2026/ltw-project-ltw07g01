@@ -89,6 +89,17 @@ if ($role === 'client') {
     $stmt->execute([':id' => $userId]);
     $clientData = $stmt->fetch();
 
+    $stmt = $db->prepare('SELECT gym_plan, COALESCE(SUM(classes_remaining), 0) AS total_credits FROM memberships WHERE client_id = :id AND (gym_end IS NULL OR gym_end > CURRENT_TIMESTAMP) LIMIT 1');
+    $stmt->execute([':id' => $userId]);
+    $membershipRow = $stmt->fetch();
+    $classCredits = (int)($membershipRow['total_credits'] ?? 0);
+    $memberTag = match($membershipRow['gym_plan'] ?? null) {
+        'ultra' => 'ULTRA MEMBER',
+        'pro'   => 'PRO MEMBER',
+        'basic' => 'BASIC MEMBER',
+        default => 'NO MEMBERSHIP',
+    };
+
     $stmt = $db->prepare(
         'SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min, cl.capacity,
                 gl.name AS gym_name, gl.city AS gym_city,
@@ -421,5 +432,7 @@ drawDashboardPage(
     $popularClasses ?? [],
     $recentReviews ?? [],
     $gymStats ?? [],
-    $nextClasses ?? []
+    $nextClasses ?? [],
+    $classCredits ?? 0,
+    $memberTag ?? ''
 );

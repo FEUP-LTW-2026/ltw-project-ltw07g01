@@ -51,6 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    ->execute([$username, $email, $hash, $firstName, $lastName]);
                 $newId = (int)$db->lastInsertId();
                 $db->prepare('INSERT INTO clients (user_id) VALUES (?)')->execute([$newId]);
+                $plan    = $_POST['gym_plan'] ?? 'none';
+                $credits = max(0, (int)($_POST['classes_remaining'] ?? 0));
+                if ($plan !== 'none' && $plan !== '') {
+                    $start = trim($_POST['gym_start'] ?? '') ?: date('Y-m-d');
+                    $end   = trim($_POST['gym_end']   ?? '') ?: null;
+                    $db->prepare('INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, classes_remaining) VALUES (?,?,?,?,?)')
+                       ->execute([$newId, $plan, $start, $end, $credits]);
+                }
                 $pf = $_FILES['photo'] ?? null;
                 if ($pf && $pf['error'] === UPLOAD_ERR_OK && $pf['size'] <= 5 * 1024 * 1024) {
                     $ext = ['image/jpeg'=>'jpg','image/png'=>'png','image/webp'=>'webp','image/gif'=>'gif'];
@@ -76,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $plan      = $_POST['gym_plan']         ?? '';
         $start     = trim($_POST['gym_start']   ?? '');
         $end       = trim($_POST['gym_end']     ?? '') ?: null;
+        $credits   = max(0, (int)($_POST['classes_remaining'] ?? 0));
 
         if (!$targetId || !$firstName || !$lastName || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error = 'Invalid data.';
@@ -93,10 +102,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $start = $start ?: date('Y-m-d');
                     $db->prepare(
-                        'INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end)
-                         VALUES (?,?,?,?)
-                         ON CONFLICT(client_id) DO UPDATE SET gym_plan=excluded.gym_plan, gym_start=excluded.gym_start, gym_end=excluded.gym_end'
-                    )->execute([$targetId, $plan, $start, $end]);
+                        'INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, classes_remaining)
+                         VALUES (?,?,?,?,?)
+                         ON CONFLICT(client_id) DO UPDATE SET gym_plan=excluded.gym_plan, gym_start=excluded.gym_start, gym_end=excluded.gym_end, classes_remaining=excluded.classes_remaining'
+                    )->execute([$targetId, $plan, $start, $end, $credits]);
                 }
 
                 $pf = $_FILES['photo'] ?? null;
@@ -145,7 +154,7 @@ if (isset($_GET['msg'])) $msg = htmlspecialchars($_GET['msg']);
 
 $members = $db->query(
     'SELECT u.id, u.username, u.first_name, u.last_name, u.email, u.profile_photo, u.created_at,
-            m.gym_plan, m.gym_start, m.gym_end
+            m.gym_plan, m.gym_start, m.gym_end, COALESCE(m.classes_remaining, 0) AS classes_remaining
      FROM users u
      JOIN clients c ON c.user_id = u.id
      LEFT JOIN memberships m ON m.client_id = u.id

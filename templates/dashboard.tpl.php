@@ -29,17 +29,28 @@
     array $popularClasses = [],
     array $recentReviews = [],
     array $gymStats = [],
-    array $nextClasses = []
+    array $nextClasses = [],
+    int $classCredits = 0,
+    string $memberTag = ''
 ): void { ?>
 
 <main class="<?= $role === 'admin' ? 'admin-page' : 'dashboard-page dashboard-' . $role ?>">
 
     <div class="dash-header">
         <div class="dash-greeting">
-            <span class="dash-role-tag"><?= strtoupper($role) ?></span>
+            <span class="dash-role-tag"><?= $role === 'client' && $memberTag ? htmlspecialchars($memberTag) : strtoupper($role) ?></span>
             <h1>Welcome back, <span class="dash-name"><?= htmlspecialchars($user['first_name']) ?></span></h1>
             <p class="dash-date"><?= date('l, F j, Y') ?></p>
         </div>
+        <?php if ($role === 'client'): ?>
+        <div class="dash-credits-badge">
+            <i class="fa fa-ticket"></i>
+            <div>
+                <span class="dash-credits-count" id="dash-credits-value"><?= $classCredits ?></span>
+                <span class="dash-credits-label">Credits</span>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 
 <?php if ($role === 'client'): ?>

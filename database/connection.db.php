@@ -2,12 +2,13 @@
     declare(strict_types=1);
 
     function getDatabaseConnection() : PDO {
-        $db = new PDO('sqlite:' . __DIR__ . '/database.db');
+        $db = new PDO('sqlite:' . __DIR__ . '/../private/db/db.db');
         $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $db->exec('PRAGMA foreign_keys = ON;');
         ensureClientsSelectedBadgesColumn($db);
         ensureMembershipClassesRemainingColumn($db);
+        ensureClassesDescriptionColumn($db);
         return $db;
     }
 
@@ -23,6 +24,13 @@
         }
         if (!$hasSelectedBadges) {
             $db->exec('ALTER TABLE clients ADD COLUMN selected_badges TEXT');
+        }
+    }
+
+    function ensureClassesDescriptionColumn(PDO $db): void {
+        $cols = array_column($db->query('PRAGMA table_info(classes)')->fetchAll(PDO::FETCH_ASSOC), 'name');
+        if (!in_array('description', $cols, true)) {
+            $db->exec('ALTER TABLE classes ADD COLUMN description TEXT NOT NULL DEFAULT \'\'');
         }
     }
 

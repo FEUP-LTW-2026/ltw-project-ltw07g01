@@ -41,33 +41,35 @@ if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && 
     $action = $_POST['_action'] ?? '';
 
     if ($action === 'create') {
-        $classTypeId = (int)($_POST['class_type_id'] ?? 0);
-        $gymId       = (int)($_POST['gym_id']        ?? 0);
-        $trainerId   = $role === 'trainer' ? $userId : ((int)($_POST['trainer_id'] ?? 0) ?: null);
-        $schedule    = trim($_POST['schedule']        ?? '');
-        $duration    = (int)($_POST['duration_min']  ?? 0);
-        $capacity    = (int)($_POST['capacity']       ?? 0);
+        $classTypeId  = (int)($_POST['class_type_id'] ?? 0);
+        $gymId        = (int)($_POST['gym_id']         ?? 0);
+        $trainerId    = $role === 'trainer' ? $userId : ((int)($_POST['trainer_id'] ?? 0) ?: null);
+        $schedule     = trim($_POST['schedule']         ?? '');
+        $duration     = (int)($_POST['duration_min']   ?? 0);
+        $capacity     = (int)($_POST['capacity']        ?? 0);
+        $description  = mb_substr(trim($_POST['description'] ?? ''), 0, 500);
         if ($classTypeId && $gymId && $schedule && $duration > 0 && $capacity > 0 && trainerCanUseClassOption($role ?? '', $classTypeId, $gymId, $trainerClassTypeIds, $trainerGymIds)) {
-            $db->prepare('INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity) VALUES (?,?,?,?,?,?)')
-               ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity]);
+            $db->prepare('INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity, description) VALUES (?,?,?,?,?,?,?)')
+               ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity, $description]);
         }
         header('Location: /pages/schedule.php'); exit;
 
     } elseif ($action === 'update') {
-        $targetId    = (int)($_POST['target_id']     ?? 0);
-        $classTypeId = (int)($_POST['class_type_id'] ?? 0);
-        $gymId       = (int)($_POST['gym_id']        ?? 0);
-        $trainerId   = $role === 'trainer' ? $userId : ((int)($_POST['trainer_id'] ?? 0) ?: null);
-        $schedule    = trim($_POST['schedule']        ?? '');
-        $duration    = (int)($_POST['duration_min']  ?? 0);
-        $capacity    = (int)($_POST['capacity']       ?? 0);
+        $targetId     = (int)($_POST['target_id']      ?? 0);
+        $classTypeId  = (int)($_POST['class_type_id']  ?? 0);
+        $gymId        = (int)($_POST['gym_id']          ?? 0);
+        $trainerId    = $role === 'trainer' ? $userId : ((int)($_POST['trainer_id'] ?? 0) ?: null);
+        $schedule     = trim($_POST['schedule']          ?? '');
+        $duration     = (int)($_POST['duration_min']    ?? 0);
+        $capacity     = (int)($_POST['capacity']         ?? 0);
+        $description  = mb_substr(trim($_POST['description'] ?? ''), 0, 500);
         if ($targetId && $classTypeId && $gymId && $schedule && $duration > 0 && $capacity > 0 && trainerCanUseClassOption($role ?? '', $classTypeId, $gymId, $trainerClassTypeIds, $trainerGymIds)) {
             if ($role === 'trainer') {
-                $db->prepare('UPDATE classes SET class_type_id=?, gym_id=?, trainer_id=?, schedule=?, duration_min=?, capacity=? WHERE id=? AND trainer_id=?')
-                   ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity, $targetId, $userId]);
+                $db->prepare('UPDATE classes SET class_type_id=?, gym_id=?, trainer_id=?, schedule=?, duration_min=?, capacity=?, description=? WHERE id=? AND trainer_id=?')
+                   ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity, $description, $targetId, $userId]);
             } else {
-                $db->prepare('UPDATE classes SET class_type_id=?, gym_id=?, trainer_id=?, schedule=?, duration_min=?, capacity=? WHERE id=?')
-                   ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity, $targetId]);
+                $db->prepare('UPDATE classes SET class_type_id=?, gym_id=?, trainer_id=?, schedule=?, duration_min=?, capacity=?, description=? WHERE id=?')
+                   ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity, $description, $targetId]);
             }
         }
         header('Location: /pages/schedule.php'); exit;
@@ -166,7 +168,10 @@ if ($requestMethod === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? 
     $s->execute([$classId]);
     $cl = $s->fetch();
     $newEnrolled = (int)$cl['enrolled'];
-    echo json_encode(['ok' => true, 'enrolled' => $newEnrolled, 'capacity' => (int)$cl['capacity'], 'spots' => (int)$cl['capacity'] - $newEnrolled]);
+    $cs = $db->prepare('SELECT COALESCE(SUM(classes_remaining), 0) FROM memberships WHERE client_id = ?');
+    $cs->execute([$userId]);
+    $newCredits = (int)$cs->fetchColumn();
+    echo json_encode(['ok' => true, 'enrolled' => $newEnrolled, 'capacity' => (int)$cl['capacity'], 'spots' => (int)$cl['capacity'] - $newEnrolled, 'credits' => $newCredits]);
     exit;
 }
 
@@ -189,7 +194,10 @@ if ($requestMethod === 'POST' && !empty($_POST['ajax']) && $role === 'client') {
     $db->prepare('INSERT INTO client_classes (client_id, class_id) VALUES (?,?)')->execute([$userId, $classId]);
     $db->prepare('UPDATE memberships SET classes_remaining = classes_remaining - 1 WHERE client_id = ?')->execute([$userId]);
     $newEnrolled = (int)$cl['enrolled'] + 1;
-    echo json_encode(['ok' => true, 'enrolled' => $newEnrolled, 'capacity' => (int)$cl['capacity'], 'spots' => (int)$cl['capacity'] - $newEnrolled]);
+    $cs = $db->prepare('SELECT COALESCE(SUM(classes_remaining), 0) FROM memberships WHERE client_id = ?');
+    $cs->execute([$userId]);
+    $newCredits = (int)$cs->fetchColumn();
+    echo json_encode(['ok' => true, 'enrolled' => $newEnrolled, 'capacity' => (int)$cl['capacity'], 'spots' => (int)$cl['capacity'] - $newEnrolled, 'credits' => $newCredits]);
     exit;
 }
 
@@ -212,7 +220,7 @@ $defaultDay = ($weekOffset === 0 && $today >= $weekMon && $today <= $weekSun)
 
 $stmt = $db->prepare("
     SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min, cl.capacity,
-           cl.class_type_id, cl.gym_id, cl.trainer_id,
+           cl.class_type_id, cl.gym_id, cl.trainer_id, cl.description,
            gl.name AS gym_name, gl.city AS gym_city,
            u.first_name AS trainer_first, u.last_name AS trainer_last,
            u.profile_photo AS trainer_photo,
@@ -277,6 +285,13 @@ if ($role === 'admin') {
 $totalClasses  = count($allClasses);
 $totalSpots    = array_sum(array_map(fn($c) => max(0, $c['capacity'] - $c['enrolled']), $allClasses));
 $totalEnrolled = array_sum(array_column($allClasses, 'enrolled'));
+
+$classCredits = 0;
+if ($role === 'client') {
+    $cs = $db->prepare('SELECT COALESCE(SUM(classes_remaining), 0) FROM memberships WHERE client_id = ?');
+    $cs->execute([$userId]);
+    $classCredits = (int)$cs->fetchColumn();
+}
 
 $weekTypes = array_values(array_unique(array_column($allClasses, 'class_name')));
 sort($weekTypes);
@@ -387,7 +402,7 @@ $buildDynamicHTML = function() use ($days, $classesByDay, $today, $enrolledIds, 
                     'color'        => $color,
                     'avg_rating'   => (float)$cls['avg_rating'],
                     'review_count' => (int)$cls['review_count'],
-                    'description'  => $typeDescriptions[$cls['class_name']] ?? '',
+                    'description'  => $cls['description'] !== '' ? $cls['description'] : ($typeDescriptions[$cls['class_name']] ?? ''),
                     'is_enrolled'  => $enrolled,
                     'is_full'      => $full,
                     'my_rating'    => isset($cls['my_rating']) && $cls['my_rating'] !== null ? (int)$cls['my_rating'] : null,
@@ -566,4 +581,4 @@ if (!empty($_GET['ajax'])) {
     exit;
 }
 drawDashHeader($session, $db, 'schedule', ['schedule']);
-drawSchedulePage($session, $db, $role ?? '', $weekOffset, $weekMon, $weekSun, $weekTypes, $weekTrainers, $totalClasses, $totalSpots, $totalEnrolled, $classTypes, $gymList, $trainers, $buildDynamicHTML, $defaultDay, $classesForJS);
+drawSchedulePage($session, $db, $role ?? '', $weekOffset, $weekMon, $weekSun, $weekTypes, $weekTrainers, $totalClasses, $totalSpots, $totalEnrolled, $classTypes, $gymList, $trainers, $buildDynamicHTML, $defaultDay, $classesForJS, $classCredits);

@@ -153,7 +153,14 @@ $archetype = $user['archetype'] ?? 'NO ARCHETYPE';
 $bio = $user['bio'] ?? '';
 $bodyWeight = $user['body_weight'] ?? '';
 $height = $user['height'] ?? '';
-$memberTag = 'MEMBER';
+$mStmt = $db->prepare('SELECT gym_plan FROM memberships WHERE client_id = ? AND (gym_end IS NULL OR gym_end > CURRENT_TIMESTAMP) ORDER BY gym_start DESC LIMIT 1');
+$mStmt->execute([$userId]);
+$memberTag = match($mStmt->fetchColumn() ?: null) {
+    'ultra' => 'ULTRA MEMBER',
+    'pro'   => 'PRO MEMBER',
+    'basic' => 'BASIC MEMBER',
+    default => 'NO MEMBERSHIP',
+};
 
 $stmt = $db->prepare('SELECT COUNT(*) FROM gym_visits WHERE client_id = :id');
 $stmt->execute([':id' => $userId]);

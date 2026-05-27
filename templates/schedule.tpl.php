@@ -15,7 +15,8 @@
     array $trainers,
     callable $buildDynamicHTML,
     string $defaultDay = '',
-    array $classesForJS = []
+    array $classesForJS = [],
+    int $classCredits = 0
 ): void { ?>
 
 <div class="sc-filter-bar" id="scFilterBar">
@@ -81,6 +82,7 @@
         <div class="sc-week-stats">
             <div class="sc-stat"><span id="statClasses"><?= $totalClasses ?></span><small>classes</small></div>
             <div class="sc-stat"><span id="statSpots"><?= $totalSpots ?></span><small>spots open</small></div>
+            <div class="sc-stat"><span id="dash-credits-value"><?= $classCredits ?></span><small>credits</small></div>
         </div>
         <?php endif; ?>
     </div>
@@ -160,6 +162,10 @@
                     <div class="admin-field">
                         <label>Capacity</label>
                         <input type="number" name="capacity" id="editCapacity" min="1" required>
+                    </div>
+                    <div class="admin-field">
+                        <label>Description <span class="admin-optional">(optional)</span></label>
+                        <textarea name="description" id="editDescription" rows="3" maxlength="500" placeholder="Brief description of the class…"></textarea>
                     </div>
                 </div>
             </form>
@@ -394,6 +400,7 @@ var SC = {
         document.getElementById('editTrainerId').value = cls ? (cls.trainer_id || '') : '';
         document.getElementById('editDuration').value  = cls ? cls.duration_min : '';
         document.getElementById('editCapacity').value  = cls ? cls.capacity : '';
+        document.getElementById('editDescription').value = cls ? (cls.description || '') : '';
         if (cls && cls.schedule) {
             var d = new Date(cls.schedule);
             var pad = function(n) { return String(n).padStart(2, '0'); };
@@ -438,6 +445,7 @@ var SC = {
         document.getElementById('editGymId').value = cls ? cls.gym_id : '';
         document.getElementById('editDuration').value = cls ? cls.duration_min : '';
         document.getElementById('editCapacity').value = cls ? cls.capacity : '';
+        document.getElementById('editDescription').value = cls ? (cls.description || '') : '';
         if (cls && cls.schedule) {
             var d = new Date(cls.schedule);
             var pad = function(n) { return String(n).padStart(2, '0'); };
