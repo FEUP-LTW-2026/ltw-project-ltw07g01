@@ -49,6 +49,33 @@ require_once(__DIR__ . '/../utils/session.php');
     </header>
 <?php } ?>
 
+<?php function drawDashNavLinks(string $activePage, string $profileUrl, string $prefix, string $role = ''): void {
+    $lnk = $prefix . '-link';
+    $div = $prefix . '-divider';
+?>
+    <a href="/pages/dashboard.php" class="<?= $lnk ?> <?= $activePage === 'home' ? 'active' : '' ?>"><i class="fa fa-home"></i> Home</a>
+    <?php if ($role === 'admin'): ?>
+    <a href="<?= htmlspecialchars($profileUrl) ?>" class="<?= $lnk ?> <?= $activePage === 'profile' ? 'active' : '' ?>"><i class="fa fa-user-shield"></i> Profile</a>
+    <hr class="<?= $div ?>">
+    <a href="/pages/admin-members.php" class="<?= $lnk ?> <?= $activePage === 'admin-members' ? 'active' : '' ?>"><i class="fa fa-users"></i> Members</a>
+    <a href="/pages/trainers.php"      class="<?= $lnk ?> <?= $activePage === 'trainers'      ? 'active' : '' ?>"><i class="fa fa-chalkboard-teacher"></i> Trainers</a>
+    <a href="/pages/schedule.php"      class="<?= $lnk ?> <?= $activePage === 'schedule'      ? 'active' : '' ?>"><i class="fa fa-calendar-days"></i> Classes</a>
+    <a href="/pages/equipment.php"     class="<?= $lnk ?> <?= $activePage === 'equipment'     ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
+    <a href="/pages/locations.php"     class="<?= $lnk ?> <?= $activePage === 'locations'     ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
+    <?php else: ?>
+    <a href="<?= htmlspecialchars($profileUrl) ?>" class="<?= $lnk ?> <?= $activePage === 'profile'    ? 'active' : '' ?>"><i class="fa fa-user"></i> Profile</a>
+    <hr class="<?= $div ?>">
+    <a href="/pages/schedule.php"   class="<?= $lnk ?> <?= $activePage === 'schedule'   ? 'active' : '' ?>"><i class="fa fa-calendar"></i> Schedule</a>
+    <a href="/pages/trainers.php"   class="<?= $lnk ?> <?= $activePage === 'trainers'   ? 'active' : '' ?>"><i class="fa fa-users"></i> Trainers</a>
+    <a href="/pages/equipment.php"  class="<?= $lnk ?> <?= $activePage === 'equipment'  ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
+    <a href="/pages/locations.php"  class="<?= $lnk ?> <?= $activePage === 'locations'  ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
+    <a href="/pages/membership.php" class="<?= $lnk ?> <?= $activePage === 'membership' ? 'active' : '' ?>"><i class="fa fa-id-card"></i> Membership</a>
+    <a href="/pages/about.php"      class="<?= $lnk ?> <?= $activePage === 'about'      ? 'active' : '' ?>"><i class="fa fa-circle-info"></i> About Us</a>
+    <?php endif; ?>
+    <hr class="<?= $div ?>">
+    <a href="/actions/logout.php" class="<?= $lnk ?> <?= $lnk ?>--logout"><i class="fa fa-right-from-bracket"></i> Logout</a>
+<?php } ?>
+
 <?php function drawDashHeader(Session $session, PDO $db, string $activePage = '', array $extraCss = [], string $bodyClass = ''): void {
     $userId = $session->isLoggedIn() ? (int)$session->getId() : 0;
     $profilePhoto = '../images/profile_pic.webp';
@@ -98,6 +125,7 @@ require_once(__DIR__ . '/../utils/session.php');
     <link rel="stylesheet" href="../css/profile.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -117,6 +145,16 @@ require_once(__DIR__ . '/../utils/session.php');
             <?php endif; ?>
         </div>
     </header>
+    <nav class="nav-sidebar">
+        <div class="nav-sidebar-user">
+            <img src="<?= htmlspecialchars($profilePhoto) ?>" alt="Profile" class="nav-sidebar-avatar">
+            <div>
+                <p class="nav-sidebar-name"><?= htmlspecialchars($fullName) ?></p>
+                <p class="nav-sidebar-handle"><?= $username ? '@' . htmlspecialchars($username) : '' ?></p>
+            </div>
+        </div>
+        <?php drawDashNavLinks($activePage, $profileUrl, 'nav-sidebar', $role ?? ''); ?>
+    </nav>
     <div class="nav-popup-backdrop" id="navBackdrop"></div>
     <div class="nav-popup" id="navPopup">
         <div class="nav-popup-user">
@@ -127,27 +165,7 @@ require_once(__DIR__ . '/../utils/session.php');
             </div>
         </div>
         <nav class="nav-popup-links">
-            <a href="/pages/dashboard.php" class="nav-popup-link <?= $activePage === 'home' ? 'active' : '' ?>"><i class="fa fa-home"></i> Home</a>
-            <?php if ($role !== 'admin'): ?>
-            <a href="<?= htmlspecialchars($profileUrl) ?>" class="nav-popup-link <?= $activePage === 'profile'    ? 'active' : '' ?>"><i class="fa fa-user"></i> Profile</a>
-            <hr class="nav-popup-divider">
-            <a href="/pages/schedule.php"   class="nav-popup-link <?= $activePage === 'schedule'   ? 'active' : '' ?>"><i class="fa fa-calendar"></i> Schedule</a>
-            <a href="/pages/trainers.php"   class="nav-popup-link <?= $activePage === 'trainers'   ? 'active' : '' ?>"><i class="fa fa-users"></i> Trainers</a>
-            <a href="/pages/equipment.php"  class="nav-popup-link <?= $activePage === 'equipment'  ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
-            <a href="/pages/locations.php"  class="nav-popup-link <?= $activePage === 'locations'  ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
-            <a href="/pages/membership.php" class="nav-popup-link <?= $activePage === 'membership' ? 'active' : '' ?>"><i class="fa fa-id-card"></i> Membership</a>
-            <a href="/pages/about.php"      class="nav-popup-link <?= $activePage === 'about'      ? 'active' : '' ?>"><i class="fa fa-circle-info"></i> About Us</a>
-            <?php else: ?>
-            <a href="/pages/admin-profile.php"      class="nav-popup-link <?= $activePage === 'profile'      ? 'active' : '' ?>"><i class="fa fa-user-shield"></i> Profile</a>
-            <hr class="nav-popup-divider">
-            <a href="/pages/admin-members.php" class="nav-popup-link <?= $activePage === 'admin-members' ? 'active' : '' ?>"><i class="fa fa-users"></i> Members</a>
-            <a href="/pages/trainers.php"      class="nav-popup-link <?= $activePage === 'trainers'     ? 'active' : '' ?>"><i class="fa fa-chalkboard-teacher"></i> Trainers</a>
-            <a href="/pages/schedule.php"      class="nav-popup-link <?= $activePage === 'schedule'     ? 'active' : '' ?>"><i class="fa fa-calendar-days"></i> Classes</a>
-            <a href="/pages/equipment.php"     class="nav-popup-link <?= $activePage === 'equipment'    ? 'active' : '' ?>"><i class="fa fa-dumbbell"></i> Equipment</a>
-            <a href="/pages/locations.php"     class="nav-popup-link <?= $activePage === 'locations'    ? 'active' : '' ?>"><i class="fa fa-location-dot"></i> Locations</a>
-            <?php endif; ?>
-            <hr class="nav-popup-divider">
-            <a href="/actions/logout.php" class="nav-popup-link nav-popup-link--logout"><i class="fa fa-right-from-bracket"></i> Logout</a>
+            <?php drawDashNavLinks($activePage, $profileUrl, 'nav-popup', $role ?? ''); ?>
         </nav>
     </div>
     <script src="../js/nav.js"></script>

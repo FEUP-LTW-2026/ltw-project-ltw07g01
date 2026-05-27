@@ -38,48 +38,13 @@
     </section>
 
     <?php
-    $equipmentImages = [
-        'Smith Machine'  => '/images/equipment/smith-machine.png',
-        'Chest Press'    => '/images/equipment/chest-press.png',
-        'Bench Press'    => '/images/equipment/bench-press.png',
-        'Shoulder Press'  => '/images/equipment/shoulder-press.jpg',
-        'Tricep Pushdown' => '/images/equipment/tricep-pushdown.png',
-        'Lat Pulldown'    => '/images/equipment/lat-pulldown.png',
-        'Rowing Machine'     => '/images/equipment/rowing-machine.png',
-        'Bicep Curl Machine' => '/images/equipment/bicep-curl.png',
-        'Leg Extension' => '/images/equipment/leg-extension.png',
-        'Leg Press'     => '/images/equipment/leg-press.png',
-    ];
-    $equipmentMuscles = [
-        'Smith Machine'       => 'Chest, shoulders and triceps. Also effective for squats targeting quads, glutes and hamstrings.',
-        'Bench Press'         => 'Primary: pectorals. Secondary: anterior deltoids and triceps.',
-        'Chest Press'         => 'Primary: pectorals. Secondary: triceps and anterior deltoids.',
-        'Lat Pulldown'        => 'Primary: latissimus dorsi. Secondary: biceps and rear deltoids.',
-        'Bicep Curl Machine'  => 'Primary: biceps brachii. Secondary: brachialis and brachioradialis.',
-        'Tricep Pushdown'     => 'Primary: triceps brachii. Secondary: anconeus.',
-        'Shoulder Press'      => 'Primary: deltoids. Secondary: triceps and upper trapezius.',
-        'Leg Press'           => 'Primary: quadriceps and glutes. Secondary: hamstrings and calves.',
-        'Leg Extension'       => 'Primary: quadriceps (rectus femoris, vastus group).',
-        'Rowing Machine'      => 'Primary: latissimus dorsi and rhomboids. Secondary: biceps, rear deltoids and core.',
-    ];
-    $equipmentMuscleDiagrams = [
-        'Smith Machine'       => ['/images/equipment/muscles/chest.png', '/images/equipment/muscles/deltoid.png', '/images/equipment/muscles/triceps.png', '/images/equipment/muscles/quadriceps.png'],
-        'Bench Press'         => ['/images/equipment/muscles/chest.png', '/images/equipment/muscles/deltoid.png', '/images/equipment/muscles/triceps.png'],
-        'Chest Press'         => ['/images/equipment/muscles/chest.png', '/images/equipment/muscles/triceps.png', '/images/equipment/muscles/deltoid.png'],
-        'Lat Pulldown'        => ['/images/equipment/muscles/upper-back.png', '/images/equipment/muscles/biceps.png'],
-        'Bicep Curl Machine'  => ['/images/equipment/muscles/biceps.png'],
-        'Tricep Pushdown'     => ['/images/equipment/muscles/triceps.png'],
-        'Shoulder Press'      => ['/images/equipment/muscles/deltoid.png', '/images/equipment/muscles/triceps.png', '/images/equipment/muscles/upper-back.png'],
-        'Leg Press'           => ['/images/equipment/muscles/quadriceps.png', '/images/equipment/muscles/glutes.png', '/images/equipment/muscles/hamstrings.png'],
-        'Leg Extension'       => ['/images/equipment/muscles/quadriceps.png'],
-        'Rowing Machine'      => ['/images/equipment/muscles/middle-back.png', '/images/equipment/muscles/upper-back.png', '/images/equipment/muscles/biceps.png'],
-    ];
+    require __DIR__ . '/../utils/equipment-data.php';
     ?>
     <section class="equipment-grid">
         <?php foreach ($equipment as $item):
             $img       = $equipmentImages[$item['name']] ?? null;
             $muscles   = $equipmentMuscles[$item['name']] ?? null;
-            $diagrams  = $equipmentMuscleDiagrams[$item['name']] ?? [];
+            $diagrams  = array_map(fn($m) => '/images/equipment/muscles/' . $m . '.png', $equipmentMuscleDiagrams[$item['name']] ?? []);
             $available = (int)$item['is_available'] === 1;
         ?>
             <div class="equipment-card"

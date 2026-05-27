@@ -580,5 +580,9 @@ if (!empty($_GET['ajax'])) {
     ]);
     exit;
 }
-drawDashHeader($session, $db, 'schedule', ['schedule']);
+if ($session->isLoggedIn()) {
+    drawDashHeader($session, $db, 'schedule', ['schedule']);
+} else {
+    drawHeader($session, ['schedule', 'dashboard']);
+}
 drawSchedulePage($session, $db, $role ?? '', $weekOffset, $weekMon, $weekSun, $weekTypes, $weekTrainers, $totalClasses, $totalSpots, $totalEnrolled, $classTypes, $gymList, $trainers, $buildDynamicHTML, $defaultDay, $classesForJS, $classCredits);

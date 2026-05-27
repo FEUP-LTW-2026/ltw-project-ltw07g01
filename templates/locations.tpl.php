@@ -17,7 +17,7 @@
                 </div>
             </div>
             <p><?= htmlspecialchars($loc['address'] ?? '—') ?></p>
-            <img src="../images/location-antas.png" alt="<?= htmlspecialchars($loc['name']) ?> gym interior">
+            <img src="<?= htmlspecialchars($loc['photo'] ?? '../images/location-antas.png') ?>" alt="<?= htmlspecialchars($loc['name']) ?> gym interior">
             <ul>
                 <li><i class="fa fa-clock"></i> Mon–Fri 6:00–23:00</li>
                 <li><i class="fa fa-clock"></i> Sat–Sun 8:00–20:00</li>
