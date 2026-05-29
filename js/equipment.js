@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
             wrap.hidden = !hasMore;
             if (btn) {
                 const remaining = matchedTotal - limit;
-                btn.innerHTML = 'Show all (' + remaining + ' more) <i class="fa fa-chevron-down"></i>';
+                btn.innerHTML = 'Load more (' + remaining + ' more) <i class="fa fa-chevron-down"></i>';
             }
         }
         return matchedTotal;
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const wrap = btn.closest('.equip-loadmore-wrap');
             const grid = wrap.previousElementSibling;
             if (!grid) return;
-            visibleCount.set(grid, Infinity);
+            visibleCount.set(grid, (visibleCount.get(grid) || STEP) + STEP);
             applyGridVisibility(grid);
         });
     });
