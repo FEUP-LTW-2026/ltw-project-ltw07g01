@@ -10,8 +10,8 @@ if (!$session->isLoggedIn()) {
 
 
 require_once('../database/connection.db.php');
-require_once('../templates/common.tpl.php');
-require_once(__DIR__ . '/../templates/edit-profile.tpl.php');
+require_once(__DIR__ . '/../templates/layout/common.tpl.php');
+require_once(__DIR__ . '/../templates/actions/edit-profile.tpl.php');
 
 $db = getDatabaseConnection();
 $userId = $session->getId();

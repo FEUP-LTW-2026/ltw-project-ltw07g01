@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 require_once(__DIR__ . '/../utils/session.php');
-require_once(__DIR__ . '/../database/connection.db.php');
-require_once(__DIR__ . '/../templates/common.tpl.php');
-require_once(__DIR__ . '/../templates/equipment.tpl.php');
 require_once(__DIR__ . '/../utils/equipment-data.php');
+require_once(__DIR__ . '/../database/connection.db.php');
+require_once(__DIR__ . '/../templates/layout/common.tpl.php');
+require_once(__DIR__ . '/../templates/pages/equipment.tpl.php');
 
 $session = new Session();
 
@@ -14,13 +14,13 @@ if (!$session->isLoggedIn()) {
 }
 
 $db = getDatabaseConnection();
-$userId  = (int)$session->getId();
+$userId = (int)$session->getId();
 $isAdmin = false;
 $s = $db->prepare('SELECT 1 FROM admins WHERE user_id = :id');
 $s->execute([':id' => $userId]);
 $isAdmin = (bool)$s->fetch();
 
-$msg   = '';
+$msg = '';
 $error = '';
 
 if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && ($_POST['_action'] ?? '') === 'toggle') {
@@ -43,42 +43,46 @@ if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['_action'] ?? '';
 
     if ($action === 'create') {
-        $name     = trim($_POST['name']      ?? '');
-        $gymId    = (int)($_POST['gym_id']   ?? 0);
+        $name = trim($_POST['name'] ?? '');
+        $gymId = (int)($_POST['gym_id'] ?? 0);
         $bodyPart = trim($_POST['body_part'] ?? '');
         if (!$name || !$gymId || !$bodyPart) {
             $error = 'All fields are required.';
         } else {
             $db->prepare('INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES (?,?,?,1)')
-               ->execute([$name, $gymId, $bodyPart]);
-            header('Location: /pages/equipment.php?msg=Equipment+added.'); exit;
+                    ->execute([$name, $gymId, $bodyPart]);
+            header('Location: /pages/equipment.php?msg=Equipment+added.');
+            exit;
         }
 
     } elseif ($action === 'update') {
         $targetId = (int)($_POST['target_id'] ?? 0);
-        $name     = trim($_POST['name']       ?? '');
-        $gymId    = (int)($_POST['gym_id']    ?? 0);
-        $bodyPart = trim($_POST['body_part']  ?? '');
+        $name = trim($_POST['name'] ?? '');
+        $gymId = (int)($_POST['gym_id'] ?? 0);
+        $bodyPart = trim($_POST['body_part'] ?? '');
         if (!$targetId || !$name || !$gymId || !$bodyPart) {
             $error = 'Invalid data.';
         } else {
             $db->prepare('UPDATE equipment SET name=?, gym_id=?, body_part=? WHERE id=?')
-               ->execute([$name, $gymId, $bodyPart, $targetId]);
-            header('Location: /pages/equipment.php?msg=Equipment+updated.'); exit;
+                    ->execute([$name, $gymId, $bodyPart, $targetId]);
+            header('Location: /pages/equipment.php?msg=Equipment+updated.');
+            exit;
         }
 
     } elseif ($action === 'toggle') {
         $targetId = (int)($_POST['target_id'] ?? 0);
         if ($targetId) {
             $db->prepare('UPDATE equipment SET is_available = NOT is_available WHERE id=?')->execute([$targetId]);
-            header('Location: /pages/equipment.php?msg=Status+updated.'); exit;
+            header('Location: /pages/equipment.php?msg=Status+updated.');
+            exit;
         }
 
     } elseif ($action === 'delete') {
         $targetId = (int)($_POST['target_id'] ?? 0);
         if ($targetId) {
             $db->prepare('DELETE FROM equipment WHERE id=?')->execute([$targetId]);
-            header('Location: /pages/equipment.php?msg=Equipment+removed.'); exit;
+            header('Location: /pages/equipment.php?msg=Equipment+removed.');
+            exit;
         }
     }
 }
@@ -97,7 +101,7 @@ if ($isAdmin) {
     $gymList = $db->query('SELECT id, name, city FROM gym_locations ORDER BY city, name')->fetchAll(PDO::FETCH_ASSOC);
 
     $allEquip = $db->query(
-        'SELECT e.id, e.name, e.body_part, e.is_available, e.gym_id,
+            'SELECT e.id, e.name, e.body_part, e.is_available, e.gym_id,
                 gl.name AS gym_name, gl.city AS gym_city
          FROM equipment e
          JOIN gym_locations gl ON gl.id = e.gym_id
@@ -121,7 +125,8 @@ if ($isAdmin) {
         <div class="admin-header">
             <div>
                 <h1><i class="fa fa-dumbbell"></i> Manage Equipment</h1>
-                <p class="admin-sub"><?= count($allEquip) ?> item<?= count($allEquip) !== 1 ? 's' : '' ?> across <?= count($byGym) ?> gym<?= count($byGym) !== 1 ? 's' : '' ?></p>
+                <p class="admin-sub"><?= count($allEquip) ?> item<?= count($allEquip) !== 1 ? 's' : '' ?>
+                    across <?= count($byGym) ?> gym<?= count($byGym) !== 1 ? 's' : '' ?></p>
             </div>
             <button class="btn-admin-primary" onclick="openCreateForm()">
                 <i class="fa fa-plus"></i> Add Equipment
@@ -129,11 +134,21 @@ if ($isAdmin) {
         </div>
 
         <?php if ($msg): ?>
-        <div class="admin-alert admin-alert--ok" id="equipMsg"><i class="fa fa-circle-check"></i> <?= $msg ?></div>
-        <script>setTimeout(function(){ var el = document.getElementById('equipMsg'); if(el){ el.style.transition='opacity .4s'; el.style.opacity='0'; setTimeout(function(){ el.remove(); }, 420); } }, 3500);</script>
+            <div class="admin-alert admin-alert--ok" id="equipMsg"><i class="fa fa-circle-check"></i> <?= $msg ?></div>
+            <script>setTimeout(function () {
+                    var el = document.getElementById('equipMsg');
+                    if (el) {
+                        el.style.transition = 'opacity .4s';
+                        el.style.opacity = '0';
+                        setTimeout(function () {
+                            el.remove();
+                        }, 420);
+                    }
+                }, 3500);</script>
         <?php endif; ?>
         <?php if ($error): ?>
-        <div class="admin-alert admin-alert--err"><i class="fa fa-triangle-exclamation"></i> <?= htmlspecialchars($error) ?></div>
+            <div class="admin-alert admin-alert--err"><i
+                        class="fa fa-triangle-exclamation"></i> <?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
         <div class="admin-form-card" id="equipForm" <?= ($editItem || $error) ? '' : 'hidden' ?>>
@@ -148,17 +163,17 @@ if ($isAdmin) {
                 <div class="admin-field">
                     <label>Body Part</label>
                     <input type="text" name="body_part" required placeholder="e.g. Chest, Legs, Back"
-                        value="<?= htmlspecialchars($editItem['body_part'] ?? '') ?>">
+                           value="<?= htmlspecialchars($editItem['body_part'] ?? '') ?>">
                 </div>
                 <div class="admin-field">
                     <label>Gym Location</label>
                     <select name="gym_id" required>
                         <option value="">— select gym —</option>
                         <?php foreach ($gymList as $g): ?>
-                        <option value="<?= $g['id'] ?>"
-                            <?= isset($editItem) && $editItem['gym_id'] == $g['id'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($g['city'] . ' — ' . $g['name']) ?>
-                        </option>
+                            <option value="<?= $g['id'] ?>"
+                                    <?= isset($editItem) && $editItem['gym_id'] == $g['id'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($g['city'] . ' — ' . $g['name']) ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -172,98 +187,111 @@ if ($isAdmin) {
         </div>
 
         <?php foreach ($byGym as $gymData): ?>
-        <div class="admin-table-wrap admin-table-wrap--spaced">
-            <div class="equip-gym-header">
+            <div class="admin-table-wrap admin-table-wrap--spaced">
+                <div class="equip-gym-header">
                 <span class="equip-gym-name">
                     <i class="fa fa-location-dot"></i>
                     <?= htmlspecialchars($gymData['gym_city'] . ' — ' . $gymData['gym_name']) ?>
                 </span>
-                <span class="equip-gym-count"><?= count($gymData['items']) ?> item<?= count($gymData['items']) !== 1 ? 's' : '' ?></span>
-            </div>
-            <table class="admin-table">
-                <thead>
-                    <tr><th>Name</th><th>Body Part</th><th>Target Muscles</th><th>Status</th><th>Actions</th></tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($gymData['items'] as $eq): ?>
+                    <span class="equip-gym-count"><?= count($gymData['items']) ?> item<?= count($gymData['items']) !== 1 ? 's' : '' ?></span>
+                </div>
+                <table class="admin-table">
+                    <thead>
                     <tr>
-                        <td><?= htmlspecialchars($eq['name']) ?></td>
-                        <td class="admin-dim"><?= htmlspecialchars($eq['body_part']) ?></td>
-                        <td class="equip-admin-muscles">
-                            <?php foreach (array_map(fn($m) => '/images/equipment/muscles/' . $m . '.png', $equipmentMuscleDiagrams[$eq['name']] ?? []) as $mImg): ?>
-                            <img src="<?= htmlspecialchars($mImg) ?>" alt="" class="equip-admin-muscle-img">
-                            <?php endforeach; ?>
-                            <?php if (empty($equipmentMuscleDiagrams[$eq['name']] ?? [])): ?>
-                            <span class="admin-dim">—</span>
-                            <?php endif; ?>
-                        </td>
-                        <td>
+                        <th>Name</th>
+                        <th>Body Part</th>
+                        <th>Target Muscles</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($gymData['items'] as $eq): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($eq['name']) ?></td>
+                            <td class="admin-dim"><?= htmlspecialchars($eq['body_part']) ?></td>
+                            <td class="equip-admin-muscles">
+                                <?php foreach (array_map(fn($m) => '/images/equipment/muscles/' . $m . '.png', $equipmentMuscleDiagrams[$eq['name']] ?? []) as $mImg): ?>
+                                    <img src="<?= htmlspecialchars($mImg) ?>" alt="" class="equip-admin-muscle-img">
+                                <?php endforeach; ?>
+                                <?php if (empty($equipmentMuscleDiagrams[$eq['name']] ?? [])): ?>
+                                    <span class="admin-dim">—</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
                             <span class="admin-badge admin-badge--<?= $eq['is_available'] ? 'active' : 'inactive' ?>">
                                 <?= $eq['is_available'] ? 'Available' : 'Unavailable' ?>
                             </span>
-                        </td>
-                        <td>
-                            <div class="admin-row-actions">
-                                <a href="/pages/equipment.php?edit=<?= $eq['id'] ?>" class="btn-admin-sm" title="Edit">
-                                    <i class="fa fa-pen"></i>
-                                </a>
-                                <button class="btn-admin-sm btn-admin-sm--ok" title="Toggle availability"
-                                        onclick="toggleEquip(<?= $eq['id'] ?>, this)">
-                                    <i class="fa fa-<?= $eq['is_available'] ? 'toggle-on' : 'toggle-off' ?>"></i>
-                                </button>
-                                <form method="POST" class="form-inline"
-                                      onsubmit="return confirm('Remove <?= htmlspecialchars(addslashes($eq['name'])) ?>?')">
-                                    <input type="hidden" name="_action" value="delete">
-                                    <input type="hidden" name="target_id" value="<?= $eq['id'] ?>">
-                                    <button type="submit" class="btn-admin-sm btn-admin-sm--danger" title="Remove">
-                                        <i class="fa fa-trash"></i>
+                            </td>
+                            <td>
+                                <div class="admin-row-actions">
+                                    <a href="/pages/equipment.php?edit=<?= $eq['id'] ?>" class="btn-admin-sm"
+                                       title="Edit">
+                                        <i class="fa fa-pen"></i>
+                                    </a>
+                                    <button class="btn-admin-sm btn-admin-sm--ok" title="Toggle availability"
+                                            onclick="toggleEquip(<?= $eq['id'] ?>, this)">
+                                        <i class="fa fa-<?= $eq['is_available'] ? 'toggle-on' : 'toggle-off' ?>"></i>
                                     </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
+                                    <form method="POST" class="form-inline"
+                                          onsubmit="return confirm('Remove <?= htmlspecialchars(addslashes($eq['name'])) ?>?')">
+                                        <input type="hidden" name="_action" value="delete">
+                                        <input type="hidden" name="target_id" value="<?= $eq['id'] ?>">
+                                        <button type="submit" class="btn-admin-sm btn-admin-sm--danger" title="Remove">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
         <?php endforeach; ?>
 
         <?php if (empty($allEquip)): ?>
-        <div class="admin-table-wrap">
-            <table class="admin-table"><tbody>
-                <tr><td class="admin-empty">No equipment registered yet.</td></tr>
-            </tbody></table>
-        </div>
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <tbody>
+                    <tr>
+                        <td class="admin-empty">No equipment registered yet.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         <?php endif; ?>
 
     </main>
 
     <script>
-    function openCreateForm() {
-        var f = document.getElementById('equipForm');
-        f.hidden = false;
-        document.getElementById('formTitle').textContent = 'Add Equipment';
-        f.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+        function openCreateForm() {
+            var f = document.getElementById('equipForm');
+            f.hidden = false;
+            document.getElementById('formTitle').textContent = 'Add Equipment';
+            f.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
 
-    function toggleEquip(id, btn) {
-        var fd = new FormData();
-        fd.append('_action', 'toggle');
-        fd.append('target_id', id);
-        fd.append('ajax', '1');
-        fetch('/pages/equipment.php', { method: 'POST', body: fd })
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (!data.ok) return;
-                var avail = data.is_available;
-                var icon = btn.querySelector('i');
-                icon.className = 'fa fa-' + (avail ? 'toggle-on' : 'toggle-off');
-                var row = btn.closest('tr');
-                var badge = row.querySelector('.admin-badge');
-                badge.className = 'admin-badge admin-badge--' + (avail ? 'active' : 'inactive');
-                badge.textContent = avail ? 'Available' : 'Unavailable';
-            });
-    }
+        function toggleEquip(id, btn) {
+            var fd = new FormData();
+            fd.append('_action', 'toggle');
+            fd.append('target_id', id);
+            fd.append('ajax', '1');
+            fetch('/pages/equipment.php', {method: 'POST', body: fd})
+                .then(function (r) {
+                    return r.json();
+                })
+                .then(function (data) {
+                    if (!data.ok) return;
+                    var avail = data.is_available;
+                    var icon = btn.querySelector('i');
+                    icon.className = 'fa fa-' + (avail ? 'toggle-on' : 'toggle-off');
+                    var row = btn.closest('tr');
+                    var badge = row.querySelector('.admin-badge');
+                    badge.className = 'admin-badge admin-badge--' + (avail ? 'active' : 'inactive');
+                    badge.textContent = avail ? 'Available' : 'Unavailable';
+                });
+        }
     </script>
 
     <?php

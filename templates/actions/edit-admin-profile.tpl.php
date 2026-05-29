@@ -34,7 +34,7 @@
             <input type="file" id="profile_photo" name="profile_photo"
                    accept="image/jpeg,image/png,image/webp,image/gif" class="profile-file-input">
 
-            <div class="profile-details">
+            <section class="profile-details" aria-label="Personal information">
                 <div class="detail-item">
                     <label class="detail-label" for="first_name">First Name</label>
                     <input type="text" id="first_name" name="first_name" class="detail-input" required
@@ -55,9 +55,9 @@
                     <span class="detail-label">Email</span>
                     <p class="detail-value"><?= htmlspecialchars($user['email']) ?></p>
                 </div>
-            </div>
+            </section>
 
-            <div class="password-section">
+            <section class="password-section">
                 <h3>CHANGE PASSWORD</h3>
                 <span class="detail-label">Leave blank to keep your current password.</span>
                 <div class="detail-item">
@@ -75,7 +75,7 @@
                     <input type="password" id="confirm_password" name="confirm_password"
                            class="detail-input" autocomplete="new-password">
                 </div>
-            </div>
+            </section>
 
             <div class="profile-actions">
                 <button type="submit" class="btn-save-changes">Save Changes</button>

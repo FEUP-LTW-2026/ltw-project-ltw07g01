@@ -9,8 +9,8 @@ if (!$session->isLoggedIn()) {
  }
 
 require_once('../database/connection.db.php');
-require_once('../templates/common.tpl.php');
-require_once(__DIR__ . '/../templates/dashboard.tpl.php');
+require_once(__DIR__ . '/../templates/layout/common.tpl.php');
+require_once(__DIR__ . '/../templates/pages/dashboard.tpl.php');
 
 $db = getDatabaseConnection();
 

@@ -87,7 +87,7 @@ html {
     padding-bottom: 0.5rem;
 }
 
-.banner h2 {
+.banner h1 {
     font-size: 3.125rem;
     font-style: italic;
     text-align: center;
@@ -112,7 +112,7 @@ html {
     text-align: center;
 }
 
-section.type-section > h3 {
+section.type-section > h2 {
     font-size: 3rem;
     font-style: italic;
     text-transform: uppercase;
@@ -122,7 +122,7 @@ section.type-section > h3 {
     letter-spacing: 0.15rem;
 }
 
-section.type-section > h3::after {
+section.type-section > h2::after {
     content: '';
     display: block;
     width: 4rem;
@@ -151,7 +151,7 @@ section.type-section > h3::after {
     transition: 0.4s;
 }
 
-.plan h2 {
+.plan h3 {
     width: 80%;
     border-bottom: 0.125rem solid white;
     padding-bottom: 0.625rem;
@@ -319,25 +319,6 @@ section.comparison table tbody tr:hover .icon-xmark {
     color: #333;
 }
 
-.plan-btn {
-    display: inline-block;
-    margin-top: 0.5rem;
-    padding: 0.6rem 1.8rem;
-    background-color: transparent;
-    color: white;
-    border: 0.125rem solid white;
-    border-radius: 3.125rem;
-    font-family: 'League Gothic', sans-serif;
-    font-size: 1.3rem;
-    letter-spacing: 0.05rem;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-.plan-btn:hover {
-    background-color: white;
-    color: black;
-}
 
 .plan:hover .plan-btn {
     color: #fff;
@@ -416,7 +397,7 @@ section.wrapper-perguntas details > div {
         max-height: 15.625rem;
     }
 
-    section.type-section > h3 {
+    section.type-section > h2 {
         font-size: 2rem;
     }
 

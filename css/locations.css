@@ -30,14 +30,14 @@ section.locations-hero p {
 }
 
 /* grid */
-section.locations-grid {
+div.locations-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     padding: 5rem 10%;
 }
 
-section.locations-grid article {
+div.locations-grid article {
     background: #111;
     border: 0.0625rem solid #222;
     border-top: 0.1875rem solid var(--accent);
@@ -48,43 +48,43 @@ section.locations-grid article {
     transition: background 0.3s;
 }
 
-section.locations-grid article:hover {
+div.locations-grid article:hover {
     background: #1a1a1a;
 }
 
-section.locations-grid article .loc-header {
+div.locations-grid article .loc-header {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-section.locations-grid article .loc-header i {
+div.locations-grid article .loc-header i {
     font-size: 2.25rem;
     color: var(--accent);
     flex-shrink: 0;
 }
 
-section.locations-grid article h2 {
+div.locations-grid article h2 {
     font-size: 2.75rem;
     font-weight: normal;
     margin: 0;
     line-height: 1;
 }
 
-section.locations-grid article .loc-header span {
+div.locations-grid article .loc-header span {
     font-size: 1.25rem;
     color: var(--text-dim);
     display: block;
     margin-top: 0.25rem;
 }
 
-section.locations-grid article > p {
+div.locations-grid article > p {
     font-size: 1.375rem;
     color: var(--text-dim);
     margin: 0;
 }
 
-section.locations-grid article img {
+div.locations-grid article img {
     width: 100%;
     height: 12rem;
     object-fit: cover;
@@ -92,7 +92,7 @@ section.locations-grid article img {
     border: 0.0625rem solid #333;
 }
 
-section.locations-grid article ul {
+div.locations-grid article ul {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -102,7 +102,7 @@ section.locations-grid article ul {
     flex: 1;
 }
 
-section.locations-grid article ul li {
+div.locations-grid article ul li {
     font-size: 1.25rem;
     color: var(--text-dim);
     display: flex;
@@ -110,13 +110,13 @@ section.locations-grid article ul li {
     gap: 0.625rem;
 }
 
-section.locations-grid article ul li i {
+div.locations-grid article ul li i {
     color: var(--accent);
     width: 1rem;
     text-align: center;
 }
 
-section.locations-grid article .loc-btn {
+div.locations-grid article .loc-btn {
     display: inline-block;
     margin-top: 0.5rem;
     padding: 0.75rem 1.75rem;
@@ -128,7 +128,7 @@ section.locations-grid article .loc-btn {
     transition: background 0.3s, color 0.3s;
 }
 
-section.locations-grid article .loc-btn:hover {
+div.locations-grid article .loc-btn:hover {
     background: var(--accent);
     color: var(--bg-color);
 }
@@ -174,7 +174,7 @@ section.locations-join .btn-filled:hover {
 
 /* responsive */
 @media (max-width: 68.75rem) {
-    section.locations-grid {
+    div.locations-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
@@ -188,7 +188,7 @@ section.locations-join .btn-filled:hover {
         font-size: 1.5rem;
     }
 
-    section.locations-grid {
+    div.locations-grid {
         grid-template-columns: 1fr;
         padding: 3rem 5%;
     }

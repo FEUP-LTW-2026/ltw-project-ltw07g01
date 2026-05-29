@@ -4,8 +4,8 @@ require_once(__DIR__ . '/../utils/session.php');
 $session = new Session();
 
 require_once(__DIR__ . '/../database/connection.db.php');
-require_once(__DIR__ . '/../templates/common.tpl.php');
-require_once(__DIR__ . '/../templates/trainer-profile.tpl.php');
+require_once(__DIR__ . '/../templates/layout/common.tpl.php');
+require_once(__DIR__ . '/../templates/pages/trainer-profile.tpl.php');
 
 $db = getDatabaseConnection();
 
@@ -209,7 +209,7 @@ $buildScheduleHTML = function() use ($days, $classesByDay, $today, $enrolledIds,
         <button class="sc-day-btn <?= $isToday ? 'sc-day-btn--today' : '' ?> <?= empty($dayClasses) ? 'sc-day-btn--empty' : '' ?>" data-day="<?= $dayKey ?>">
             <span class="sc-day-name"><?= $day->format('D') ?></span>
             <span class="sc-day-num"><?= $day->format('j') ?></span>
-            <div class="sc-day-dots">
+            <span class="sc-day-dots">
                 <?php if (empty($dayClasses)): ?>
                     <span class="sc-dot sc-dot--empty"></span>
                 <?php else: ?>
@@ -217,7 +217,7 @@ $buildScheduleHTML = function() use ($days, $classesByDay, $today, $enrolledIds,
                     <span class="sc-dot" style="background:<?= typeColor($tn, $typeColors) ?>"></span>
                     <?php endforeach; ?>
                 <?php endif; ?>
-            </div>
+            </span>
         </button>
         <?php endforeach; ?>
     </div>

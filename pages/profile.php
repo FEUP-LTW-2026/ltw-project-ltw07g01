@@ -4,8 +4,8 @@ require_once(__DIR__ . '/../utils/session.php');
 $session = new Session();
 
 require_once(__DIR__ . '/../database/connection.db.php');
-require_once(__DIR__ . '/../templates/common.tpl.php');
-require_once(__DIR__ . '/../templates/profile.tpl.php');
+require_once(__DIR__ . '/../templates/layout/common.tpl.php');
+require_once(__DIR__ . '/../templates/pages/profile.tpl.php');
 
 $db = getDatabaseConnection();
 $currentUserId = $session->isLoggedIn() ? (int)$session->getId() : 3; // 3 = test client fallback
@@ -47,6 +47,15 @@ $stmt = $db->prepare(
 );
 $stmt->execute([':id' => $viewId]);
 $membership = $stmt->fetch();
+
+$gymEnd = $membership['gym_end'] ?? null;
+$daysLeft = null;
+if($gymEnd){
+    $now = new DateTime();
+    $end = new DateTime($gymEnd);
+    $diff = $now->diff($end);
+    $daysLeft = $end > $now ? $diff->days : 0;
+}
 
 
 $stmt = $db->prepare('SELECT COUNT(*) FROM gym_visits WHERE client_id = :id');
@@ -212,4 +221,4 @@ $memberTag = match($membership['gym_plan'] ?? null) {
 $totalCredits = (int)($membership['total_credits'] ?? 0);
 
 drawDashHeader($session, $db, 'profile', [], 'profile-body');
-drawProfilePage($session, $db, $user, $isOwnProfile, $viewId, $currentUserId, $profilePhoto, $fullName, $memberSince, $homeGym, $archetype, (string)$bio, (string)$bodyWeight, (string)$height, $memberTag, $totalVisits, $classesAttended, $earnedBadgeCount, array_values($selectedBadges), $daysRange, $periodLabel, $minutesByDay, $daysLabels, $periodTotalFormatted, $totalWorkoutFormatted, $avgFormatted, $totalCredits);
+drawProfilePage($session, $db, $user, $isOwnProfile, $viewId, $currentUserId, $profilePhoto, $fullName, $memberSince, $homeGym, $archetype, (string)$bio, (string)$bodyWeight, (string)$height, $memberTag, $totalVisits, $classesAttended, $earnedBadgeCount, array_values($selectedBadges), $daysRange, $periodLabel, $minutesByDay, $daysLabels, $periodTotalFormatted, $totalWorkoutFormatted, $avgFormatted, $totalCredits, $daysLeft);

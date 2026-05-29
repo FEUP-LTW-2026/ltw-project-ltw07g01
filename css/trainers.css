@@ -2,7 +2,6 @@
     min-height: 100vh;
     background: linear-gradient(to bottom, black, #2a2a2a, black);
     padding-top: 5.625rem;
-    font-family: 'League Gothic', sans-serif;
 }
 
 .trainers-hero {
@@ -146,12 +145,6 @@
 
 .admin-trainer-actions form { margin: 0; }
 
-@media (max-width: 68.75rem) {
-    .trainers-grid {
-        grid-template-columns: repeat(auto-fit, 22.5rem);
-        justify-content: center;
-    }
-}
 
 @media (max-width: 43.75rem) {
     .trainers-grid {
