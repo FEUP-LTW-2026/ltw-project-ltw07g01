@@ -27,20 +27,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please fill in all fields.';
     } elseif (!preg_match('/^[\w.]{3,30}$/', $username)) {
         $error = 'Username: 3–30 characters, letters, numbers, underscores or dots.';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = 'Invalid email address.';
     } elseif ($password !== $confirmPassword) {
         $error = 'Passwords do not match.';
     } else {
         $db = getDatabaseConnection();
 
         $stmt = $db->prepare('
-            SELECT id
+            SELECT username, email
             FROM users
             WHERE username = ? OR email = ?
         ');
         $stmt->execute([$username, $email]);
 
-        if ($stmt->fetch()) {
-            $error = 'Username or email already exists.';
+        $existingUsers = $stmt->fetchAll();
+        $usernameTaken = false;
+        $emailTaken = false;
+
+        foreach ($existingUsers as $existingUser) {
+            $usernameTaken = $usernameTaken || $existingUser['username'] === $username;
+            $emailTaken = $emailTaken || $existingUser['email'] === $email;
+        }
+
+        if ($usernameTaken || $emailTaken) {
+            if ($usernameTaken && $emailTaken) {
+                $error = 'Username and email are already taken.';
+            } elseif ($usernameTaken) {
+                $error = 'Username is already taken.';
+            } else {
+                $error = 'Email is already taken.';
+            }
         } else {
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
