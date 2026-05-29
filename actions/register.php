@@ -23,12 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $confirmPassword = $_POST['confirm_password'] ?? '';
 
-    if ($username === '' || $email === '' || $firstName === '' || $lastName === '' || $password === '') {
+    if ($username === '' || $email === '' || $firstName === '' || $lastName === '' || $password === '' || $confirmPassword === '') {
         $error = 'Please fill in all fields.';
     } elseif (!preg_match('/^[\w.]{3,30}$/', $username)) {
         $error = 'Username: 3–30 characters, letters, numbers, underscores or dots.';
+    } elseif (strlen($firstName) > 50 || strlen($lastName) > 50) {
+        $error = 'First name and last name must have 50 characters or fewer.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Invalid email address.';
+    } elseif (strlen($password) < 6) {
+        $error = 'Password must have at least 6 characters.';
     } elseif ($password !== $confirmPassword) {
         $error = 'Passwords do not match.';
     } else {
