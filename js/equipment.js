@@ -107,43 +107,96 @@ document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.equipment-card');
     const clearButton = document.getElementById('equipment-filter-clear');
     const count = document.getElementById('equipment-filter-count');
+    const grids = document.querySelectorAll('.equipment-grid[data-loadmore]');
 
-    function filterEquipment() {
+    const STEP = 3;
+    const visibleCount = new WeakMap();
+    grids.forEach(grid => visibleCount.set(grid, STEP));
+
+    function cardMatchesFilters(card) {
+        if (!locationFilter) return true;
         const selectedLocation = locationFilter.value;
         const selectedBody = bodyFilter.value;
         const selectedStatus = statusFilter.value;
-        const hasFilter =
-            selectedLocation !== 'all' || selectedBody !== 'all' || selectedStatus !== 'all';
-        let visibleTotal = 0;
-
-        cards.forEach(card => {
-            const matchesLocation =
-                selectedLocation === 'all' || card.dataset.location === selectedLocation;
-
-            const matchesBody =
-                selectedBody === 'all' || card.dataset.body === selectedBody;
-
-            const matchesStatus =
-                selectedStatus === 'all' || card.dataset.status === selectedStatus;
-
-            const visible = matchesLocation && matchesBody && matchesStatus;
-            card.style.display = visible ? 'block' : 'none';
-            if (visible) visibleTotal += 1;
-        });
-
-        clearButton.hidden = !hasFilter;
-        count.textContent = hasFilter
-            ? `${visibleTotal} result${visibleTotal === 1 ? '' : 's'}`
-            : '';
+        return (selectedLocation === 'all' || card.dataset.location === selectedLocation)
+            && (selectedBody === 'all' || card.dataset.body === selectedBody)
+            && (selectedStatus === 'all' || card.dataset.status === selectedStatus);
     }
 
-    locationFilter.addEventListener('change', filterEquipment);
-    bodyFilter.addEventListener('change', filterEquipment);
-    statusFilter.addEventListener('change', filterEquipment);
-    clearButton.addEventListener('click', () => {
-        locationFilter.value = 'all';
-        bodyFilter.value = 'all';
-        statusFilter.value = 'all';
-        filterEquipment();
+    function applyGridVisibility(grid) {
+        const limit = visibleCount.get(grid) || STEP;
+        const allCards = grid.querySelectorAll('.equipment-card');
+        let matchedSoFar = 0;
+        let matchedTotal = 0;
+
+        allCards.forEach(card => {
+            const matches = cardMatchesFilters(card);
+            if (matches) {
+                matchedTotal += 1;
+                if (matchedSoFar < limit) {
+                    card.style.display = '';
+                    matchedSoFar += 1;
+                } else {
+                    card.style.display = 'none';
+                }
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        const wrap = grid.nextElementSibling;
+        if (wrap && wrap.classList.contains('equip-loadmore-wrap')) {
+            const btn = wrap.querySelector('[data-loadmore-btn]');
+            const hasMore = matchedTotal > limit;
+            wrap.hidden = !hasMore;
+            if (btn) {
+                const remaining = matchedTotal - limit;
+                btn.innerHTML = 'Load more (' + remaining + ' more) <i class="fa fa-chevron-down"></i>';
+            }
+        }
+        return matchedTotal;
+    }
+
+    function refreshAll() {
+        let total = 0;
+        grids.forEach(grid => { total += applyGridVisibility(grid); });
+        if (count && locationFilter) {
+            const hasFilter = locationFilter.value !== 'all'
+                || bodyFilter.value !== 'all'
+                || statusFilter.value !== 'all';
+            clearButton.hidden = !hasFilter;
+            count.textContent = hasFilter
+                ? `${total} result${total === 1 ? '' : 's'}`
+                : '';
+        }
+    }
+
+    function resetAndRefresh() {
+        grids.forEach(grid => visibleCount.set(grid, STEP));
+        refreshAll();
+    }
+
+    document.querySelectorAll('[data-loadmore-btn]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const wrap = btn.closest('.equip-loadmore-wrap');
+            const grid = wrap.previousElementSibling;
+            if (!grid) return;
+            visibleCount.set(grid, (visibleCount.get(grid) || STEP) + STEP);
+            applyGridVisibility(grid);
+        });
     });
+
+    if (locationFilter) {
+        locationFilter.addEventListener('change', resetAndRefresh);
+        bodyFilter.addEventListener('change', resetAndRefresh);
+        statusFilter.addEventListener('change', resetAndRefresh);
+        clearButton.addEventListener('click', () => {
+            locationFilter.value = 'all';
+            bodyFilter.value = 'all';
+            statusFilter.value = 'all';
+            resetAndRefresh();
+        });
+    }
+
+    refreshAll();
 });
