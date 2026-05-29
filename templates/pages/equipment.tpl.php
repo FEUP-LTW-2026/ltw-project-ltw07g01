@@ -1,7 +1,7 @@
 <?php function drawEquipment(array $equipment): void
 { ?>
     <main class="equipment-page">
-        <section class="equipment-filters filter-bar">
+        <section class="equipment-filters filter-bar" aria-label="Equipment filters">
             <span class="filter-label"><i class="fa fa-sliders"></i> Filter</span>
 
             <select class="filter-select" id="filter-location">
@@ -81,11 +81,11 @@
         <div class="equip-modal-backdrop" id="equipModalBackdrop" onclick="closeEquipModal()"></div>
         <div class="equip-modal" id="equipModal" aria-hidden="true">
             <button class="equip-modal-close" onclick="closeEquipModal()"><i class="fa fa-xmark"></i></button>
-            <div class="equip-modal-img-wrap" id="equipModalImgWrap">
-                <img id="equipModalImg" src="" alt="">
+            <div class="equip-modal-img-wrap" id="equipModalImgWrap" hidden>
+                <img id="equipModalImg" src="/images/gym.png" alt="">
             </div>
             <div class="equip-modal-body">
-                <h2 id="equipModalName"></h2>
+                <h2 id="equipModalName">Equipment Details</h2>
                 <div class="equip-modal-meta">
                     <span><i class="fa fa-location-dot"></i> <span id="equipModalGym"></span></span>
                     <span><i class="fa fa-person-running"></i> <span id="equipModalBody"></span></span>

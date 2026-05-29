@@ -52,7 +52,7 @@
             </div>
         </section>
 
-        <section class="about-classes">
+        <section class="about-classes" aria-label="Classes offered">
             <article class="class-card">
                 <img src="../../images/cycling.jpg" alt="Cycling class">
                 <div class="class-overlay">

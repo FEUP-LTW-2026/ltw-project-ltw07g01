@@ -14,29 +14,29 @@
             </div>
         </section>
 
-        <section class="stats">
+        <section class="stats" aria-label="Gym statistics">
             <article class="stat-card">
                 <img src="../../images/membros.png" alt="logo">
                 <p class="stat-number">+<span class="counter" data-target="10000">0</span></p>
-                <p class="stat-text">members</p>
+                <h3 class="stat-text">members</h3>
             </article>
 
             <article class="stat-card">
                 <img src="../../images/star.png" alt="logo">
                 <p class="stat-number"><span class="counter" data-target="4.7">0</span>/5</p>
-                <p class="stat-text">average rating</p>
+                <h3 class="stat-text">average rating</h3>
             </article>
 
             <article class="stat-card">
                 <img src="../../images/calendar.png" alt="logo">
                 <p class="stat-number">+<span class="counter" data-target="200">0</span></p>
-                <p class="stat-text">weekly classes</p>
+                <h3 class="stat-text">weekly classes</h3>
             </article>
 
             <article class="stat-card">
                 <img src="../../images/halter.png" alt="logo">
                 <p class="stat-number">+<span class="counter" data-target="25">0</span> certified</p>
-                <p class="stat-text">personal trainers</p>
+                <h3 class="stat-text">personal trainers</h3>
             </article>
         </section>
 
@@ -55,7 +55,7 @@
             </div>
         </section>
 
-        <section class="cards">
+        <section class="cards" aria-label="What we offer">
             <article class="card1">
                 <h2>Amazing Group Classes</h2>
                 <div class="about-divider1"></div>

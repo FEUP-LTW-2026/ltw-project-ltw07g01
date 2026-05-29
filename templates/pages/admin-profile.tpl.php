@@ -9,7 +9,7 @@
                         <img src="<?= htmlspecialchars($profilePhoto) ?>" alt="Profile photo">
                     </figure>
                     <div class="user-meta">
-                        <h1 class="user-name"><?= htmlspecialchars($fullName) ?></h1>
+                        <h2 class="user-name"><?= htmlspecialchars($fullName) ?></h2>
                         <p class="user-handle">@<?= htmlspecialchars($user['username']) ?></p>
                         <span class="member-tag">ADMIN</span>
                     </div>
@@ -21,7 +21,7 @@
         </aside>
 
         <div class="main-content">
-            <section class="profile-details">
+            <section class="profile-details" aria-label="Account details">
                 <div class="detail-item">
                     <span class="detail-label">First Name</span>
                     <p class="detail-value"><?= htmlspecialchars($user['first_name']) ?></p>

@@ -99,6 +99,8 @@ section.stats img {
 
 .stat-text {
     font-size: 1.5rem;
+    font-weight: normal;
+    margin: 0;
     color: var(--bg-color);
 }
 

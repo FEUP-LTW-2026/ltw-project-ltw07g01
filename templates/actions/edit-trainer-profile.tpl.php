@@ -41,7 +41,7 @@
         <form method="post" enctype="multipart/form-data" class="edit-form">
             <input type="file" id="profile_photo" name="profile_photo" accept="image/jpeg,image/png,image/webp,image/gif" class="profile-file-input">
 
-            <section class="profile-details">
+            <section class="profile-details" aria-label="Personal information">
                 <div class="detail-item">
                     <label class="detail-label" for="first_name">First Name</label>
                     <input type="text" id="first_name" name="first_name" class="detail-input" value="<?= htmlspecialchars($user['first_name']) ?>" required>
