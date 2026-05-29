@@ -26,12 +26,5 @@ WHERE client_id = :id');
 } else {
     drawHeader($session, ['membership']);
 }
-?>
-
-<?php if (isset($_GET['subscribed'])): ?>
-    <p class="subscribe-success">Your plan has been activated successfully!</p>
-<?php endif; ?>
-
-<?php drawMemberships($session, $classesRemaining); ?>
-
-<?php drawFooter(); ?>
+drawMemberships($session, $classesRemaining, isset($_GET['subscribed']));
+drawFooter();

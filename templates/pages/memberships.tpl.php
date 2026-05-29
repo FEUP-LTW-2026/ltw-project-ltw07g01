@@ -1,7 +1,11 @@
-<?php function drawMemberships(object $session, ?int $classesRemaining = null)
+<?php function drawMemberships(object $session, ?int $classesRemaining = null, bool $subscribed = false)
 {
     $loggedIn = $session->isLoggedIn();
     ?>
+
+    <?php if ($subscribed): ?>
+        <p class="subscribe-success">Your plan has been activated successfully!</p>
+    <?php endif; ?>
 
     <section class="banner">
         <h1>MEMBERSHIPS</h1>
