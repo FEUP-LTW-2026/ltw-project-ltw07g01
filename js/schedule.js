@@ -1,3 +1,5 @@
+var SC = JSON.parse(document.getElementById('schedule-data').textContent);
+
 (function () {
     'use strict';
 
@@ -457,6 +459,17 @@
         document.getElementById('scModalCapLabel').textContent = cls.is_full
             ? 'Class is full'
             : spots + ' spot' + (spots !== 1 ? 's' : '') + ' remaining';
+
+        var classPhotoWrap = document.getElementById('scModalClassPhotoWrap');
+        var classPhotoImg  = document.getElementById('scModalClassPhoto');
+        if (classPhotoWrap && classPhotoImg) {
+            if (cls.photo) {
+                classPhotoImg.src = cls.photo;
+                classPhotoWrap.style.display = 'block';
+            } else {
+                classPhotoWrap.style.display = 'none';
+            }
+        }
 
         document.getElementById('scModalDesc').textContent = cls.description || 'No description available.';
 

@@ -1,3 +1,10 @@
+function openCreateForm() {
+    var f = document.getElementById('trainerForm');
+    f.hidden = false;
+    document.getElementById('formTitle').textContent = 'New Trainer';
+    f.scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+
 document.querySelectorAll('.admin-photo-picker input[type="file"]').forEach(function(inp) {
     inp.addEventListener('change', function() {
         var file = this.files[0];
@@ -10,6 +17,15 @@ document.querySelectorAll('.admin-photo-picker input[type="file"]').forEach(func
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    var msgEl = document.getElementById('trainerMsg');
+    if (msgEl) {
+        setTimeout(function () {
+            msgEl.style.transition = 'opacity .4s';
+            msgEl.style.opacity = '0';
+            setTimeout(function () { msgEl.remove(); }, 420);
+        }, 3500);
+    }
+
     const gymFilter = document.getElementById('trainer-filter-gym');
     const classFilter = document.getElementById('trainer-filter-class');
     const clearButton = document.getElementById('trainer-filter-clear');

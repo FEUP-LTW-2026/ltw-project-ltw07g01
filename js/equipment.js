@@ -1,3 +1,29 @@
+function openCreateForm() {
+    var f = document.getElementById('equipForm');
+    f.hidden = false;
+    document.getElementById('formTitle').textContent = 'Add Equipment';
+    f.scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+
+function toggleEquip(id, btn) {
+    var fd = new FormData();
+    fd.append('_action', 'toggle');
+    fd.append('target_id', id);
+    fd.append('ajax', '1');
+    fetch('/pages/equipment.php', {method: 'POST', body: fd})
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (!data.ok) return;
+            var avail = data.is_available;
+            var icon = btn.querySelector('i');
+            icon.className = 'fa fa-' + (avail ? 'toggle-on' : 'toggle-off');
+            var row = btn.closest('tr');
+            var badge = row.querySelector('.admin-badge');
+            badge.className = 'admin-badge admin-badge--' + (avail ? 'active' : 'inactive');
+            badge.textContent = avail ? 'Available' : 'Unavailable';
+        });
+}
+
 function openEquipModal(card) {
     var name     = card.dataset.name;
     var gym      = card.dataset.gym;
@@ -66,6 +92,15 @@ document.addEventListener('keydown', function(e) {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    var msgEl = document.getElementById('equipMsg');
+    if (msgEl) {
+        setTimeout(function () {
+            msgEl.style.transition = 'opacity .4s';
+            msgEl.style.opacity = '0';
+            setTimeout(function () { msgEl.remove(); }, 420);
+        }, 3500);
+    }
+
     const locationFilter = document.getElementById('filter-location');
     const bodyFilter = document.getElementById('filter-body');
     const statusFilter = document.getElementById('filter-status');

@@ -120,16 +120,6 @@
 
         <?php if ($msg): ?>
             <div class="admin-alert admin-alert--ok" id="equipMsg"><i class="fa fa-circle-check"></i> <?= $msg ?></div>
-            <script>setTimeout(function () {
-                    var el = document.getElementById('equipMsg');
-                    if (el) {
-                        el.style.transition = 'opacity .4s';
-                        el.style.opacity = '0';
-                        setTimeout(function () {
-                            el.remove();
-                        }, 420);
-                    }
-                }, 3500);</script>
         <?php endif; ?>
         <?php if ($error): ?>
             <div class="admin-alert admin-alert--err"><i
@@ -248,33 +238,5 @@
         <?php endif; ?>
     </main>
 
-    <script>
-        function openCreateForm() {
-            var f = document.getElementById('equipForm');
-            f.hidden = false;
-            document.getElementById('formTitle').textContent = 'Add Equipment';
-            f.scrollIntoView({behavior: 'smooth', block: 'start'});
-        }
-
-        function toggleEquip(id, btn) {
-            var fd = new FormData();
-            fd.append('_action', 'toggle');
-            fd.append('target_id', id);
-            fd.append('ajax', '1');
-            fetch('/pages/equipment.php', {method: 'POST', body: fd})
-                .then(function (r) {
-                    return r.json();
-                })
-                .then(function (data) {
-                    if (!data.ok) return;
-                    var avail = data.is_available;
-                    var icon = btn.querySelector('i');
-                    icon.className = 'fa fa-' + (avail ? 'toggle-on' : 'toggle-off');
-                    var row = btn.closest('tr');
-                    var badge = row.querySelector('.admin-badge');
-                    badge.className = 'admin-badge admin-badge--' + (avail ? 'active' : 'inactive');
-                    badge.textContent = avail ? 'Available' : 'Unavailable';
-                });
-        }
-    </script>
+    <script src="../../js/equipment.js"></script>
 <?php } ?>

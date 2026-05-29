@@ -120,7 +120,7 @@
                 <h2 class="sc-modal-title">Class Details</h2>
             </div>
             <div class="sc-modal-body">
-                <form method="POST" id="editForm">
+                <form method="POST" id="editForm" enctype="multipart/form-data">
                     <input type="hidden" name="_action" id="editAction" value="create">
                     <input type="hidden" name="target_id" id="editTargetId" value="">
                     <div class="class-editor-fields">
@@ -170,6 +170,20 @@
                             <textarea name="description" id="editDescription" rows="3" maxlength="500"
                                       placeholder="Brief description of the class…"></textarea>
                         </div>
+                        <div class="admin-field">
+                            <label>Class Photo <span class="admin-optional">(optional)</span></label>
+                            <div id="editPhotoPreviewWrap" style="display:none;">
+                                <img id="editPhotoPreview" src="" alt="" class="admin-photo-preview">
+                            </div>
+                            <div class="admin-file-row">
+                                <label class="admin-file-btn" for="editClassPhoto">
+                                    <i class="fa fa-image"></i> Choose photo
+                                </label>
+                                <span id="editPhotoFileName" class="admin-file-name">No file chosen</span>
+                            </div>
+                            <input type="file" name="class_photo" id="editClassPhoto"
+                                   accept="image/jpeg,image/png,image/webp,image/gif" style="display:none;">
+                        </div>
                     </div>
                 </form>
             </div>
@@ -196,7 +210,6 @@
 
 <?php endif; ?>
 
-    <?php if ($role !== 'admin'): ?>
     <div class="sc-modal" id="scModal" aria-hidden="true">
         <div class="sc-modal-backdrop" id="scModalBackdrop"></div>
         <div class="sc-modal-panel" id="scModalPanel">
@@ -207,6 +220,9 @@
                 <p class="sc-modal-datetime" id="scModalDatetime"></p>
             </div>
             <div class="sc-modal-body">
+                <div id="scModalClassPhotoWrap" class="sc-class-photo-wrap" style="display:none;">
+                    <img id="scModalClassPhoto" src="" alt="" class="sc-class-photo">
+                </div>
                 <div class="sc-modal-info-grid">
                     <div class="sc-modal-info-item" id="scModalTrainerItem">
                         <img id="scModalTrainerAvatar" src="/images/profile_pic.webp" alt="" class="sc-modal-trainer-avatar">
@@ -248,378 +264,35 @@
             <div class="sc-modal-footer" id="scModalFooter"></div>
         </div>
     </div>
-<?php endif; ?>
 
-    <script>
-        var SC = {
-            isClient: <?= json_encode($role === 'client') ?>,
-            weekOffset: <?= json_encode($weekOffset) ?>,
-            defaultDay: <?= json_encode($defaultDay) ?>,
-            classes: <?= json_encode($classesForJS ?: new stdClass()) ?>,
-        };
+    <script type="application/json" id="schedule-data">
+        <?= json_encode(['isClient' => $role === 'client', 'weekOffset' => $weekOffset, 'defaultDay' => $defaultDay, 'classes' => $classesForJS ?: new stdClass()]) ?>
     </script>
     <?php if ($role === 'admin'): ?>
-    <script>
-        (function () {
-            'use strict';
-
-            var dynamicContent = document.getElementById('scDynamicContent');
-            var prevBtn = document.getElementById('scPrevBtn');
-            var nextBtn = document.getElementById('scNextBtn');
-            var todayBtn = document.getElementById('scTodayBtn');
-            var weekLabelEl = document.getElementById('scWeekLabel');
-            var statClassesEl = document.getElementById('statClasses');
-            var statSpotsEl = document.getElementById('statSpots');
-            var filterTypeEl = document.getElementById('filterType');
-            var filterTrainerEl = document.getElementById('filterTrainer');
-            var filterTimeEl = document.getElementById('filterTime');
-            var filterClearBtn = document.getElementById('filterClear');
-            var filterCountEl = document.getElementById('filterCount');
-
-            function selectDay(dayKey) {
-                document.querySelectorAll('.sc-day-btn').forEach(function (b) {
-                    b.classList.toggle('sc-day-btn--active', b.dataset.day === dayKey);
-                });
-                document.querySelectorAll('.sc-day-panel').forEach(function (p) {
-                    p.classList.toggle('sc-day-panel--active', p.id === 'panel-' + dayKey);
-                });
-            }
-
-            function applyFilters() {
-                var rows = document.querySelectorAll('.sc-row');
-                var panels = document.querySelectorAll('.sc-day-panel');
-                var type = filterTypeEl.value;
-                var trainer = filterTrainerEl ? filterTrainerEl.value : '';
-                var time = filterTimeEl.value;
-                var hasFilter = !!(type || trainer || time);
-                filterClearBtn.hidden = !hasFilter;
-                var visibleTotal = 0;
-                rows.forEach(function (row) {
-                    var show = true;
-                    if (type && row.dataset.type !== type) show = false;
-                    if (trainer && row.dataset.trainerId !== trainer) show = false;
-                    if (time && row.dataset.timeofday !== time) show = false;
-                    row.classList.toggle('sc-row--hidden', !show);
-                    if (show) visibleTotal++;
-                });
-                panels.forEach(function (panel) {
-                    var dayKey = panel.id.replace('panel-', '');
-                    var panelRows = panel.querySelectorAll('.sc-row');
-                    var visible = panel.querySelectorAll('.sc-row:not(.sc-row--hidden)').length;
-                    var emptyEl = document.getElementById('fempty-' + dayKey);
-                    var countEl = document.getElementById('count-' + dayKey);
-                    if (emptyEl) emptyEl.hidden = !(panelRows.length > 0 && visible === 0);
-                    if (countEl) countEl.textContent = visible + ' class' + (visible !== 1 ? 'es' : '');
-                });
-                filterCountEl.textContent = hasFilter ? visibleTotal + ' result' + (visibleTotal !== 1 ? 's' : '') : '';
-            }
-
-            [filterTypeEl, filterTrainerEl, filterTimeEl].forEach(function (el) {
-                if (el) el.addEventListener('change', applyFilters);
-            });
-            filterClearBtn.addEventListener('click', function () {
-                filterTypeEl.value = '';
-                if (filterTrainerEl) filterTrainerEl.value = '';
-                filterTimeEl.value = '';
-                applyFilters();
-            });
-
-            function updateWeekNav(offset) {
-                prevBtn.disabled = offset <= -2;
-                prevBtn.classList.toggle('sc-week-arrow--disabled', offset <= -2);
-                nextBtn.disabled = offset >= 8;
-                nextBtn.classList.toggle('sc-week-arrow--disabled', offset >= 8);
-                if (todayBtn) todayBtn.hidden = (offset === 0);
-            }
-
-            function updateFilterOptions(types, trainers) {
-                var curType = filterTypeEl.value;
-                var curTrainer = filterTrainerEl ? filterTrainerEl.value : '';
-                filterTypeEl.innerHTML = '<option value="">All types</option>';
-                types.forEach(function (t) {
-                    var opt = document.createElement('option');
-                    opt.value = t;
-                    opt.textContent = t;
-                    if (t === curType) opt.selected = true;
-                    filterTypeEl.appendChild(opt);
-                });
-                if (filterTrainerEl) {
-                    filterTrainerEl.innerHTML = '<option value="">All trainers</option>';
-                    Object.keys(trainers).forEach(function (tid) {
-                        var opt = document.createElement('option');
-                        opt.value = tid;
-                        opt.textContent = trainers[tid];
-                        if (tid === curTrainer) opt.selected = true;
-                        filterTrainerEl.appendChild(opt);
-                    });
-                }
-            }
-
-            function loadWeek(offset) {
-                dynamicContent.classList.add('sc-loading');
-                prevBtn.disabled = true;
-                nextBtn.disabled = true;
-                fetch('schedule.php?ajax=1&w=' + offset)
-                    .then(function (r) {
-                        return r.json();
-                    })
-                    .then(function (data) {
-                        SC.weekOffset = data.weekOffset;
-                        SC.classes = data.classes;
-                        SC.defaultDay = data.defaultDay;
-                        weekLabelEl.textContent = data.weekLabel;
-                        statClassesEl.textContent = data.totalClasses;
-                        statSpotsEl.textContent = data.totalEnrolled;
-                        dynamicContent.innerHTML = data.html;
-                        dynamicContent.classList.remove('sc-loading');
-                        updateFilterOptions(data.filterTypes, data.filterTrainers);
-                        updateWeekNav(data.weekOffset);
-                        selectDay(data.defaultDay);
-                        applyFilters();
-                    })
-                    .catch(function () {
-                        dynamicContent.classList.remove('sc-loading');
-                        updateWeekNav(SC.weekOffset);
-                    });
-            }
-
-            prevBtn.addEventListener('click', function () {
-                loadWeek(SC.weekOffset - 1);
-            });
-            nextBtn.addEventListener('click', function () {
-                loadWeek(SC.weekOffset + 1);
-            });
-            if (todayBtn) todayBtn.addEventListener('click', function () {
-                loadWeek(0);
-            });
-
-            dynamicContent.addEventListener('click', function (e) {
-                var dayBtn = e.target.closest('.sc-day-btn');
-                if (dayBtn) {
-                    selectDay(dayBtn.dataset.day);
-                    return;
-                }
-            });
-
-            selectDay(SC.defaultDay);
-            applyFilters();
-
-            var editModal = document.getElementById('editModal');
-            var editBackdrop = document.getElementById('editModalBackdrop');
-            var editClose = document.getElementById('editModalClose');
-
-            window.openEditModal = function (classId) {
-                var cls = classId ? SC.classes[classId] : null;
-                document.getElementById('editModalLabel').textContent = cls ? 'Edit Class' : 'New Class';
-                document.getElementById('editAction').value = cls ? 'update' : 'create';
-                document.getElementById('editTargetId').value = cls ? classId : '';
-                document.getElementById('editClassType').value = cls ? cls.class_type_id : '';
-                document.getElementById('editGymId').value = cls ? cls.gym_id : '';
-                document.getElementById('editTrainerId').value = cls ? (cls.trainer_id || '') : '';
-                document.getElementById('editDuration').value = cls ? cls.duration_min : '';
-                document.getElementById('editCapacity').value = cls ? cls.capacity : '';
-                document.getElementById('editDescription').value = cls ? (cls.description || '') : '';
-                if (cls && cls.schedule) {
-                    var d = new Date(cls.schedule);
-                    var pad = function (n) {
-                        return String(n).padStart(2, '0');
-                    };
-                    document.getElementById('editSchedule').value =
-                        d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())
-                        + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
-                } else {
-                    document.getElementById('editSchedule').value = '';
-                }
-                editModal.setAttribute('aria-hidden', 'false');
-                editModal.classList.add('sc-modal--open');
-                document.body.style.overflow = 'hidden';
-            };
-
-            function closeEditModal() {
-                editModal.setAttribute('aria-hidden', 'true');
-                editModal.classList.remove('sc-modal--open');
-                document.body.style.overflow = '';
-            }
-
-            editClose.addEventListener('click', closeEditModal);
-            editBackdrop.addEventListener('click', closeEditModal);
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
-                    closeEditModal();
-                    if (window.closeEnrollModal) window.closeEnrollModal();
-                }
-            });
-        }());
-    </script>
-<?php elseif ($role === 'trainer'): ?>
+    <script src="../../js/schedule-admin.js"></script>
+    <script src="../../js/schedule-edit.js"></script>
+    <script src="../../js/schedule-enroll.js"></script>
+    <?php elseif ($role === 'trainer'): ?>
     <script src="../../js/schedule.js"></script>
-    <script>
-        (function () {
-            'use strict';
-
-            var editModal = document.getElementById('editModal');
-            var editBackdrop = document.getElementById('editModalBackdrop');
-            var editClose = document.getElementById('editModalClose');
-
-            window.openEditModal = function (classId) {
-                var cls = classId ? SC.classes[classId] : null;
-                document.getElementById('editModalLabel').textContent = cls ? 'Edit Class' : 'New Class';
-                document.getElementById('editAction').value = cls ? 'update' : 'create';
-                document.getElementById('editTargetId').value = cls ? classId : '';
-                document.getElementById('editClassType').value = cls ? cls.class_type_id : '';
-                document.getElementById('editGymId').value = cls ? cls.gym_id : '';
-                document.getElementById('editDuration').value = cls ? cls.duration_min : '';
-                document.getElementById('editCapacity').value = cls ? cls.capacity : '';
-                document.getElementById('editDescription').value = cls ? (cls.description || '') : '';
-                if (cls && cls.schedule) {
-                    var d = new Date(cls.schedule);
-                    var pad = function (n) {
-                        return String(n).padStart(2, '0');
-                    };
-                    document.getElementById('editSchedule').value =
-                        d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())
-                        + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
-                } else {
-                    document.getElementById('editSchedule').value = '';
-                }
-                editModal.setAttribute('aria-hidden', 'false');
-                editModal.classList.add('sc-modal--open');
-                document.body.style.overflow = 'hidden';
-            };
-
-            function closeEditModal() {
-                editModal.setAttribute('aria-hidden', 'true');
-                editModal.classList.remove('sc-modal--open');
-                document.body.style.overflow = '';
-            }
-
-            if (editClose) editClose.addEventListener('click', closeEditModal);
-            if (editBackdrop) editBackdrop.addEventListener('click', closeEditModal);
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
-                    closeEditModal();
-                    if (window.closeEnrollModal) window.closeEnrollModal();
-                }
-            });
-        }());
-    </script>
-<?php else: ?>
+    <script src="../../js/schedule-edit.js"></script>
+    <script src="../../js/schedule-enroll.js"></script>
+    <?php else: ?>
     <script src="../../js/schedule.js"></script>
-<?php endif; ?>
-
-    <?php if (in_array($role, ['admin', 'trainer'], true)): ?>
-    <script>
-        (function () {
-            var enrollModal = document.getElementById('enrollModal');
-            var enrollBackdrop = document.getElementById('enrollModalBackdrop');
-            var enrollClose = document.getElementById('enrollModalClose');
-            var enrollClassId = null;
-
-            function escHtml(str) {
-                var d = document.createElement('div');
-                d.textContent = str;
-                return d.innerHTML;
-            }
-
-            window.closeEnrollModal = function () {
-                enrollModal.setAttribute('aria-hidden', 'true');
-                enrollModal.classList.remove('sc-modal--open');
-                document.body.style.overflow = '';
-            };
-
-            function loadEnrollments() {
-                var body = document.getElementById('enrollModalBody');
-                body.innerHTML = '<p class="sc-modal-loading">Loading…</p>';
-                fetch('schedule.php?ajax=1&action=enrollments&class_id=' + enrollClassId)
-                    .then(function (r) {
-                        return r.json();
-                    })
-                    .then(function (data) {
-                        if (!data.ok || !data.enrollments.length) {
-                            body.innerHTML = '<p class="sc-enroll-empty"><i class="fa fa-users"></i> No one enrolled yet.</p>';
-                            return;
-                        }
-                        var html = '<ul class="sc-enroll-list">';
-                        data.enrollments.forEach(function (u) {
-                            var photo = u.profile_photo || '../images/profile_pic.webp';
-                            html += '<li class="sc-enroll-item" id="enroll-item-' + u.id + '">';
-                            html += '<a href=' + u.id + '"/pages/profile.php?id=" class="sc-enroll-profile-link">';
-                            html += '<img src="' + escHtml(photo) + '" class="sc-enroll-avatar" alt="">';
-                            html += '<div class="sc-enroll-info"><strong>' + escHtml(u.first_name + ' ' + u.last_name) + '</strong><span>@' + escHtml(u.username) + '</span></div>';
-                            html += '</a>';
-                            html += '<button class="btn-admin-sm btn-admin-sm--danger" onclick="removeEnrollment(' + u.id + ')" title="Remove"><i class="fa fa-trash"></i></button>';
-                            html += '</li>';
-                        });
-                        html += '</ul>';
-                        body.innerHTML = html;
-                    });
-            }
-
-            window.removeEnrollment = function (clientId) {
-                if (!confirm('Remove this student from the class?')) return;
-                var fd = new FormData();
-                fd.append('ajax', '1');
-                fd.append('action', 'unenroll');
-                fd.append('class_id', enrollClassId);
-                fd.append('client_id', clientId);
-                fetch('schedule.php', {method: 'POST', body: fd})
-                    .then(function (r) {
-                        return r.json();
-                    })
-                    .then(function (data) {
-                        if (!data.ok) return;
-                        var item = document.getElementById('enroll-item-' + clientId);
-                        if (item) item.remove();
-                        var cls = SC.classes[enrollClassId];
-                        if (cls) cls.enrolled = data.enrolled;
-                        var countEl = document.getElementById('enroll-count-' + enrollClassId);
-                        if (countEl) countEl.textContent = data.enrolled;
-                        var spotsEl = document.getElementById('spots-' + enrollClassId);
-                        if (spotsEl && cls) {
-                            var spots = cls.capacity - data.enrolled;
-                            spotsEl.textContent = data.enrolled + '/' + cls.capacity + (spots > 0 ? ' · ' + spots + ' left' : '');
-                        }
-                        var capFill = document.getElementById('capfill-' + enrollClassId);
-                        if (capFill && cls) {
-                            var fillPct = cls.capacity > 0 ? Math.round((data.enrolled / cls.capacity) * 100) : 0;
-                            capFill.style.width = fillPct + '%';
-                        }
-                        if (!document.querySelector('.sc-enroll-item')) {
-                            document.getElementById('enrollModalBody').innerHTML = '<p class="sc-enroll-empty"><i class="fa fa-users"></i> No one enrolled yet.</p>';
-                        }
-                    });
-            };
-
-            window.openEnrollmentsModal = function (classId) {
-                enrollClassId = classId;
-                var cls = SC.classes[classId];
-                document.getElementById('enrollModalType').textContent = cls ? cls.class_name : '';
-                enrollModal.setAttribute('aria-hidden', 'false');
-                enrollModal.classList.add('sc-modal--open');
-                document.body.style.overflow = 'hidden';
-                loadEnrollments();
-            };
-
-            enrollClose.addEventListener('click', window.closeEnrollModal);
-            enrollBackdrop.addEventListener('click', window.closeEnrollModal);
-        }());
-    </script>
-<?php endif; ?>
+    <?php endif; ?>
 
     <?php drawFooter();
 } ?>
 
 <?php function drawScheduleDynamicHTML(
-    $days,
-    $classesByDay,
-    $today,
-    $enrolledIds,
-    $typeColors,
-    $typeDescriptions,
-    $role,
-    $allClasses
-): string
-{
+    array    $days,
+    array    $classesByDay,
+    DateTime $today,
+    array    $enrolledIds,
+    array    $typeColors,
+    array    $typeDescriptions,
+    ?string  $role,
+    array    $allClasses
+): string {
     $usedTypes = array_unique(array_column($allClasses, 'class_name'));
     sort($usedTypes);
     ob_start();
@@ -700,6 +373,7 @@
                     'avg_rating'   => (float)$cls['avg_rating'],
                     'review_count' => (int)$cls['review_count'],
                     'description'  => $cls['description'] !== '' ? $cls['description'] : ($typeDescriptions[$cls['class_name']] ?? ''),
+                    'photo'        => $cls['photo'] ?? '',
                     'is_enrolled'  => $enrolled,
                     'is_full'      => $full,
                     'my_rating'    => isset($cls['my_rating']) && $cls['my_rating'] !== null ? (int)$cls['my_rating'] : null,
@@ -822,5 +496,4 @@
 
     <?php
     return ob_get_clean();
-}
-?>
+} ?>
