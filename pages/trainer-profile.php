@@ -191,7 +191,7 @@ $classesForJS = function() use ($allClasses, $typeColors, $typeDescriptions, $en
                 'my_comment'   => $c['my_comment'] ?? null,
             ];
         }, $allClasses)
-    ) : new stdClass();
+    ) : [];
 };
 
 $buildScheduleHTML = fn(): string => drawTrainerScheduleHTML($days, $classesByDay, $today, $enrolledIds, $typeColors, $typeDescriptions, $role, $allClasses);
