@@ -41,8 +41,9 @@
     cursor: pointer;
 }
 
-.trainer-card-admin:hover {
-    transform: translateY(-0.9375rem);
+.trainer-card-admin:hover,
+.trainers-grid > .trainer-card:hover {
+    transform: translateY(-0.9rem);
 }
 
 .trainer-photo {
