@@ -26,7 +26,27 @@
     sort($allClasses);
     ?>
 
-    <main class="trainers-page">
+    <div class="trainers-filters filter-bar">
+        <span class="filter-label"><i class="fa fa-sliders"></i> Filter</span>
+        <select class="filter-select" id="trainer-filter-gym">
+            <option value="all">All gyms</option>
+            <?php foreach ($allGyms as $gym): ?>
+                <option value="<?= htmlspecialchars($gym) ?>"><?= htmlspecialchars($gym) ?></option>
+            <?php endforeach; ?>
+        </select>
+        <select class="filter-select" id="trainer-filter-class">
+            <option value="all">All classes</option>
+            <?php foreach ($allClasses as $class): ?>
+                <option value="<?= htmlspecialchars($class) ?>"><?= htmlspecialchars($class) ?></option>
+            <?php endforeach; ?>
+        </select>
+        <button class="filter-clear" id="trainer-filter-clear" hidden>
+            <i class="fa fa-xmark"></i> Clear
+        </button>
+        <span class="filter-count" id="trainer-filter-count"></span>
+    </div>
+
+    <main class="trainers-page<?= $isAdmin ? ' admin-page' : '' ?>">
 
         <?php if ($isAdmin): ?>
             <header class="admin-header">
@@ -148,26 +168,6 @@
                 <?php endif; ?>
             </section>
         <?php endif; ?>
-
-        <div class="trainers-filters filter-bar">
-            <span class="filter-label"><i class="fa fa-sliders"></i> Filter</span>
-            <select class="filter-select" id="trainer-filter-gym">
-                <option value="all">All gyms</option>
-                <?php foreach ($allGyms as $gym): ?>
-                    <option value="<?= htmlspecialchars($gym) ?>"><?= htmlspecialchars($gym) ?></option>
-                <?php endforeach; ?>
-            </select>
-            <select class="filter-select" id="trainer-filter-class">
-                <option value="all">All classes</option>
-                <?php foreach ($allClasses as $class): ?>
-                    <option value="<?= htmlspecialchars($class) ?>"><?= htmlspecialchars($class) ?></option>
-                <?php endforeach; ?>
-            </select>
-            <button class="filter-clear" id="trainer-filter-clear" hidden>
-                <i class="fa fa-xmark"></i> Clear
-            </button>
-            <span class="filter-count" id="trainer-filter-count"></span>
-        </div>
 
         <?php if (!$isAdmin): ?>
             <section class="trainers-hero">

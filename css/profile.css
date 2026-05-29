@@ -92,6 +92,12 @@ body.admin-theme main.admin-profile-page {
     border-radius: 3.125rem;
 }
 
+.membership-days {
+    margin-top: 0.9rem;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+}
+
 .user-identity {
     border-top: var(--border);
     padding-top: 1.25rem;
