@@ -173,7 +173,7 @@ if ($role === 'client') {
     $totalClasses = (int)$stmt->fetchColumn();
 
     $stmt = $db->prepare(
-        'SELECT COALESCE(SUM((julianday(checked_out) - julianday(checked_in)) * 60), 0)
+        'SELECT COALESCE(SUM((julianday(checked_out) - julianday(checked_in)) * 1440), 0)
          FROM gym_visits WHERE client_id = :id AND checked_out IS NOT NULL'
     );
     $stmt->execute([':id' => $userId]);
