@@ -93,6 +93,50 @@
 
 .admin-field--full { grid-column: 1 / -1; }
 
+.admin-file-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.admin-file-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #111;
+    border: 0.0625rem solid #2a2a2a;
+    border-radius: 0.5rem;
+    color: var(--text-main);
+    font-size: 0.875rem;
+    padding: 0.5rem 0.875rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.admin-file-btn:hover {
+    border-color: #555;
+    background: #1a1a1a;
+}
+
+.admin-file-name {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-photo-preview {
+    width: 100%;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
 .admin-form-actions {
     display: flex;
     gap: 0.625rem;

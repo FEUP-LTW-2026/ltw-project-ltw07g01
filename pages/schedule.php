@@ -30,6 +30,22 @@ if ($role === 'trainer') {
     $trainerGymIds = array_map('intval', $s->fetchAll(PDO::FETCH_COLUMN));
 }
 
+function saveClassPhoto(PDO $db, int $id, ?array $file): void {
+    if (!$file || $file['error'] !== UPLOAD_ERR_OK) return;
+    if (empty($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) return;
+    if ($file['size'] > 2 * 1024 * 1024) return;
+    $allowed = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif'];
+    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
+    if (!$mime || !isset($allowed[$mime])) return;
+    $destDir = __DIR__ . '/../images/class_photos/';
+    if (!is_dir($destDir)) mkdir($destDir, 0755, true);
+    $fn = 'class_' . $id . '_' . time() . '.' . $allowed[$mime];
+    if (move_uploaded_file($file['tmp_name'], $destDir . $fn)) {
+        $db->prepare('UPDATE classes SET photo=? WHERE id=?')
+           ->execute(['../images/class_photos/' . $fn, $id]);
+    }
+}
+
 function trainerCanUseClassOption(string $role, int $classTypeId, int $gymId, array $trainerClassTypeIds, array $trainerGymIds): bool {
     if ($role !== 'trainer') return true;
     return in_array($classTypeId, $trainerClassTypeIds, true)
@@ -51,6 +67,7 @@ if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && 
         if ($classTypeId && $gymId && $schedule && $duration > 0 && $capacity > 0 && trainerCanUseClassOption($role ?? '', $classTypeId, $gymId, $trainerClassTypeIds, $trainerGymIds)) {
             $db->prepare('INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity, description) VALUES (?,?,?,?,?,?,?)')
                ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity, $description]);
+            saveClassPhoto($db, (int)$db->lastInsertId(), $_FILES['class_photo'] ?? null);
         }
         header('Location: /pages/schedule.php'); exit;
 
@@ -63,7 +80,14 @@ if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && 
         $duration     = (int)($_POST['duration_min']    ?? 0);
         $capacity     = (int)($_POST['capacity']         ?? 0);
         $description  = mb_substr(trim($_POST['description'] ?? ''), 0, 500);
-        if ($targetId && $classTypeId && $gymId && $schedule && $duration > 0 && $capacity > 0 && trainerCanUseClassOption($role ?? '', $classTypeId, $gymId, $trainerClassTypeIds, $trainerGymIds)) {
+        $canUpdate = $targetId && $classTypeId && $gymId && $schedule && $duration > 0 && $capacity > 0;
+        if ($canUpdate && $role === 'trainer') {
+            // Para update, verifica apenas a propriedade da aula — não requer especialização
+            $s = $db->prepare('SELECT 1 FROM classes WHERE id=? AND trainer_id=?');
+            $s->execute([$targetId, $userId]);
+            $canUpdate = (bool)$s->fetch();
+        }
+        if ($canUpdate) {
             if ($role === 'trainer') {
                 $db->prepare('UPDATE classes SET class_type_id=?, gym_id=?, trainer_id=?, schedule=?, duration_min=?, capacity=?, description=? WHERE id=? AND trainer_id=?')
                    ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity, $description, $targetId, $userId]);
@@ -71,6 +95,7 @@ if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && 
                 $db->prepare('UPDATE classes SET class_type_id=?, gym_id=?, trainer_id=?, schedule=?, duration_min=?, capacity=?, description=? WHERE id=?')
                    ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity, $description, $targetId]);
             }
+            saveClassPhoto($db, $targetId, $_FILES['class_photo'] ?? null);
         }
         header('Location: /pages/schedule.php'); exit;
 
@@ -220,7 +245,7 @@ $defaultDay = ($weekOffset === 0 && $today >= $weekMon && $today <= $weekSun)
 
 $stmt = $db->prepare("
     SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min, cl.capacity,
-           cl.class_type_id, cl.gym_id, cl.trainer_id, cl.description,
+           cl.class_type_id, cl.gym_id, cl.trainer_id, cl.description, cl.photo,
            gl.name AS gym_name, gl.city AS gym_city,
            u.first_name AS trainer_first, u.last_name AS trainer_last,
            u.profile_photo AS trainer_photo,
@@ -267,12 +292,22 @@ if ($role === 'client') {
 $classTypes = $gymList = $trainers = [];
 if (in_array($role, ['admin', 'trainer'], true)) {
     if ($role === 'trainer') {
-        $classTypes = $trainerClassTypeIds
-            ? $db->query("SELECT id, name FROM class_types WHERE name IN ('Pilates', 'Cycling', 'Personal Training') AND id IN (" . implode(',', array_map('intval', $trainerClassTypeIds)) . ") ORDER BY name")->fetchAll(PDO::FETCH_ASSOC)
-            : [];
-        $gymList = $trainerGymIds
-            ? $db->query('SELECT id, name, city FROM gym_locations WHERE id IN (' . implode(',', array_map('intval', $trainerGymIds)) . ') ORDER BY city, name')->fetchAll(PDO::FETCH_ASSOC)
-            : [];
+        // class types: especializações + tipos usados nas aulas já existentes do trainer
+        $s = $db->prepare("SELECT DISTINCT ct.id, ct.name FROM class_types ct
+            WHERE ct.name IN ('Pilates', 'Cycling', 'Personal Training')
+            AND (ct.id IN (SELECT class_type_id FROM trainer_specializations WHERE trainer_id = ?)
+                 OR ct.id IN (SELECT class_type_id FROM classes WHERE trainer_id = ?))
+            ORDER BY ct.name");
+        $s->execute([$userId, $userId]);
+        $classTypes = $s->fetchAll(PDO::FETCH_ASSOC);
+
+        // gyms: trainer_locations + ginásios das aulas já atribuídas ao trainer por admins
+        $s = $db->prepare('SELECT DISTINCT gl.id, gl.name, gl.city FROM gym_locations gl
+            WHERE gl.id IN (SELECT gym_id FROM trainer_locations WHERE trainer_id = ?)
+               OR gl.id IN (SELECT gym_id FROM classes WHERE trainer_id = ?)
+            ORDER BY gl.city, gl.name');
+        $s->execute([$userId, $userId]);
+        $gymList = $s->fetchAll(PDO::FETCH_ASSOC);
     } else {
         $classTypes = $db->query("SELECT id, name FROM class_types WHERE name IN ('Pilates', 'Cycling', 'Personal Training') ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
         $gymList    = $db->query('SELECT id, name, city FROM gym_locations ORDER BY city, name')->fetchAll(PDO::FETCH_ASSOC);
@@ -326,7 +361,14 @@ $buildDynamicHTML = fn(): string => drawScheduleDynamicHTML($days, $classesByDay
 
 if ($role === 'admin') {
     $classesForJS = $allClasses
-        ? array_combine(array_column($allClasses, 'id'), $allClasses)
+        ? array_combine(
+            array_column($allClasses, 'id'),
+            array_map(function($c) use ($typeColors) {
+                $c['color']   = $typeColors[$c['class_name']] ?? '#888';
+                $c['is_full'] = ((int)$c['capacity'] - (int)$c['enrolled']) <= 0;
+                return $c;
+            }, $allClasses)
+          )
         : new stdClass();
 } else {
     $classesForJS = $allClasses ? array_combine(
@@ -351,6 +393,7 @@ if ($role === 'admin') {
                 'avg_rating'   => (float)$c['avg_rating'],
                 'review_count' => (int)$c['review_count'],
                 'description'  => $typeDescriptions[$c['class_name']] ?? '',
+                'photo'        => $c['photo'] ?? '',
                 'is_enrolled'  => in_array((int)$c['id'], $enrolledIds),
                 'is_full'      => ((int)$c['capacity'] - (int)$c['enrolled']) <= 0,
                 'my_rating'    => isset($c['my_rating']) ? (int)$c['my_rating'] : null,

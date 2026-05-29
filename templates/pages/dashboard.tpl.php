@@ -601,16 +601,12 @@
             <div class="sc-modal-footer" id="scModalFooter"></div>
         </div>
     </div>
-    <script>
-        var SC = {
-            isClient: <?= $role === 'client' ? 'true' : 'false' ?>,
-            weekOffset: 0,
-            defaultDay: '',
-            classes: <?= json_encode($dashClassesForSC ?: new stdClass()) ?>,
-        };
+    <script type="application/json" id="schedule-data">
+        <?= json_encode(['isClient' => $role === 'client', 'weekOffset' => 0, 'defaultDay' => '', 'classes' => $dashClassesForSC ?: new stdClass()]) ?>
     </script>
     <script src="../../js/schedule.js"></script>
 <?php endif; ?>
 
     <?php drawFooter();
 } ?>
+

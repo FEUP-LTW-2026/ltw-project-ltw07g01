@@ -221,15 +221,8 @@
         </div>
     </div>
 
-    <script>
-        var SC = {
-            isClient: <?= json_encode($role === 'client') ?>,
-            weekOffset: <?= json_encode($weekOffset) ?>,
-            defaultDay: <?= json_encode($defaultDay) ?>,
-            ajaxUrl: <?= json_encode('trainer-profile.php?id=' . $userId) ?>,
-            actionUrl: '/pages/schedule.php',
-            classes: <?= json_encode($classesForJS) ?>,
-        };
+    <script type="application/json" id="schedule-data">
+        <?= json_encode(['isClient' => $role === 'client', 'weekOffset' => $weekOffset, 'defaultDay' => $defaultDay, 'ajaxUrl' => 'trainer-profile.php?id=' . $userId, 'actionUrl' => '/pages/schedule.php', 'classes' => $classesForJS]) ?>
     </script>
     <script src="../../js/schedule.js"></script>
 

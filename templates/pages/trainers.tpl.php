@@ -43,16 +43,6 @@
         <?php if ($msg): ?>
             <div class="admin-alert admin-alert--ok" id="trainerMsg"><i class="fa fa-circle-check"></i> <?= $msg ?>
             </div>
-            <script>setTimeout(function () {
-                    var el = document.getElementById('trainerMsg');
-                    if (el) {
-                        el.style.transition = 'opacity .4s';
-                        el.style.opacity = '0';
-                        setTimeout(function () {
-                            el.remove();
-                        }, 420);
-                    }
-                }, 3500);</script>
         <?php endif; ?>
         <?php if ($error): ?>
             <div class="admin-alert admin-alert--err"><i
@@ -269,15 +259,5 @@
         </div>
     </main>
 
-    <?php if ($isAdmin): ?>
-    <script>
-        function openCreateForm() {
-            var f = document.getElementById('trainerForm');
-            f.hidden = false;
-            document.getElementById('formTitle').textContent = 'New Trainer';
-            f.scrollIntoView({behavior: 'smooth', block: 'start'});
-        }
-    </script>
-<?php endif; ?>
     <script src="../../js/trainers.js"></script>
 <?php } ?>

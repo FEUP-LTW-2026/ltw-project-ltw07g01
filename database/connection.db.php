@@ -9,6 +9,7 @@
         ensureClientsSelectedBadgesColumn($db);
         ensureMembershipClassesRemainingColumn($db);
         ensureClassesDescriptionColumn($db);
+        ensureClassesPhotoColumn($db);
         return $db;
     }
 
@@ -31,6 +32,13 @@
         $cols = array_column($db->query('PRAGMA table_info(classes)')->fetchAll(PDO::FETCH_ASSOC), 'name');
         if (!in_array('description', $cols, true)) {
             $db->exec('ALTER TABLE classes ADD COLUMN description TEXT NOT NULL DEFAULT \'\'');
+        }
+    }
+
+    function ensureClassesPhotoColumn(PDO $db): void {
+        $cols = array_column($db->query('PRAGMA table_info(classes)')->fetchAll(PDO::FETCH_ASSOC), 'name');
+        if (!in_array('photo', $cols, true)) {
+            $db->exec('ALTER TABLE classes ADD COLUMN photo TEXT');
         }
     }
 
