@@ -37,7 +37,7 @@
 
     <main class="<?= $role === 'admin' ? 'admin-page' : 'dashboard-page dashboard-' . $role ?>">
 
-        <div class="dash-header">
+        <header class="dash-header">
             <div class="dash-greeting">
                 <span class="dash-role-tag"><?= $role === 'client' && $memberTag ? htmlspecialchars($memberTag) : strtoupper($role) ?></span>
                 <h1>Welcome back, <span class="dash-name"><?= htmlspecialchars($user['first_name']) ?></span></h1>
@@ -52,7 +52,7 @@
                     </div>
                 </div>
             <?php endif; ?>
-        </div>
+        </header>
 
         <?php if ($role === 'client'): ?>
 

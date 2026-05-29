@@ -29,7 +29,7 @@
     <main class="trainers-page">
 
         <?php if ($isAdmin): ?>
-            <div class="admin-header">
+            <header class="admin-header">
                 <div>
                     <h1><i class="fa fa-chalkboard-teacher"></i> Trainers</h1>
                     <p class="admin-sub"><?= count($trainers) ?> trainer<?= count($trainers) !== 1 ? 's' : '' ?>
@@ -38,7 +38,7 @@
                 <button class="btn-admin-primary" onclick="openCreateForm()">
                     <i class="fa fa-plus"></i> New Trainer
                 </button>
-            </div>
+            </header>
 
         <?php if ($msg): ?>
             <div class="admin-alert admin-alert--ok" id="trainerMsg"><i class="fa fa-circle-check"></i> <?= $msg ?>
@@ -59,7 +59,7 @@
                         class="fa fa-triangle-exclamation"></i> <?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
-            <div class="admin-form-card" id="trainerForm" <?= ($editTrainer || $error) ? '' : 'hidden' ?>>
+            <section class="admin-form-card" id="trainerForm" <?= ($editTrainer || $error) ? '' : 'hidden' ?>>
                 <h2 id="formTitle"><?= $editTrainer ? 'Edit Trainer' : 'New Trainer' ?></h2>
                 <form method="POST" enctype="multipart/form-data" class="admin-form-grid">
                     <input type="hidden" name="_action" value="<?= $editTrainer ? 'update' : 'create' ?>"
@@ -156,7 +156,7 @@
                         </form>
                     </div>
                 <?php endif; ?>
-            </div>
+            </section>
         <?php endif; ?>
 
         <div class="trainers-filters filter-bar">
@@ -219,7 +219,7 @@
                         <?php if (!empty($trainer['bio'])): ?>
                             <p class="trainer-bio"><?= htmlspecialchars($trainer['bio']) ?></p>
                         <?php endif; ?>
-                        <div class="trainer-section">
+                        <section class="trainer-section">
                             <h3>Gyms</h3>
                             <div class="trainer-tags">
                                 <?php if (empty($gyms)): ?>
@@ -230,8 +230,8 @@
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="trainer-section">
+                        </section>
+                        <section class="trainer-section">
                             <h3>Classes</h3>
                             <div class="trainer-tags">
                                 <?php if (empty($classes)): ?>
@@ -242,7 +242,7 @@
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </div>
-                        </div>
+                        </section>
                     </div>
 
                     <?php if ($isAdmin): ?>

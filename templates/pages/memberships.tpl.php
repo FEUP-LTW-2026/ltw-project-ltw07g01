@@ -3,10 +3,10 @@
     $loggedIn = $session->isLoggedIn();
     ?>
 
-    <div class="banner">
+    <section class="banner">
         <h1>MEMBERSHIPS</h1>
         <p>Choose the right plan to achieve your goals</p>
-    </div>
+    </section>
 
     <nav class="types-membership-container">
         <div class="types-memberships">

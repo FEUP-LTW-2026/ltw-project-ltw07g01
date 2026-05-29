@@ -82,7 +82,7 @@
 
         <div class="main-content">
 
-            <div class="profile-details">
+            <section class="profile-details">
                 <div class="detail-item">
                     <span class="detail-label">Full Name</span>
                     <p class="detail-value"><?= htmlspecialchars($fullName) ?></p>
@@ -103,9 +103,9 @@
                     <span class="detail-label">Class Credits</span>
                     <p class="detail-value"><?= $totalCredits ?></p>
                 </div>
-            </div>
+            </section>
 
-            <div class="metrics-section">
+            <section class="metrics-section">
                 <h3>MY METRICS</h3>
                 <div class="metrics-grid">
                     <div class="metric-card">
@@ -117,9 +117,9 @@
                         <span class="metric-value"><?= htmlspecialchars((string)$height) ?></span>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="hall-of-fame">
+            <section class="hall-of-fame">
                 <h3>HALL OF FAME</h3>
                 <div class="stats-row">
                     <div class="stat-box">
@@ -143,9 +143,9 @@
                     </span>
                     <?php endforeach; ?>
                 </div>
-            </div>
+            </section>
 
-            <div class="stats-section">
+            <section class="stats-section">
                 <header class="stats-header">
                     <div class="header-titles">
                         <h3>TIME SPENT TRAINING</h3>
@@ -189,7 +189,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <?php if ($isOwnProfile): ?>
                 <div class="profile-actions">

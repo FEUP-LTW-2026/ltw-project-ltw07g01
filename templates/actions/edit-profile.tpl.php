@@ -41,7 +41,7 @@
 
         <form method="post" enctype="multipart/form-data" class="edit-form">
             <input type="file" id="profile_photo" name="profile_photo" accept="image/jpeg,image/png,image/webp,image/gif" class="profile-file-input">
-            <div class="profile-details">
+            <section class="profile-details">
                 <div class="detail-item">
                     <label class="detail-label" for="first_name">First Name</label>
                     <input type="text" id="first_name" name="first_name" class="detail-input" value="<?= htmlspecialchars($user['first_name']) ?>" required>
@@ -84,12 +84,12 @@
                         <?php endforeach; ?>
                     </select>
                 </div>
-            </div>
+            </section>
 
             <div class="badge-picker">
             </div>
 
-            <div class="metrics-section">
+            <section class="metrics-section">
                 <h3>METRICS</h3>
                 <div class="metrics-grid">
                     <div class="metric-card">
@@ -101,9 +101,9 @@
                         <input type="number" id="height" name="height" class="metric-input" step="0.1" value="<?= htmlspecialchars((string)$height) ?>" required>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="display-badges-section">
+            <section class="display-badges-section">
                 <h3>DISPLAY BADGES</h3>
                 <p class="detail-label">Select which earned badges should appear on your profile.</p>
                 <div class="badge-toggle-group">
@@ -119,9 +119,9 @@
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
-            </div>
+            </section>
 
-            <div class="password-section">
+            <section class="password-section">
                 <h3>CHANGE PASSWORD</h3>
                 <p class="detail-label">Leave blank to keep your current password.</p>
                 <div class="detail-item">
@@ -136,7 +136,7 @@
                     <label class="detail-label" for="confirm_password">Confirm New Password</label>
                     <input type="password" id="confirm_password" name="confirm_password" class="detail-input" autocomplete="new-password">
                 </div>
-            </div>
+            </section>
 
             <div class="profile-actions">
                 <button type="submit" class="btn-save-changes">Save Changes</button>

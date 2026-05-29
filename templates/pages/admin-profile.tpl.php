@@ -3,7 +3,7 @@
 
     <main class="profile-page admin-profile-page">
         <aside class="sidebar-container">
-            <div class="profile-card">
+            <section class="profile-card">
                 <div class="profile-info">
                     <figure class="profile-avatar">
                         <img src="<?= htmlspecialchars($profilePhoto) ?>" alt="Profile photo">
@@ -17,11 +17,11 @@
                 <div class="user-identity">
                     <span class="archetype-tag"><i class="fa fa-user-shield"></i> Administrator</span>
                 </div>
-            </div>
+            </section>
         </aside>
 
         <div class="main-content">
-            <div class="profile-details">
+            <section class="profile-details">
                 <div class="detail-item">
                     <span class="detail-label">First Name</span>
                     <p class="detail-value"><?= htmlspecialchars($user['first_name']) ?></p>
@@ -38,7 +38,7 @@
                     <span class="detail-label">Email</span>
                     <p class="detail-value"><?= htmlspecialchars($user['email']) ?></p>
                 </div>
-            </div>
+            </section>
 
             <div class="profile-actions">
                 <a href="/actions/edit-admin-profile.php" class="btn-edit-profile">Edit Profile</a>

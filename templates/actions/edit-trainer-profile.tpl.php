@@ -41,7 +41,7 @@
         <form method="post" enctype="multipart/form-data" class="edit-form">
             <input type="file" id="profile_photo" name="profile_photo" accept="image/jpeg,image/png,image/webp,image/gif" class="profile-file-input">
 
-            <div class="profile-details">
+            <section class="profile-details">
                 <div class="detail-item">
                     <label class="detail-label" for="first_name">First Name</label>
                     <input type="text" id="first_name" name="first_name" class="detail-input" value="<?= htmlspecialchars($user['first_name']) ?>" required>
@@ -62,9 +62,9 @@
                     <label class="detail-label" for="bio">Bio <span class="bio-char-count">(<span id="bioCount"><?= mb_strlen($bio) ?></span>/300)</span></label>
                     <textarea id="bio" name="bio" class="detail-input bio-textarea" maxlength="300" rows="4" placeholder="Tell members about yourself..."><?= htmlspecialchars($bio) ?></textarea>
                 </div>
-            </div>
+            </section>
 
-            <div class="specializations-section">
+            <section class="specializations-section">
                 <h3>SPECIALIZATIONS</h3>
                 <p class="detail-label">Select all areas you are qualified to teach.</p>
                 <div class="specialization-toggle-group">
@@ -76,15 +76,15 @@
                         </label>
                     <?php endforeach; ?>
                 </div>
-            </div>
+            </section>
 
-            <div class="certifications-edit-section">
+            <section class="certifications-edit-section">
                 <h3>CERTIFICATIONS</h3>
                 <p class="detail-label">Enter one certification per line.</p>
                 <textarea name="certifications" class="detail-input bio-textarea" rows="6" placeholder="e.g. NASM Certified Personal Trainer&#10;ACE Group Fitness Instructor"><?= htmlspecialchars($certifications) ?></textarea>
-            </div>
+            </section>
 
-            <div class="gyms-section">
+            <section class="gyms-section">
                 <h3>GYM LOCATIONS</h3>
                 <p class="detail-label">Select the gyms where you work.</p>
                 <div class="specialization-toggle-group">
@@ -96,9 +96,9 @@
                         </label>
                     <?php endforeach; ?>
                 </div>
-            </div>
+            </section>
 
-            <div class="password-section">
+            <section class="password-section">
                 <h3>CHANGE PASSWORD</h3>
                 <p class="detail-label">Leave blank to keep your current password.</p>
                 <div class="detail-item">
@@ -113,7 +113,7 @@
                     <label class="detail-label" for="confirm_password">Confirm New Password</label>
                     <input type="password" id="confirm_password" name="confirm_password" class="detail-input" autocomplete="new-password">
                 </div>
-            </div>
+            </section>
 
             <div class="profile-actions">
                 <button type="submit" class="btn-save-changes">Save Changes</button>

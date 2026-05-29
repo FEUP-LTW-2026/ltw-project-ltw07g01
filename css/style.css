@@ -15,6 +15,16 @@
     --border: 0.0625rem solid #222;
 }
 
+.admin-theme {
+    --accent: #e11d48;
+    --admin-accent: #e11d48;
+}
+
+.trainer-theme {
+    --accent: #7c3aed;
+    --admin-accent: #7c3aed;
+}
+
 header nav {
     display: flex;
     align-items: center;

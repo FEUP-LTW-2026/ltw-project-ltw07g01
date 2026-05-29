@@ -53,27 +53,27 @@
         </section>
 
         <section class="about-classes">
-            <div class="class-card">
+            <article class="class-card">
                 <img src="../../images/cycling.jpg" alt="Cycling class">
                 <div class="class-overlay">
                     <h3>Cycling</h3>
                     <p>High-energy indoor cycling sessions for all levels.</p>
                 </div>
-            </div>
-            <div class="class-card">
+            </article>
+            <article class="class-card">
                 <img src="../../images/pilatu.jpg" alt="Pilates class">
                 <div class="class-overlay">
                     <h3>Pilates</h3>
                     <p>Core strength and flexibility in a focused environment.</p>
                 </div>
-            </div>
-            <div class="class-card">
+            </article>
+            <article class="class-card">
                 <img src="../../images/bigGuy.jpg" alt="Strength training">
                 <div class="class-overlay">
                     <h3>Strength</h3>
                     <p>Build muscle and power with expert-led training.</p>
                 </div>
-            </div>
+            </article>
         </section>
 
         <section class="join">

@@ -1,9 +1,3 @@
-.admin-theme {
-    --accent: #e11d48;
-}
-.trainer-theme {
-    --accent: #7c3aed;
-}
 body {
     min-height: 100vh;
     display: flex;
@@ -334,19 +328,25 @@ main.dashboard-page {
     gap: 0.75rem;
 }
 
-.dash-class-item {
+.dash-class-item,
+.dash-visit-item,
+.dash-student-item {
     display: flex;
     align-items: center;
-    gap: 0.875rem;
-    padding: 0.75rem 0.875rem;
     border: var(--border);
     border-radius: 0.75rem;
     background: #0a0a0a;
-    transition: border-color 0.2s;
 }
 
-.dash-class-item:hover {
+.dash-class-item:hover,
+.dash-student-item:hover {
     border-color: var(--accent);
+}
+
+.dash-class-item {
+    gap: 0.875rem;
+    padding: 0.75rem 0.875rem;
+    transition: border-color 0.2s;
 }
 
 .class-date-block {
@@ -437,13 +437,8 @@ main.dashboard-page {
 }
 
 .dash-visit-item {
-    display: flex;
-    align-items: center;
     gap: 0.75rem;
     padding: 0.625rem 0.875rem;
-    border: var(--border);
-    border-radius: 0.75rem;
-    background: #0a0a0a;
 }
 
 .visit-dot {
@@ -499,18 +494,9 @@ main.dashboard-page {
 }
 
 .dash-student-item {
-    display: flex;
-    align-items: center;
     gap: 0.75rem;
     padding: 0.625rem 0.875rem;
-    border: var(--border);
-    border-radius: 0.75rem;
-    background: #0a0a0a;
     transition: border-color 0.2s;
-}
-
-.dash-student-item:hover {
-    border-color: var(--accent);
 }
 
 .student-avatar {
@@ -974,11 +960,6 @@ main.dashboard-page {
     text-overflow: ellipsis;
 }
 
-
-.admin-theme,
-.trainer-theme {
-    --admin-accent: var(--accent);
-}
 
 .admin-page {
     --admin-accent: var(--accent);

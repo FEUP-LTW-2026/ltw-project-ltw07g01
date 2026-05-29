@@ -3,7 +3,7 @@
 
     <main class="admin-page">
 
-        <div class="admin-header">
+        <header class="admin-header">
             <div>
                 <h1><i class="fa fa-users"></i> Manage Members</h1>
                 <p class="admin-sub"><?= count($members) ?> member<?= count($members) !== 1 ? 's' : '' ?> registered</p>
@@ -11,7 +11,7 @@
             <button class="btn-admin-primary" onclick="toggleForm()">
                 <i class="fa fa-plus"></i> New Member
             </button>
-        </div>
+        </header>
 
         <?php if ($msg): ?>
             <div class="admin-alert admin-alert--ok"><i class="fa fa-circle-check"></i> <?= $msg ?></div>
@@ -21,7 +21,7 @@
                         class="fa fa-triangle-exclamation"></i> <?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
-        <div class="admin-form-card" id="memberForm" hidden>
+        <section class="admin-form-card" id="memberForm" hidden>
             <h2 id="formTitle">New Member</h2>
             <form method="POST" enctype="multipart/form-data" class="admin-form-grid">
                 <input type="hidden" name="_action" id="formAction" value="create">
@@ -109,7 +109,7 @@
                     <i class="fa fa-user-shield"></i> Promote to Admin
                 </button>
             </div>
-        </div>
+        </section>
 
         <div class="admin-search-bar">
             <input type="search" id="memberSearch" placeholder="Search by name, username or email…">
