@@ -13,16 +13,16 @@
 
         <form method="POST" action="/actions/register.php">
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username" placeholder="John67" required>
 
             <label for="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" required>
+            <input type="text" id="first_name" name="first_name" placeholder="John" required>
 
             <label for="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" required>
+            <input type="text" id="last_name" name="last_name" placeholder="Pork" required>
 
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" placeholder="john67pork@example.com" required>
 
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>

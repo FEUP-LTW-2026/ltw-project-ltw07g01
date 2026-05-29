@@ -63,6 +63,11 @@ main.login-page section input:focus {
     border-color: #00bfa6;
 }
 
+main.login-page section input::placeholder {
+    color: #8f8f8f;
+    opacity: 1;
+}
+
 main.login-page section button {
     margin-top: 1.5625rem;
     padding: 0.875rem;
