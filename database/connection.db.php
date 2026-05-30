@@ -10,6 +10,7 @@
         ensureMembershipClassesRemainingColumn($db);
         ensureClassesDescriptionColumn($db);
         ensureClassesPhotoColumn($db);
+        dropOrphanBadgeTables($db);
         return $db;
     }
 
@@ -39,6 +40,19 @@
         $cols = array_column($db->query('PRAGMA table_info(classes)')->fetchAll(PDO::FETCH_ASSOC), 'name');
         if (!in_array('photo', $cols, true)) {
             $db->exec('ALTER TABLE classes ADD COLUMN photo TEXT');
+        }
+    }
+
+    function dropOrphanBadgeTables(PDO $db): void {
+        $tables = array_column($db->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_ASSOC), 'name');
+        if (in_array('badge_display', $tables, true)) {
+            $db->exec('PRAGMA foreign_keys = OFF');
+            $db->exec('DROP TABLE IF EXISTS badge_display');
+            $db->exec('DROP TABLE IF EXISTS client_badges');
+            $db->exec('DROP TABLE IF EXISTS badges');
+            $db->exec('DROP TABLE IF EXISTS workout_sessions');
+            $db->exec('DROP TABLE IF EXISTS workout_plans');
+            $db->exec('PRAGMA foreign_keys = ON');
         }
     }
 
