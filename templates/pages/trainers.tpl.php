@@ -72,6 +72,7 @@
             <section class="admin-form-card" id="trainerForm" <?= ($editTrainer || $error) ? '' : 'hidden' ?>>
                 <h2 id="formTitle"><?= $editTrainer ? 'Edit Trainer' : 'New Trainer' ?></h2>
                 <form method="POST" enctype="multipart/form-data" class="admin-form-grid">
+                    <?= csrf_field() ?>
                     <input type="hidden" name="_action" value="<?= $editTrainer ? 'update' : 'create' ?>"
                            id="formAction">
                     <input type="hidden" name="target_id" value="<?= $editTrainer['id'] ?? '' ?>">
@@ -158,6 +159,7 @@
                     <div class="admin-promote-section">
                         <form method="POST"
                               onsubmit="return confirm('Promote <?= htmlspecialchars(addslashes($editTrainer['first_name'])) ?> to admin? This cannot be undone.')">
+                            <?= csrf_field() ?>
                             <input type="hidden" name="_action" value="promote">
                             <input type="hidden" name="target_id" value="<?= (int)$editTrainer['id'] ?>">
                             <button type="submit" class="btn-admin-ghost btn-admin-ghost--warn">
@@ -244,6 +246,7 @@
                     </a>
                     <form method="POST"
                           onsubmit="return confirm('Remove <?= htmlspecialchars(addslashes($trainer['first_name'])) ?>? This cannot be undone.')">
+                        <?= csrf_field() ?>
                         <input type="hidden" name="_action" value="delete">
                         <input type="hidden" name="target_id" value="<?= (int)$trainer['id'] ?>">
                         <button type="submit" class="btn-admin-sm btn-admin-sm--danger" title="Remove">

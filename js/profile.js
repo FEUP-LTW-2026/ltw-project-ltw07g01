@@ -40,10 +40,11 @@
             btn.disabled  = true;
             btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Cancelling…';
         }
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         fetch('profile.php', {
             method:  'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body:    'ajax=1&action=cancel_subscription',
+            body:    'ajax=1&action=cancel_subscription&csrf_token=' + encodeURIComponent(csrfToken),
         })
             .then(function (r) { return r.json(); })
             .then(function (data) {

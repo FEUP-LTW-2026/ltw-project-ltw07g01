@@ -54,6 +54,10 @@ function trainerCanUseClassOption(string $role, int $classTypeId, int $gymId, ar
 
 // admin/trainer: criar aula; trainer só edita/apaga aulas próprias
 if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && empty($_GET['ajax'])) {
+    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        http_response_code(403);
+        die('Invalid CSRF token.');
+    }
     $action = $_POST['_action'] ?? '';
 
     if ($action === 'create') {
@@ -131,6 +135,11 @@ if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'GET' && !
 // ajax: remover inscrito (admin e trainer)
 if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? '') === 'unenroll') {
     header('Content-Type: application/json');
+    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        http_response_code(403);
+        echo json_encode(['ok' => false, 'error' => 'Invalid CSRF token']);
+        exit;
+    }
     $classId  = (int)($_POST['class_id']  ?? 0);
     $clientId = (int)($_POST['client_id'] ?? 0);
     if (!$classId || !$clientId) { echo json_encode(['ok' => false]); exit; }
@@ -152,6 +161,11 @@ if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && 
 // ajax: review
 if ($requestMethod === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? '') === 'review' && $role === 'client') {
     header('Content-Type: application/json');
+    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        http_response_code(403);
+        echo json_encode(['ok' => false, 'error' => 'Invalid CSRF token']);
+        exit;
+    }
     $classId = (int)($_POST['class_id'] ?? 0);
     $rating  = (int)($_POST['rating'] ?? 0);
     $comment = mb_substr(trim($_POST['comment'] ?? ''), 0, 500);
@@ -178,6 +192,11 @@ if ($requestMethod === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? 
 // ajax: cancelar
 if ($requestMethod === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? '') === 'cancel' && $role === 'client') {
     header('Content-Type: application/json');
+    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        http_response_code(403);
+        echo json_encode(['ok' => false, 'error' => 'Invalid CSRF token']);
+        exit;
+    }
     $classId = (int)($_POST['class_id'] ?? 0);
     if ($classId <= 0) { echo json_encode(['ok' => false, 'error' => 'invalid']); exit; }
     $s = $db->prepare('SELECT c.schedule FROM client_classes cc JOIN classes c ON c.id = cc.class_id WHERE cc.client_id=? AND cc.class_id=?');
@@ -203,6 +222,11 @@ if ($requestMethod === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? 
 // ajax: reservar
 if ($requestMethod === 'POST' && !empty($_POST['ajax']) && $role === 'client') {
     header('Content-Type: application/json');
+    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        http_response_code(403);
+        echo json_encode(['ok' => false, 'error' => 'Invalid CSRF token']);
+        exit;
+    }
     $classId = (int)($_POST['class_id'] ?? 0);
     if ($classId <= 0) { echo json_encode(['ok' => false, 'error' => 'invalid']); exit; }
     $s = $db->prepare('SELECT COUNT(*) FROM client_classes WHERE client_id=? AND class_id=?');

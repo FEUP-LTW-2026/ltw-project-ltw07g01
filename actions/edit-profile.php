@@ -46,6 +46,10 @@ $archetypeOptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $validArchetypeIds = array_column($archetypeOptions, 'id');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        http_response_code(403);
+        die('Invalid CSRF token.');
+    }
     $firstName = trim($_POST['first_name'] ?? '');
     $lastName = trim($_POST['last_name'] ?? '');
     $email = trim($_POST['email'] ?? '');

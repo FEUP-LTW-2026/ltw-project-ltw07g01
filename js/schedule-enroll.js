@@ -49,10 +49,11 @@
     window.removeEnrollment = function (clientId) {
         if (!confirm('Remove this student from the class?')) return;
         var fd = new FormData();
-        fd.append('ajax',      '1');
-        fd.append('action',    'unenroll');
-        fd.append('class_id',  enrollClassId);
-        fd.append('client_id', clientId);
+        fd.append('ajax',       '1');
+        fd.append('action',     'unenroll');
+        fd.append('class_id',   enrollClassId);
+        fd.append('client_id',  clientId);
+        fd.append('csrf_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
         fetch('schedule.php', { method: 'POST', body: fd })
             .then(function (r) { return r.json(); })
             .then(function (data) {

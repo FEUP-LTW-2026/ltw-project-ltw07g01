@@ -72,9 +72,10 @@
         var btn = this;
         btn.disabled = true;
         var data = new FormData();
-        data.append('_action',   'promote_admin');
-        data.append('target_id', targetId);
-        data.append('_ajax',     '1');
+        data.append('_action',    'promote_admin');
+        data.append('target_id',  targetId);
+        data.append('_ajax',      '1');
+        data.append('csrf_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
         var responsePromise = fetch('/pages/admin-members.php', { method: 'POST', body: data })
             .then(function (r) { return r.json(); });
         setTimeout(function () {

@@ -9,6 +9,7 @@ require_once(__DIR__ . '/../../utils/session.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?= htmlspecialchars($session->getCsrfToken()) ?>">
     <title>Cubo Gym</title>
     <?php foreach ($extraCss as $css): ?>
     <link rel="stylesheet" href="../css/<?= htmlspecialchars($css) ?>.css">
@@ -118,6 +119,7 @@ require_once(__DIR__ . '/../../utils/session.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?= htmlspecialchars($session->getCsrfToken()) ?>">
     <title>Cubo Gym</title>
     <?php foreach ($extraCss as $css): ?>
     <link rel="stylesheet" href="../css/<?= htmlspecialchars($css) ?>.css">

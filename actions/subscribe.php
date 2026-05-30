@@ -21,6 +21,11 @@ if (!$stmt->fetch()) {
     exit();
 }
 
+if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
+    http_response_code(403);
+    die('Invalid CSRF token.');
+}
+
 $plan = $_POST['plan'] ?? '';
 
 $gymPlans = [

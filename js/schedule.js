@@ -192,7 +192,8 @@ var SC = JSON.parse(document.getElementById('schedule-data').textContent);
         fetch(scheduleActionUrl(), {
             method  : 'POST',
             headers : { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body    : 'ajax=1&class_id=' + classId + '&w=' + SC.weekOffset,
+            body    : 'ajax=1&class_id=' + classId + '&w=' + SC.weekOffset
+                    + '&csrf_token=' + encodeURIComponent(document.querySelector('meta[name="csrf-token"]').getAttribute('content')),
         })
         .then(function (r) { return r.json(); })
         .then(function (data) {
@@ -256,7 +257,8 @@ var SC = JSON.parse(document.getElementById('schedule-data').textContent);
         fetch(scheduleActionUrl(), {
             method  : 'POST',
             headers : { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body    : 'ajax=1&action=cancel&class_id=' + classId,
+            body    : 'ajax=1&action=cancel&class_id=' + classId
+                    + '&csrf_token=' + encodeURIComponent(document.querySelector('meta[name="csrf-token"]').getAttribute('content')),
         })
         .then(function (r) { return r.json(); })
         .then(function (data) {
@@ -384,7 +386,8 @@ var SC = JSON.parse(document.getElementById('schedule-data').textContent);
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body   : 'ajax=1&action=review&class_id=' + classId
                    + '&rating=' + rating
-                   + '&comment=' + encodeURIComponent(comment),
+                   + '&comment=' + encodeURIComponent(comment)
+                   + '&csrf_token=' + encodeURIComponent(document.querySelector('meta[name="csrf-token"]').getAttribute('content')),
         })
         .then(function(r) { return r.json(); })
         .then(function(data) {

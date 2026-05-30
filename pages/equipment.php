@@ -24,6 +24,12 @@ $msg = '';
 $error = '';
 
 if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && ($_POST['_action'] ?? '') === 'toggle') {
+    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        header('Content-Type: application/json');
+        http_response_code(403);
+        echo json_encode(['ok' => false, 'error' => 'Invalid CSRF token']);
+        exit;
+    }
     $targetId = (int)($_POST['target_id'] ?? 0);
     if ($targetId) {
         $db->prepare('UPDATE equipment SET is_available = NOT is_available WHERE id=?')->execute([$targetId]);
@@ -40,6 +46,10 @@ if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) 
 }
 
 if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        http_response_code(403);
+        die('Invalid CSRF token.');
+    }
     $action = $_POST['_action'] ?? '';
 
     if ($action === 'create') {

@@ -121,6 +121,7 @@
             </div>
             <div class="sc-modal-body">
                 <form method="POST" id="editForm" enctype="multipart/form-data">
+                    <?= csrf_field() ?>
                     <input type="hidden" name="_action" id="editAction" value="create">
                     <input type="hidden" name="target_id" id="editTargetId" value="">
                     <div class="class-editor-fields">
@@ -448,6 +449,7 @@
                             </div>
                             <form method="POST" class="form-inline"
                                   onsubmit="return confirm('Delete this class? All enrollments will also be removed.')">
+                                <?= csrf_field() ?>
                                 <input type="hidden" name="_action" value="delete">
                                 <input type="hidden" name="target_id" value="<?= $cls['id'] ?>">
                                 <button type="submit" class="sc-details-btn sc-details-btn--danger">

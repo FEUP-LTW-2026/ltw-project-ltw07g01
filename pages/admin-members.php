@@ -25,6 +25,16 @@ $msg   = '';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        if (!empty($_POST['_ajax'])) {
+            header('Content-Type: application/json');
+            http_response_code(403);
+            echo json_encode(['ok' => false, 'error' => 'Invalid CSRF token']);
+            exit;
+        }
+        http_response_code(403);
+        die('Invalid CSRF token.');
+    }
     $action = $_POST['_action'] ?? '';
 
     if ($action === 'create') {
