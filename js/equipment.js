@@ -1,29 +1,82 @@
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+
 function openCreateForm() {
-    var f = document.getElementById('equipForm');
+    const f = document.getElementById('equipForm');
     f.hidden = false;
     document.getElementById('formTitle').textContent = 'Add Equipment';
     f.scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
+function closeEquipForm() {
+    document.getElementById('equipForm').hidden = true;
+}
+
 function toggleEquip(id, btn) {
-    var fd = new FormData();
-    fd.append('_action', 'toggle');
-    fd.append('target_id', id);
-    fd.append('ajax', '1');
-    fd.append('csrf_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-    fetch('/pages/equipment.php', {method: 'POST', body: fd})
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-            if (!data.ok) return;
-            var avail = data.is_available;
-            var icon = btn.querySelector('i');
+    const fd = new FormData();
+    fd.append('_method', 'PATCH');
+    fd.append('csrf_token', csrfToken);
+    fetch('/api/equipment.php?id=' + id, {method: 'POST', body: fd})
+        .then(r => r.json())
+        .then(data => {
+            const avail = data.is_available;
+            const icon  = btn.querySelector('i');
             icon.className = 'fa fa-' + (avail ? 'toggle-on' : 'toggle-off');
-            var row = btn.closest('tr');
-            var badge = row.querySelector('.admin-badge');
-            badge.className = 'admin-badge admin-badge--' + (avail ? 'active' : 'inactive');
-            badge.textContent = avail ? 'Available' : 'Unavailable';
+            const card   = btn.closest('.equipment-card');
+            const status = card.querySelector('.status');
+            status.className  = 'status ' + (avail ? 'available' : 'unavailable');
+            status.textContent = avail ? 'Available' : 'Out of service';
+            card.dataset.status = avail ? 'available' : 'out';
         });
 }
+
+// Create / Edit form
+const equipForm = document.querySelector('#equipForm form');
+if (equipForm) {
+    equipForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const fd     = new FormData(this);
+        const method = fd.get('_method') || 'POST';
+        fd.delete('_method');
+        let res;
+        try {
+            res = await fetch(this.action, {method, body: fd});
+        } catch {
+            alert('Network error. Please try again.');
+            return;
+        }
+        const data = await res.json();
+        if (res.ok) {
+            window.location.href = '/pages/equipment.php?msg=' + encodeURIComponent(data.msg);
+        } else {
+            alert(data.error || 'An error occurred.');
+        }
+    });
+}
+
+// Delete forms
+document.querySelectorAll('.form-inline').forEach(form => {
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const id    = this.querySelector('[name="target_id"]').value;
+        const token = this.querySelector('[name="csrf_token"]').value;
+        const fd    = new FormData();
+        fd.append('_method', 'DELETE');
+        fd.append('csrf_token', token);
+        let res;
+        try {
+            res = await fetch('/api/equipment.php?id=' + id, {method: 'POST', body: fd});
+        } catch {
+            alert('Network error.');
+            return;
+        }
+        if (res.status === 204 || res.ok) {
+            this.closest('.equipment-card--admin')?.remove();
+        } else {
+            const data = await res.json();
+            alert(data.error || 'Error removing equipment.');
+        }
+    });
+});
 
 function openEquipModal(card) {
     var name     = card.dataset.name;

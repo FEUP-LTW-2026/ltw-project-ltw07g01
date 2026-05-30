@@ -20,84 +20,8 @@ $s = $db->prepare('SELECT 1 FROM admins WHERE user_id = :id');
 $s->execute([':id' => $userId]);
 $isAdmin = (bool)$s->fetch();
 
-$msg = '';
+$msg   = isset($_GET['msg']) ? htmlspecialchars($_GET['msg']) : '';
 $error = '';
-
-if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && ($_POST['_action'] ?? '') === 'toggle') {
-    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
-        header('Content-Type: application/json');
-        http_response_code(403);
-        echo json_encode(['ok' => false, 'error' => 'Invalid CSRF token']);
-        exit;
-    }
-    $targetId = (int)($_POST['target_id'] ?? 0);
-    if ($targetId) {
-        $db->prepare('UPDATE equipment SET is_available = NOT is_available WHERE id=?')->execute([$targetId]);
-        $s = $db->prepare('SELECT is_available FROM equipment WHERE id=?');
-        $s->execute([$targetId]);
-        $row = $s->fetch();
-        header('Content-Type: application/json');
-        echo json_encode(['ok' => true, 'is_available' => (bool)$row['is_available']]);
-    } else {
-        header('Content-Type: application/json');
-        echo json_encode(['ok' => false]);
-    }
-    exit;
-}
-
-if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
-        http_response_code(403);
-        die('Invalid CSRF token.');
-    }
-    $action = $_POST['_action'] ?? '';
-
-    if ($action === 'create') {
-        $name = trim($_POST['name'] ?? '');
-        $gymId = (int)($_POST['gym_id'] ?? 0);
-        $bodyPart = trim($_POST['body_part'] ?? '');
-        if (!$name || !$gymId || !$bodyPart) {
-            $error = 'All fields are required.';
-        } else {
-            $db->prepare('INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES (?,?,?,1)')
-                    ->execute([$name, $gymId, $bodyPart]);
-            header('Location: /pages/equipment.php?msg=Equipment+added.');
-            exit;
-        }
-
-    } elseif ($action === 'update') {
-        $targetId = (int)($_POST['target_id'] ?? 0);
-        $name = trim($_POST['name'] ?? '');
-        $gymId = (int)($_POST['gym_id'] ?? 0);
-        $bodyPart = trim($_POST['body_part'] ?? '');
-        if (!$targetId || !$name || !$gymId || !$bodyPart) {
-            $error = 'Invalid data.';
-        } else {
-            $db->prepare('UPDATE equipment SET name=?, gym_id=?, body_part=? WHERE id=?')
-                    ->execute([$name, $gymId, $bodyPart, $targetId]);
-            header('Location: /pages/equipment.php?msg=Equipment+updated.');
-            exit;
-        }
-
-    } elseif ($action === 'toggle') {
-        $targetId = (int)($_POST['target_id'] ?? 0);
-        if ($targetId) {
-            $db->prepare('UPDATE equipment SET is_available = NOT is_available WHERE id=?')->execute([$targetId]);
-            header('Location: /pages/equipment.php?msg=Status+updated.');
-            exit;
-        }
-
-    } elseif ($action === 'delete') {
-        $targetId = (int)($_POST['target_id'] ?? 0);
-        if ($targetId) {
-            $db->prepare('DELETE FROM equipment WHERE id=?')->execute([$targetId]);
-            header('Location: /pages/equipment.php?msg=Equipment+removed.');
-            exit;
-        }
-    }
-}
-
-if (isset($_GET['msg'])) $msg = htmlspecialchars($_GET['msg']);
 
 if ($isAdmin) {
     $editItem = null;
