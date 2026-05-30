@@ -9,6 +9,17 @@
       unset($_SESSION['messages']);
     }
 
+    public function getCsrfToken(): string {
+      if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+      }
+      return $_SESSION['csrf_token'];
+    }
+
+    public function validateCsrfToken(string $token): bool {
+      return !empty($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+    }
+
     public function isLoggedIn() : bool {
       return isset($_SESSION['id']);    
     }
@@ -42,4 +53,12 @@
       return $this->messages;
     }
   }
+?>
+<?php
+function csrf_field(): string {
+  if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+  }
+  return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($_SESSION['csrf_token']) . '">';
+}
 ?>
