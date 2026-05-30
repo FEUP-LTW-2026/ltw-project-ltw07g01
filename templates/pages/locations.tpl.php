@@ -66,10 +66,13 @@
 
         <div class="admin-form-card" id="locForm" <?= ($editItem || $error) ? '' : 'hidden' ?>>
             <h2 id="formTitle"><?= $editItem ? 'Edit Location' : 'Add Location' ?></h2>
-            <form method="POST" enctype="multipart/form-data" class="admin-form-grid">
+            <form method="POST"
+                      action="<?= $editItem ? '/api/locations.php?id=' . (int)$editItem['id'] : '/api/locations.php' ?>"
+                      enctype="multipart/form-data" class="admin-form-grid">
                 <?= csrf_field() ?>
-                <input type="hidden" name="_action" value="<?= $editItem ? 'update' : 'create' ?>">
-                <input type="hidden" name="target_id" value="<?= $editItem['id'] ?? '' ?>">
+                <?php if ($editItem): ?>
+                    <input type="hidden" name="_method" value="PUT">
+                <?php endif; ?>
                 <div class="admin-field">
                     <label>Name</label>
                     <input type="text" name="name" required value="<?= htmlspecialchars($editItem['name'] ?? '') ?>">
@@ -97,7 +100,7 @@
                     <button type="submit" class="btn-admin-primary">
                         <?= $editItem ? '<i class="fa fa-save"></i> Save' : '<i class="fa fa-plus"></i> Add' ?>
                     </button>
-                    <a href="/pages/locations.php" class="btn-admin-ghost">Cancel</a>
+                    <button type="button" class="btn-admin-ghost" onclick="closeLocForm()">Cancel</button>
                 </div>
             </form>
         </div>
@@ -122,7 +125,6 @@
                     <form method="POST" class="form-inline"
                           onsubmit="return confirm('Remove <?= htmlspecialchars(addslashes($loc['name'])) ?>?')">
                         <?= csrf_field() ?>
-                        <input type="hidden" name="_action" value="delete">
                         <input type="hidden" name="target_id" value="<?= $loc['id'] ?>">
                         <button type="submit" class="btn-admin-sm btn-admin-sm--danger" title="Remove">
                             <i class="fa fa-trash"></i>
