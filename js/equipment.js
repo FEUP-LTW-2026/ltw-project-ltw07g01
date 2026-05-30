@@ -10,6 +10,7 @@ function toggleEquip(id, btn) {
     fd.append('_action', 'toggle');
     fd.append('target_id', id);
     fd.append('ajax', '1');
+    fd.append('csrf_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
     fetch('/pages/equipment.php', {method: 'POST', body: fd})
         .then(function (r) { return r.json(); })
         .then(function (data) {
