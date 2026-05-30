@@ -12,6 +12,7 @@
         <?php endif; ?>
 
         <form method="POST" action="/actions/login.php">
+            <?= csrf_field() ?>
             <label for="email">Email or Username</label>
             <input type="text" id="email" name="email" required autocomplete="username">
 

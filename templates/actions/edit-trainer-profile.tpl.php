@@ -39,6 +39,7 @@
         <?php endif; ?>
 
         <form method="post" enctype="multipart/form-data" class="edit-form">
+            <?= csrf_field() ?>
             <input type="file" id="profile_photo" name="profile_photo" accept="image/jpeg,image/png,image/webp,image/gif" class="profile-file-input">
 
             <section class="profile-details" aria-label="Personal information">

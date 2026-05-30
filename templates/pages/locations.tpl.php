@@ -67,6 +67,7 @@
         <div class="admin-form-card" id="locForm" <?= ($editItem || $error) ? '' : 'hidden' ?>>
             <h2 id="formTitle"><?= $editItem ? 'Edit Location' : 'Add Location' ?></h2>
             <form method="POST" enctype="multipart/form-data" class="admin-form-grid">
+                <?= csrf_field() ?>
                 <input type="hidden" name="_action" value="<?= $editItem ? 'update' : 'create' ?>">
                 <input type="hidden" name="target_id" value="<?= $editItem['id'] ?? '' ?>">
                 <div class="admin-field">
@@ -120,6 +121,7 @@
                     </a>
                     <form method="POST" class="form-inline"
                           onsubmit="return confirm('Remove <?= htmlspecialchars(addslashes($loc['name'])) ?>?')">
+                        <?= csrf_field() ?>
                         <input type="hidden" name="_action" value="delete">
                         <input type="hidden" name="target_id" value="<?= $loc['id'] ?>">
                         <button type="submit" class="btn-admin-sm btn-admin-sm--danger" title="Remove">

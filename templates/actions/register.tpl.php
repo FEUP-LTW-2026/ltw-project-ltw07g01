@@ -12,6 +12,7 @@
         <?php endif; ?>
 
         <form method="POST" action="/actions/register.php">
+            <?= csrf_field() ?>
             <label for="username">Username</label>
             <input type="text" id="username" name="username" placeholder="John67" required
                    pattern="[\w.]{3,30}" title="3 to 30 characters: letters, numbers, underscores or dots">

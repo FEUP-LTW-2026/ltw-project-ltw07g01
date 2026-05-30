@@ -24,6 +24,7 @@
         <section class="admin-form-card" id="memberForm" <?= $error ? '' : 'hidden' ?>>
             <h2 id="formTitle">New Member</h2>
             <form method="POST" enctype="multipart/form-data" class="admin-form-grid">
+                <?= csrf_field() ?>
                 <input type="hidden" name="_action" id="formAction" value="create">
                 <input type="hidden" name="target_id" id="formTargetId" value="">
 
@@ -99,6 +100,7 @@
             <div id="promoteSection" class="admin-promote-section">
                 <form method="POST" id="promoteForm"
                       onsubmit="return confirm('Promote this member to trainer? This cannot be undone.')">
+                    <?= csrf_field() ?>
                     <input type="hidden" name="_action" value="promote">
                     <input type="hidden" name="target_id" id="promoteTargetId" value="">
                     <button type="submit" class="btn-admin-ghost btn-admin-ghost--warn">
@@ -156,6 +158,7 @@
                                 </a>
                                 <form method="POST" class="form-inline"
                                       onsubmit="return confirm('Remove <?= htmlspecialchars(addslashes($m['first_name'])) ?>? This cannot be undone.')">
+                                    <?= csrf_field() ?>
                                     <input type="hidden" name="_action" value="delete">
                                     <input type="hidden" name="target_id" value="<?= $m['id'] ?>">
                                     <button type="submit" class="btn-admin-sm btn-admin-sm--danger" title="Remove">

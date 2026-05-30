@@ -20,6 +20,7 @@
         </div>
 
         <form method="POST" action="/actions/subscribe.php">
+            <?= csrf_field() ?>
             <input type="hidden" name="plan" value="<?= htmlspecialchars($planKey) ?>">
             <button type="submit" class="plan-btn">Confirm Purchase</button>
         </form>

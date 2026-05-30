@@ -182,6 +182,11 @@ $avgFormatted   = formatMinutes($avgMinutes);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? '') === 'cancel_subscription' && $isOwnProfile) {
     header('Content-Type: application/json');
+    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        http_response_code(403);
+        echo json_encode(['ok' => false, 'error' => 'Invalid CSRF token']);
+        exit;
+    }
     $db->prepare("UPDATE memberships SET gym_plan = NULL, gym_end = datetime('now') WHERE client_id = ? AND (gym_end IS NULL OR gym_end > datetime('now'))")
        ->execute([$currentUserId]);
     echo json_encode(['ok' => true]);

@@ -28,83 +28,87 @@ $stmt->execute([$adminId]);
 $user = $stmt->fetch();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $firstName       = trim($_POST['first_name']      ?? '');
-    $lastName        = trim($_POST['last_name']       ?? '');
-    $username        = trim($_POST['username']        ?? '');
-    $currentPassword = $_POST['current_password']     ?? '';
-    $newPassword     = $_POST['new_password']          ?? '';
-    $confirmPassword = $_POST['confirm_password']      ?? '';
-
-    if (!$firstName || !$lastName || !$username) {
-        $error = 'Name and username are required.';
-    } elseif (!preg_match('/^[\w.]{3,30}$/', $username)) {
-        $error = 'Username must be 3–30 characters (letters, numbers, underscores, dots).';
+    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        $error = 'Invalid request. Please try again.';
     } else {
-        $s = $db->prepare('SELECT 1 FROM users WHERE username = ? AND id != ?');
-        $s->execute([$username, $adminId]);
-        if ($s->fetch()) {
-            $error = 'That username is already taken.';
-        }
-    }
+        $firstName       = trim($_POST['first_name']      ?? '');
+        $lastName        = trim($_POST['last_name']       ?? '');
+        $username        = trim($_POST['username']        ?? '');
+        $currentPassword = $_POST['current_password']     ?? '';
+        $newPassword     = $_POST['new_password']          ?? '';
+        $confirmPassword = $_POST['confirm_password']      ?? '';
 
-    if (!$error && $newPassword !== '') {
-        $row = $db->prepare('SELECT password_hash FROM users WHERE id = ?');
-        $row->execute([$adminId]);
-        $hash = $row->fetchColumn();
-        if (!password_verify($currentPassword, $hash)) {
-            $error = 'Current password is incorrect.';
-        } elseif (strlen($newPassword) < 6) {
-            $error = 'New password must be at least 6 characters.';
-        } elseif ($newPassword !== $confirmPassword) {
-            $error = 'New passwords do not match.';
-        }
-    }
-
-    $newPhotoPath = null;
-    if (!$error && isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
-        $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-        $finfo   = new finfo(FILEINFO_MIME_TYPE);
-        $mime    = $finfo->file($_FILES['profile_photo']['tmp_name']);
-        if (!in_array($mime, $allowed, true)) {
-            $error = 'Photo must be JPEG, PNG, WebP or GIF.';
-        } elseif ($_FILES['profile_photo']['size'] > 5 * 1024 * 1024) {
-            $error = 'Photo must be under 5 MB.';
+        if (!$firstName || !$lastName || !$username) {
+            $error = 'Name and username are required.';
+        } elseif (!preg_match('/^[\w.]{3,30}$/', $username)) {
+            $error = 'Username must be 3–30 characters (letters, numbers, underscores, dots).';
         } else {
-            $ext      = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif'][$mime];
-            $filename = 'user_' . $adminId . '_' . time() . '.' . $ext;
-            $destDir  = __DIR__ . '/../images/profile_photos/';
-            if (move_uploaded_file($_FILES['profile_photo']['tmp_name'], $destDir . $filename)) {
-                $newPhotoPath = '../images/profile_photos/' . $filename;
-            } else {
-                $error = 'Could not save the photo. Please try again.';
+            $s = $db->prepare('SELECT 1 FROM users WHERE username = ? AND id != ?');
+            $s->execute([$username, $adminId]);
+            if ($s->fetch()) {
+                $error = 'That username is already taken.';
             }
         }
-    }
 
-    if (!$error) {
-        $fields = 'first_name=?, last_name=?, username=?';
-        $params = [$firstName, $lastName, $username];
-
-        if ($newPhotoPath !== null) {
-            $fields .= ', profile_photo=?';
-            $params[] = $newPhotoPath;
+        if (!$error && $newPassword !== '') {
+            $row = $db->prepare('SELECT password_hash FROM users WHERE id = ?');
+            $row->execute([$adminId]);
+            $hash = $row->fetchColumn();
+            if (!password_verify($currentPassword, $hash)) {
+                $error = 'Current password is incorrect.';
+            } elseif (strlen($newPassword) < 6) {
+                $error = 'New password must be at least 6 characters.';
+            } elseif ($newPassword !== $confirmPassword) {
+                $error = 'New passwords do not match.';
+            }
         }
-        if ($newPassword !== '') {
-            $fields .= ', password_hash=?';
-            $params[] = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        $newPhotoPath = null;
+        if (!$error && isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
+            $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+            $finfo   = new finfo(FILEINFO_MIME_TYPE);
+            $mime    = $finfo->file($_FILES['profile_photo']['tmp_name']);
+            if (!in_array($mime, $allowed, true)) {
+                $error = 'Photo must be JPEG, PNG, WebP or GIF.';
+            } elseif ($_FILES['profile_photo']['size'] > 5 * 1024 * 1024) {
+                $error = 'Photo must be under 5 MB.';
+            } else {
+                $ext      = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif'][$mime];
+                $filename = 'user_' . $adminId . '_' . time() . '.' . $ext;
+                $destDir  = __DIR__ . '/../images/profile_photos/';
+                if (move_uploaded_file($_FILES['profile_photo']['tmp_name'], $destDir . $filename)) {
+                    $newPhotoPath = '../images/profile_photos/' . $filename;
+                } else {
+                    $error = 'Could not save the photo. Please try again.';
+                }
+            }
         }
 
-        $params[] = $adminId;
-        $db->prepare("UPDATE users SET {$fields} WHERE id=?")->execute($params);
+        if (!$error) {
+            $fields = 'first_name=?, last_name=?, username=?';
+            $params = [$firstName, $lastName, $username];
 
-        header('Location: /actions/edit-admin-profile.php');
-        exit;
+            if ($newPhotoPath !== null) {
+                $fields .= ', profile_photo=?';
+                $params[] = $newPhotoPath;
+            }
+            if ($newPassword !== '') {
+                $fields .= ', password_hash=?';
+                $params[] = password_hash($newPassword, PASSWORD_DEFAULT);
+            }
+
+            $params[] = $adminId;
+            $db->prepare("UPDATE users SET {$fields} WHERE id=?")->execute($params);
+
+            header('Location: /actions/edit-admin-profile.php');
+            exit;
+        }
+
+        // em erro mantem os valores submetidos
+        $user['first_name'] = $firstName;
+        $user['last_name']  = $lastName;
+        $user['username']   = $username;
     }
-
-    // em erro mantem os valores submetidos
-    $user['first_name'] = $firstName;
-    $user['last_name']  = $lastName;
-    $user['username']   = $username;
 }
 
 $profilePhoto = $user['profile_photo'] ?? '../images/profile_pic.webp';
