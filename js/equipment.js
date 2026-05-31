@@ -34,12 +34,10 @@ const equipForm = document.querySelector('#equipForm form');
 if (equipForm) {
     equipForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        const fd     = new FormData(this);
-        const method = fd.get('_method') || 'POST';
-        fd.delete('_method');
+        const fd = new FormData(this);
         let res;
         try {
-            res = await fetch(this.action, {method, body: fd});
+            res = await fetch(this.action, {method: 'POST', body: fd});
         } catch {
             alert('Network error. Please try again.');
             return;

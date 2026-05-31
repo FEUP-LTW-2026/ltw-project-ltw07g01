@@ -8,8 +8,9 @@ header('Content-Type: application/json');
 $session = new Session();
 $db = getDatabaseConnection();
 
-$method = strtoupper($_SERVER['REQUEST_METHOD']);
-$id = isset($_GET['id']) ? (int)$_GET['id'] : null;
+$method  = strtoupper($_SERVER['REQUEST_METHOD']);
+$id      = isset($_GET['id']) ? (int)$_GET['id'] : null;
+$rawBody = file_get_contents('php://input');
 
 if ($method === 'GET') {
     if ($id) {
@@ -39,6 +40,7 @@ if ($method === 'GET') {
 }
 function requireAdmin(Session $session, PDO $db): void
 {
+    global $rawBody;
     if (!$session->isLoggedIn()) {
         http_response_code(401);
         die(json_encode(['error' => 'Unauthorized']));
@@ -49,7 +51,7 @@ function requireAdmin(Session $session, PDO $db): void
         http_response_code(403);
         die(json_encode(['error' => 'Forbidden']));
     }
-    $body = json_decode(file_get_contents('php://input'), true) ?? [];
+    $body  = json_decode($rawBody, true) ?? [];
     $token = $body['csrf_token'] ?? $_POST['csrf_token'] ?? '';
     if (!$session->validateCsrfToken($token)) {
         http_response_code(403);
@@ -59,7 +61,8 @@ function requireAdmin(Session $session, PDO $db): void
 
 function getBody(): array
 {
-    $body = json_decode(file_get_contents('php://input'), true);
+    global $rawBody;
+    $body = json_decode($rawBody, true);
     return is_array($body) ? $body : $_POST;
 }
 

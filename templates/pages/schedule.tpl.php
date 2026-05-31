@@ -405,7 +405,15 @@
                         <div class="sc-card-top">
                             <span class="sc-class-name"><?= htmlspecialchars($cls['class_name']) ?></span>
                             <div class="sc-badges" id="badges-<?= $cls['id'] ?>">
-                                <?php if ($role !== 'admin' && $enrolled): ?>
+                                <?php
+                                    $isPast = strtotime($cls['schedule']) <= time();
+                                    if ($role !== 'admin' && $enrolled && $isPast):
+                                        if (isset($cls['my_rating']) && $cls['my_rating'] !== null): ?>
+                                <span class="sc-badge sc-badge--reviewed"><i class="fa fa-star"></i> Reviewed</span>
+                                        <?php else: ?>
+                                <span class="sc-badge sc-badge--attended"><i class="fa fa-check"></i> Attended</span>
+                                        <?php endif;
+                                    elseif ($role !== 'admin' && $enrolled): ?>
                                 <span class="sc-badge sc-badge--enrolled"><i class="fa fa-check"></i> Enrolled</span>
                                 <?php elseif ($full): ?>
                                 <span class="sc-badge sc-badge--full">Full</span>
@@ -464,9 +472,17 @@
                                 </button>
                             </form>
                         </div>
-                        <?php else: ?>
+                        <?php else:
+                            $isPast = strtotime($cls['schedule']) <= time();
+                        ?>
                         <div class="sc-card-actions" id="actions-<?= $cls['id'] ?>">
-                            <?php if ($role === 'client' && !$enrolled && !$full): ?>
+                            <?php if ($isPast): ?>
+                                <?php if ($enrolled): ?>
+                                <span class="sc-enrolled-confirm sc-enrolled-past">
+                                    <i class="fa fa-clock-rotate-left"></i> Attended
+                                </span>
+                                <?php endif; ?>
+                            <?php elseif ($role === 'client' && !$enrolled && !$full): ?>
                             <button class="sc-book-btn"
                                     onclick="event.stopPropagation(); bookClass(<?= $cls['id'] ?>, this)">
                                 <i class="fa fa-calendar-check"></i> Book
@@ -477,7 +493,11 @@
                             <span class="sc-full-msg">Class full</span>
                             <?php endif; ?>
                             <button class="sc-details-btn" onclick="event.stopPropagation(); openModal(<?= $cls['id'] ?>)">
-                                Details <i class="fa fa-chevron-right"></i>
+                                <?php if ($isPast && $enrolled && $cls['my_rating'] === null): ?>
+                                    <i class="fa fa-star"></i> Review
+                                <?php else: ?>
+                                    Details <i class="fa fa-chevron-right"></i>
+                                <?php endif; ?>
                             </button>
                         </div>
                         <?php endif; ?>

@@ -2,8 +2,8 @@
 declare(strict_types=1);
 require_once __DIR__ . '/../database/connection.db.php';
 require_once __DIR__ . '/../utils/session.php';
-require_once __DIR__ . '/../models/Auth.php';
-require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../database/Auth.php';
+require_once __DIR__ . '/../database/User.php';
 
 header('Content-Type: application/json');
 
@@ -20,6 +20,13 @@ function requireAdmin(Session $session, PDO $db): void {
 
 function savePhoto(PDO $db, int $userId): void {
     User::saveProfilePhoto($db, $userId, __DIR__ . '/../images/profile_photos/');
+}
+
+function parseDMY(string $date): ?string {
+    if (preg_match('/^(\d{2})-(\d{2})-(\d{4})$/', $date, $m)) {
+        return $m[3] . '-' . $m[2] . '-' . $m[1];
+    }
+    return $date ?: null;
 }
 
 if ($method === 'POST' && $action === 'promote_trainer') {
@@ -81,8 +88,8 @@ if ($method === 'POST') {
     $plan    = $_POST['gym_plan'] ?? 'none';
     $credits = max(0, (int)($_POST['classes_remaining'] ?? 0));
     if ($plan !== 'none' && $plan !== '') {
-        $start = trim($_POST['gym_start'] ?? '') ?: date('Y-m-d');
-        $end   = trim($_POST['gym_end']   ?? '') ?: null;
+        $start = parseDMY(trim($_POST['gym_start'] ?? '')) ?? date('Y-m-d');
+        $end   = parseDMY(trim($_POST['gym_end']   ?? ''));
         $db->prepare('INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, classes_remaining) VALUES (?,?,?,?,?)')
            ->execute([$newId, $plan, $start, $end, $credits]);
     }
@@ -106,8 +113,8 @@ if ($method === 'PUT') {
     $lastName  = trim($_POST['last_name']  ?? '');
     $email     = trim($_POST['email']      ?? '');
     $plan      = $_POST['gym_plan']        ?? '';
-    $start     = trim($_POST['gym_start']  ?? '');
-    $end       = trim($_POST['gym_end']    ?? '') ?: null;
+    $start     = parseDMY(trim($_POST['gym_start'] ?? '')) ?? date('Y-m-d');
+    $end       = parseDMY(trim($_POST['gym_end']   ?? ''));
     $credits   = max(0, (int)($_POST['classes_remaining'] ?? 0));
 
     if (!$firstName || !$lastName || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
