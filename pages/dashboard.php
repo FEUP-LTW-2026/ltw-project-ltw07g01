@@ -14,6 +14,53 @@ require_once(__DIR__ . '/../templates/pages/dashboard.tpl.php');
 
 $db = getDatabaseConnection();
 
+function fetchClassesForSC(PDO $db, array $classIds, array $typeColors): array {
+    if (empty($classIds)) return [];
+    $placeholders = implode(',', array_fill(0, count($classIds), '?'));
+    $s = $db->prepare("
+        SELECT cl.id, ct.name AS class_name, cl.schedule, cl.duration_min, cl.capacity, cl.photo,
+               cl.trainer_id, gl.name AS gym_name, gl.city AS gym_city,
+               u.first_name AS trainer_first, u.last_name AS trainer_last, u.profile_photo AS trainer_photo,
+               (SELECT COUNT(*) FROM client_classes cc WHERE cc.class_id = cl.id) AS enrolled,
+               ROUND(COALESCE((SELECT AVG(r2.rating) FROM reviews r2 JOIN classes c2 ON c2.id=r2.class_id
+                   WHERE c2.trainer_id=cl.trainer_id AND c2.class_type_id=cl.class_type_id),0),1) AS avg_rating,
+               (SELECT COUNT(*) FROM reviews r2 JOIN classes c2 ON c2.id=r2.class_id
+                   WHERE c2.trainer_id=cl.trainer_id AND c2.class_type_id=cl.class_type_id) AS review_count
+        FROM classes cl
+        JOIN class_types ct ON ct.id=cl.class_type_id
+        LEFT JOIN gym_locations gl ON gl.id=cl.gym_id
+        LEFT JOIN users u ON u.id=cl.trainer_id
+        WHERE cl.id IN ($placeholders)");
+    $s->execute(array_values($classIds));
+    $result = [];
+    foreach ($s->fetchAll(PDO::FETCH_ASSOC) as $c) {
+        $result[(int)$c['id']] = [
+            'id'           => (int)$c['id'],
+            'class_name'   => $c['class_name'],
+            'color'        => $typeColors[$c['class_name']] ?? '#888',
+            'schedule'     => $c['schedule'],
+            'duration_min' => (int)$c['duration_min'],
+            'gym_name'     => $c['gym_name'] ?? '',
+            'gym_city'     => $c['gym_city'] ?? '',
+            'trainer_id'   => (int)$c['trainer_id'],
+            'trainer_first'=> $c['trainer_first'] ?? '',
+            'trainer_last' => $c['trainer_last'] ?? '',
+            'trainer_photo'=> $c['trainer_photo'] ?? '',
+            'capacity'     => (int)$c['capacity'],
+            'enrolled'     => (int)$c['enrolled'],
+            'avg_rating'   => (float)$c['avg_rating'],
+            'review_count' => (int)$c['review_count'],
+            'description'  => '',
+            'photo'        => $c['photo'] ?? '',
+            'is_enrolled'  => false,
+            'is_full'      => ((int)$c['capacity'] - (int)$c['enrolled']) <= 0,
+            'my_rating'    => null,
+            'my_comment'   => null,
+        ];
+    }
+    return $result;
+}
+
 $userId = $session->getId();
 
 
@@ -112,17 +159,20 @@ if ($role === 'client') {
                     WHERE c2.trainer_id = cl.trainer_id AND c2.class_type_id = cl.class_type_id), 0), 1) AS avg_rating,
                 (SELECT COUNT(*) FROM reviews r
                     JOIN classes c2 ON c2.id = r.class_id
-                    WHERE c2.trainer_id = cl.trainer_id AND c2.class_type_id = cl.class_type_id) AS review_count
+                    WHERE c2.trainer_id = cl.trainer_id AND c2.class_type_id = cl.class_type_id) AS review_count,
+                my_rev.rating  AS my_rating,
+                my_rev.comment AS my_comment
          FROM client_classes cc
          JOIN classes cl ON cl.id = cc.class_id
          JOIN class_types ct ON ct.id = cl.class_type_id
          LEFT JOIN gym_locations gl ON gl.id = cl.gym_id
          LEFT JOIN users u ON u.id = cl.trainer_id
+         LEFT JOIN reviews my_rev ON my_rev.class_id = cl.id AND my_rev.client_id = :uid
          WHERE cc.client_id = :id AND cl.schedule > datetime(\'now\')
          ORDER BY cl.schedule ASC
          LIMIT 5'
     );
-    $stmt->execute([':id' => $userId]);
+    $stmt->execute([':id' => $userId, ':uid' => $userId]);
     $upcomingClasses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $stmt = $db->prepare(
@@ -286,6 +336,18 @@ if ($role === 'trainer') {
     );
     $stmt->execute([':id' => $userId]);
     $specializations = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    $stmt = $db->prepare(
+        'SELECT r.rating, r.comment, r.class_id, u.username, ct.name AS class_name
+         FROM reviews r
+         JOIN users u ON u.id = r.client_id
+         JOIN classes cl ON cl.id = r.class_id
+         JOIN class_types ct ON ct.id = cl.class_type_id
+         WHERE cl.trainer_id = :id
+         ORDER BY r.created_at DESC LIMIT 8'
+    );
+    $stmt->execute([':id' => $userId]);
+    $trainerReviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 
@@ -314,7 +376,7 @@ if ($role === 'admin') {
     )->fetchAll(PDO::FETCH_ASSOC);
 
     $recentReviews = $db->query(
-        'SELECT r.rating, r.comment, u.username, ct.name AS class_name
+        'SELECT r.rating, r.comment, r.class_id, u.username, ct.name AS class_name
          FROM reviews r
          JOIN users u ON u.id = r.client_id
          JOIN classes cl ON cl.id = r.class_id
@@ -398,6 +460,15 @@ if ($role === 'client') {
             'my_comment'   => null,
         ];
     }
+    // also include past classes referenced in reviews that aren't yet in the map
+    $missingIds = array_diff(
+        array_unique(array_map('intval', array_column($trainerReviews ?? [], 'class_id'))),
+        array_keys($dashClassesForSC)
+    );
+    $dashClassesForSC += fetchClassesForSC($db, $missingIds, $dashTypeColors);
+} elseif ($role === 'admin') {
+    $reviewIds = array_unique(array_map('intval', array_column($recentReviews ?? [], 'class_id')));
+    $dashClassesForSC = fetchClassesForSC($db, $reviewIds, $dashTypeColors);
 }
 
 drawDashHeader($session, $db, 'home', ['schedule']);
@@ -421,6 +492,7 @@ drawDashboardPage(
     $classesTaught ?? 0,
     (string)($avgRating ?? '—'),
     $recentStudents ?? [],
+    $trainerReviews ?? [],
     $specializations ?? [],
     $totalMembers ?? 0,
     $totalTrainers ?? 0,

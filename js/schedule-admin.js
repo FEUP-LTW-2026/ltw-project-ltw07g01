@@ -137,6 +137,67 @@ var SC = JSON.parse(document.getElementById('schedule-data').textContent);
     selectDay(SC.defaultDay);
     applyFilters();
 
+    function escHtml(s) {
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function loadReviews(classId, color) {
+        var listEl = document.getElementById('scModalReviewList');
+        if (!listEl) return;
+        listEl.innerHTML = '<p class="sc-review-loading"><i class="fa fa-spinner fa-spin"></i></p>';
+        fetch('schedule.php?ajax=1&action=get_reviews&class_id=' + classId)
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (!data.ok || !data.reviews || !data.reviews.length) {
+                    listEl.innerHTML = '';
+                    return;
+                }
+                var html = '';
+                data.reviews.forEach(function(rev) {
+                    var stars = '';
+                    for (var i = 1; i <= 5; i++) {
+                        stars += '<i class="fa fa-star" style="color:' + (i <= rev.rating ? color : '#555') + '"></i>';
+                    }
+                    html += '<div class="sc-review-item">'
+                        + '<div class="sc-review-item-header">'
+                        + '<div class="sc-review-item-stars">' + stars + '</div>'
+                        + '<span class="sc-review-item-name">' + escHtml(rev.first_name + ' ' + rev.last_name) + '</span>'
+                        + '<button class="sc-review-delete" onclick="deleteReview(' + rev.id + ',' + classId + ',this)" title="Delete review"><i class="fa fa-trash"></i></button>'
+                        + '</div>'
+                        + (rev.comment ? '<p class="sc-review-item-comment">' + escHtml(rev.comment) + '</p>' : '')
+                        + '</div>';
+                });
+                listEl.innerHTML = html;
+            })
+            .catch(function() { listEl.innerHTML = ''; });
+    }
+
+    window.deleteReview = function(reviewId, classId, btn) {
+        btn.disabled = true;
+        fetch('schedule.php', {
+            method : 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body   : 'ajax=1&action=delete_review&review_id=' + reviewId + '&class_id=' + classId
+                   + '&csrf_token=' + encodeURIComponent(document.querySelector('meta[name="csrf-token"]').getAttribute('content')),
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (!data.ok) { btn.disabled = false; return; }
+            var cls = SC.classes[classId];
+            if (cls) {
+                Object.keys(SC.classes).forEach(function(id) {
+                    var c = SC.classes[id];
+                    if (c.trainer_id === cls.trainer_id && c.class_name === cls.class_name) {
+                        c.avg_rating   = data.avg_rating;
+                        c.review_count = data.review_count;
+                    }
+                });
+            }
+            openModal(classId);
+        })
+        .catch(function() { btn.disabled = false; });
+    };
+
     var modal       = document.getElementById('scModal');
     var modalClose  = document.getElementById('scModalClose');
     var modalBackdrop = document.getElementById('scModalBackdrop');
@@ -204,6 +265,8 @@ var SC = JSON.parse(document.getElementById('schedule-data').textContent);
         } else {
             ratingEl.innerHTML = '<p class="sc-modal-no-reviews"><i class="fa fa-comment-slash"></i> No reviews yet for this class.</p>';
         }
+
+        loadReviews(classId, color);
 
         document.getElementById('scModalFooter').innerHTML = '';
         modal.setAttribute('aria-hidden', 'false');

@@ -1,14 +1,68 @@
 (function () {
     'use strict';
 
-    var editModal   = document.getElementById('editModal');
+    var editModal     = document.getElementById('editModal');
     if (!editModal) return;
 
-    var editBackdrop = document.getElementById('editModalBackdrop');
-    var editClose    = document.getElementById('editModalClose');
+    var editBackdrop  = document.getElementById('editModalBackdrop');
+    var editClose     = document.getElementById('editModalClose');
+    var editDateInput = document.getElementById('editDate');
+    var editTimeInput = document.getElementById('editTime');
+    var editForm      = document.getElementById('editForm');
+
+    // auto-format dd/mm/yyyy as the user types digits
+    if (editDateInput) {
+        editDateInput.addEventListener('input', function () {
+            var digits = this.value.replace(/\D/g, '').substring(0, 8);
+            var v = digits.substring(0, 2);
+            if (digits.length > 2) v += '/' + digits.substring(2, 4);
+            if (digits.length > 4) v += '/' + digits.substring(4, 8);
+            this.value = v;
+        });
+    }
+
+    // auto-format HH:mm as the user types digits
+    if (editTimeInput) {
+        editTimeInput.addEventListener('input', function () {
+            var digits = this.value.replace(/\D/g, '').substring(0, 4);
+            this.value = digits.length > 2
+                ? digits.substring(0, 2) + ':' + digits.substring(2)
+                : digits;
+        });
+    }
+
+    // combine dd/mm/yyyy + HH:mm into hidden schedule field before submit
+    if (editForm) {
+        editForm.addEventListener('submit', function (e) {
+            var dateVal = editDateInput ? editDateInput.value.trim() : '';
+            var timeVal = editTimeInput ? editTimeInput.value.trim() : '';
+            var dp = dateVal.split('/');
+            var valid = dp.length === 3
+                && dp[0].length === 2 && dp[1].length === 2 && dp[2].length === 4
+                && /^\d{2}:\d{2}$/.test(timeVal);
+            if (valid) {
+                // convert dd/mm/yyyy → yyyy-mm-dd for PHP
+                document.getElementById('editSchedule').value = dp[2] + '-' + dp[1] + '-' + dp[0] + 'T' + timeVal;
+                var prev = editForm.querySelector('.edit-dt-error');
+                if (prev) prev.remove();
+            } else {
+                e.preventDefault();
+                var wrap = editDateInput ? editDateInput.closest('.admin-field') : null;
+                if (wrap && !wrap.querySelector('.edit-dt-error')) {
+                    var err = document.createElement('p');
+                    err.className = 'edit-dt-error';
+                    err.textContent = 'Enter date as dd/mm/yyyy and time as HH:mm (e.g. 31/05/2026 and 14:30).';
+                    wrap.appendChild(err);
+                }
+            }
+        });
+    }
 
     window.openEditModal = function (classId) {
         var cls = classId ? SC.classes[classId] : null;
+        // block editing past classes
+        if (cls && cls.schedule && new Date(cls.schedule) < new Date()) return;
+
         document.getElementById('editModalLabel').textContent = cls ? 'Edit Class' : 'New Class';
         document.getElementById('editAction').value      = cls ? 'update' : 'create';
         document.getElementById('editTargetId').value    = cls ? classId : '';
@@ -32,12 +86,15 @@
         if (cls && cls.schedule) {
             var d = new Date(cls.schedule);
             var pad = function (n) { return String(n).padStart(2, '0'); };
-            document.getElementById('editSchedule').value =
-                d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())
-                + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+            if (editDateInput) editDateInput.value = pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear();
+            if (editTimeInput) editTimeInput.value = pad(d.getHours()) + ':' + pad(d.getMinutes());
         } else {
-            document.getElementById('editSchedule').value = '';
+            if (editDateInput) editDateInput.value = '';
+            if (editTimeInput) editTimeInput.value = '';
         }
+        document.getElementById('editSchedule').value = '';
+        var prevErr = editForm ? editForm.querySelector('.edit-dt-error') : null;
+        if (prevErr) prevErr.remove();
         editModal.setAttribute('aria-hidden', 'false');
         editModal.classList.add('sc-modal--open');
         document.body.style.overflow = 'hidden';

@@ -392,8 +392,21 @@ var SC = JSON.parse(document.getElementById('schedule-data').textContent);
         .then(function(r) { return r.json(); })
         .then(function(data) {
             if (!data.ok) {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa fa-paper-plane"></i> Submit Review';
+                if (data.error === 'already_reviewed') {
+                    // fetch the stored review and show it
+                    var cls = SC.classes[classId];
+                    if (cls && currentModalId === classId) openModal(classId);
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa fa-paper-plane"></i> Submit Review';
+                    var wrap = btn.closest('.sc-modal-review-form');
+                    if (wrap && !wrap.querySelector('.sc-review-error')) {
+                        var err = document.createElement('p');
+                        err.className = 'sc-review-error';
+                        err.textContent = data.error === 'not_past' ? 'This class hasn\'t happened yet.' : 'Could not submit review. Please try again.';
+                        wrap.appendChild(err);
+                    }
+                }
                 return;
             }
             var cls = SC.classes[classId];
@@ -410,12 +423,85 @@ var SC = JSON.parse(document.getElementById('schedule-data').textContent);
                     }
                 });
             }
+            // update the dashboard recent-class card badge immediately
+            var li = document.querySelector('li[data-class-id="' + classId + '"]');
+            if (li) {
+                var badge = li.querySelector('.class-review-badge');
+                if (badge) {
+                    var stars = '';
+                    for (var i = 1; i <= 5; i++) {
+                        stars += '<i class="fa fa-star' + (i <= rating ? '' : '-o') + '"></i>';
+                    }
+                    badge.innerHTML = '<span class="review-badge review-badge--done" title="Reviewed">' + stars + '</span>';
+                }
+            }
             if (currentModalId === classId) openModal(classId);
         })
         .catch(function() {
             btn.disabled = false;
             btn.innerHTML = '<i class="fa fa-paper-plane"></i> Submit Review';
         });
+    };
+
+    function loadReviews(classId, color) {
+        var listEl = document.getElementById('scModalReviewList');
+        if (!listEl) return;
+        listEl.innerHTML = '<p class="sc-review-loading"><i class="fa fa-spinner fa-spin"></i></p>';
+        var ajaxUrl = (window.SC && SC.actionUrl) ? SC.actionUrl : 'schedule.php';
+        var sep = ajaxUrl.indexOf('?') === -1 ? '?' : '&';
+        fetch(ajaxUrl + sep + 'ajax=1&action=get_reviews&class_id=' + classId)
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (!data.ok || !data.reviews || !data.reviews.length) {
+                    listEl.innerHTML = '';
+                    return;
+                }
+                var myId = parseInt(data.my_id) || 0;
+                var html = '';
+                data.reviews.forEach(function(rev) {
+                    var stars = '';
+                    for (var i = 1; i <= 5; i++) {
+                        stars += '<i class="fa fa-star" style="color:' + (i <= rev.rating ? color : '#555') + '"></i>';
+                    }
+                    var canDelete = SC.isAdmin || (myId && parseInt(rev.client_id) === myId);
+                    html += '<div class="sc-review-item">'
+                        + '<div class="sc-review-item-header">'
+                        + '<div class="sc-review-item-stars">' + stars + '</div>'
+                        + '<span class="sc-review-item-name">' + escHtml(rev.first_name + ' ' + rev.last_name) + '</span>'
+                        + (canDelete ? '<button class="sc-review-delete" onclick="deleteReview(' + rev.id + ',' + classId + ',this)" title="Delete review"><i class="fa fa-trash"></i></button>' : '')
+                        + '</div>'
+                        + (rev.comment ? '<p class="sc-review-item-comment">' + escHtml(rev.comment) + '</p>' : '')
+                        + '</div>';
+                });
+                listEl.innerHTML = html;
+            })
+            .catch(function() { listEl.innerHTML = ''; });
+    }
+
+    window.deleteReview = function(reviewId, classId, btn) {
+        btn.disabled = true;
+        fetch(scheduleActionUrl(), {
+            method : 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body   : 'ajax=1&action=delete_review&review_id=' + reviewId + '&class_id=' + classId
+                   + '&csrf_token=' + encodeURIComponent(document.querySelector('meta[name="csrf-token"]').getAttribute('content')),
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (!data.ok) { btn.disabled = false; return; }
+            var cls = SC.classes[classId];
+            if (cls) {
+                Object.keys(SC.classes).forEach(function(id) {
+                    var c = SC.classes[id];
+                    if (c.trainer_id === cls.trainer_id && c.class_name === cls.class_name) {
+                        c.avg_rating   = data.avg_rating;
+                        c.review_count = data.review_count;
+                    }
+                });
+            }
+            if (currentModalId === classId) openModal(classId);
+        })
+        .catch(function() { btn.disabled = false; });
     };
 
     var modal = document.getElementById('scModal');
@@ -490,6 +576,7 @@ var SC = JSON.parse(document.getElementById('schedule-data').textContent);
         } else {
             ratingEl.innerHTML = '<p class="sc-modal-no-reviews"><i class="fa fa-comment-slash"></i> No reviews yet for this class.</p>';
         }
+        loadReviews(classId, color);
 
         var footer = document.getElementById('scModalFooter');
         footer.innerHTML = '';
