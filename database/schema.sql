@@ -126,10 +126,10 @@ CREATE TABLE classes
         ON DELETE SET NULL ON UPDATE NO ACTION,
     FOREIGN KEY (gym_id)
         REFERENCES gym_locations(id)
-        ON DELETE SET NULL ON UPDATE NO ACTION,
+        ON DELETE CASCADE ON UPDATE NO ACTION,
     FOREIGN KEY (trainer_id)
         REFERENCES trainers(user_id)
-        ON DELETE SET NULL ON UPDATE NO ACTION
+        ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
 CREATE TABLE trainer_locations
