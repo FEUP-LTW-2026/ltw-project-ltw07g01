@@ -31,6 +31,12 @@
     padding: 3.125rem 10% 6.25rem;
 }
 
+.trainers-page.admin-page .trainers-grid {
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 22.5rem));
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .trainer-card {
     background-color: #d9d9d9;
     border-left: 0.5rem solid var(--accent);
