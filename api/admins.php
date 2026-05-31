@@ -94,6 +94,8 @@ if ($method === 'POST') {
     $s = $db->prepare('SELECT 1 FROM trainers WHERE user_id = ?');
     $s->execute([$userId]);
     if ($s->fetch()) {
+        $db->prepare('DELETE FROM client_classes WHERE class_id IN (SELECT id FROM classes WHERE trainer_id=?)')->execute([$userId]);
+        $db->prepare('DELETE FROM classes WHERE trainer_id=?')->execute([$userId]);
         $db->prepare('DELETE FROM trainer_specializations WHERE trainer_id=?')->execute([$userId]);
         $db->prepare('DELETE FROM trainer_locations WHERE trainer_id=?')->execute([$userId]);
         $db->prepare('DELETE FROM trainers WHERE user_id=?')->execute([$userId]);

@@ -402,7 +402,17 @@ if (in_array($role, ['admin', 'trainer'], true)) {
     }
 }
 if ($role === 'admin') {
-    $trainers   = $db->query('SELECT u.id, u.first_name, u.last_name FROM users u JOIN trainers t ON t.user_id=u.id ORDER BY u.first_name')->fetchAll(PDO::FETCH_ASSOC);
+    $trainers   = $db->query(
+        'SELECT u.id, u.first_name, u.last_name,
+                GROUP_CONCAT(DISTINCT ts.class_type_id) AS spec_ids,
+                GROUP_CONCAT(DISTINCT tl.gym_id)        AS gym_ids
+         FROM users u
+         JOIN trainers t ON t.user_id = u.id
+         LEFT JOIN trainer_specializations ts ON ts.trainer_id = u.id
+         LEFT JOIN trainer_locations tl       ON tl.trainer_id = u.id
+         GROUP BY u.id
+         ORDER BY u.first_name'
+    )->fetchAll(PDO::FETCH_ASSOC);
 }
 
 $totalClasses  = count($allClasses);

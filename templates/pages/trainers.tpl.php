@@ -117,6 +117,10 @@
             </section>
         <?php endif; ?>
 
+        <div class="admin-search-bar">
+            <input type="search" id="trainerSearch" placeholder="Search by name, username or gym…">
+        </div>
+
         <div class="trainers-grid" id="trainersGrid"></div>
 
     </main>

@@ -5,6 +5,8 @@
     font-family: 'Barlow Condensed', sans-serif;
 }
 
+[hidden] { display: none !important; }
+
 
 :root {
     --accent: #00bfa6;
@@ -612,4 +614,25 @@ footer .footer-info p {
     .admin-table { font-size: 0.9rem; }
     .admin-table th,
     .admin-table td { padding: 0.625rem 0.75rem; }
+}
+
+/* shared search bar */
+.admin-search-bar { margin-bottom: 0.75rem; }
+
+.admin-search-bar input {
+    width: 100%;
+    padding: 0.6rem 0.875rem;
+    background: #0d0d0d;
+    border: 0.0625rem solid #1e1e1e;
+    border-radius: 0.375rem;
+    color: #e5e5e5;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.admin-search-bar input:hover,
+.admin-search-bar input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0.1875rem color-mix(in srgb, var(--accent) 12%, transparent);
 }

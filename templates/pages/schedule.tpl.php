@@ -149,7 +149,11 @@
                                 <select name="trainer_id" id="editTrainerId">
                                     <option value="">— no trainer —</option>
                                     <?php foreach ($trainers as $tr): ?>
-                                        <option value="<?= $tr['id'] ?>"><?= htmlspecialchars($tr['first_name'] . ' ' . $tr['last_name']) ?></option>
+                                        <option value="<?= $tr['id'] ?>"
+                                                data-specs="<?= htmlspecialchars($tr['spec_ids'] ?? '') ?>"
+                                                data-gyms="<?= htmlspecialchars($tr['gym_ids'] ?? '') ?>">
+                                            <?= htmlspecialchars($tr['first_name'] . ' ' . $tr['last_name']) ?>
+                                        </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

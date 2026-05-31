@@ -102,9 +102,12 @@ function populateFilters(trainers) {
 
     gymSel.addEventListener('change', applyFilters);
     classSel.addEventListener('change', applyFilters);
+    document.getElementById('trainerSearch')?.addEventListener('input', applyFilters);
     document.getElementById('trainer-filter-clear')?.addEventListener('click', () => {
         gymSel.value = 'all';
         classSel.value = 'all';
+        const searchEl = document.getElementById('trainerSearch');
+        if (searchEl) searchEl.value = '';
         applyFilters();
     });
 }
@@ -112,12 +115,14 @@ function populateFilters(trainers) {
 function applyFilters() {
     const gymVal   = document.getElementById('trainer-filter-gym')?.value   ?? 'all';
     const classVal = document.getElementById('trainer-filter-class')?.value ?? 'all';
-    const hasFilter = gymVal !== 'all' || classVal !== 'all';
+    const q        = (document.getElementById('trainerSearch')?.value ?? '').toLowerCase().trim();
+    const hasFilter = gymVal !== 'all' || classVal !== 'all' || q !== '';
     let visible = 0;
 
     document.querySelectorAll('[data-gyms]').forEach(card => {
         const ok = (gymVal   === 'all' || (card.dataset.gyms    || '').split('|').includes(gymVal)) &&
-                   (classVal === 'all' || (card.dataset.classes  || '').split('|').includes(classVal));
+                   (classVal === 'all' || (card.dataset.classes  || '').split('|').includes(classVal)) &&
+                   (!q || card.textContent.toLowerCase().includes(q));
         card.style.display = ok ? '' : 'none';
         if (ok) visible++;
     });

@@ -95,10 +95,38 @@
         document.getElementById('editSchedule').value = '';
         var prevErr = editForm ? editForm.querySelector('.edit-dt-error') : null;
         if (prevErr) prevErr.remove();
+        filterTrainers();
         editModal.setAttribute('aria-hidden', 'false');
         editModal.classList.add('sc-modal--open');
         document.body.style.overflow = 'hidden';
     };
+
+    var trainerSel = document.getElementById('editTrainerId');
+
+    function filterTrainers() {
+        if (!trainerSel) return;
+        var typeVal = document.getElementById('editClassType').value;
+        var gymVal  = document.getElementById('editGymId').value;
+        var selectedVal = trainerSel.value;
+        var selectedStillVisible = false;
+
+        Array.prototype.forEach.call(trainerSel.options, function (opt) {
+            if (!opt.value) return; // "— no trainer —" always visible
+            var specs = (opt.dataset.specs || '').split(',');
+            var gyms  = (opt.dataset.gyms  || '').split(',');
+            var specOk = !typeVal || specs.includes(typeVal);
+            var gymOk  = !gymVal  || gyms.includes(gymVal);
+            opt.hidden = !(specOk && gymOk);
+            if (opt.value === selectedVal && !opt.hidden) selectedStillVisible = true;
+        });
+
+        if (selectedVal && !selectedStillVisible) trainerSel.value = '';
+    }
+
+    var editClassTypeEl = document.getElementById('editClassType');
+    var editGymIdEl     = document.getElementById('editGymId');
+    if (editClassTypeEl) editClassTypeEl.addEventListener('change', filterTrainers);
+    if (editGymIdEl)     editGymIdEl.addEventListener('change', filterTrainers);
 
     var editPhotoInput = document.getElementById('editClassPhoto');
     if (editPhotoInput) {

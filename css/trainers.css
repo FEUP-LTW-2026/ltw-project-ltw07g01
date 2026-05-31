@@ -149,6 +149,17 @@
 
 .admin-trainer-actions form { margin: 0; }
 
+.trainers-page .admin-search-bar {
+    padding: 0 10%;
+    margin-bottom: 0;
+}
+
+@media (max-width: 43.75rem) {
+    .trainers-page .admin-search-bar {
+        padding: 0 6%;
+    }
+}
+
 
 @media (max-width: 43.75rem) {
     .trainers-grid {
