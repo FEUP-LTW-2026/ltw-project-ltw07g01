@@ -1,7 +1,7 @@
 .equipment-page {
     min-height: 100vh;
     background: linear-gradient(to bottom, black, #2a2a2a, black);
-    padding-top: 5.625rem;
+    padding-top: 5.62rem;
 }
 
 .equipment-hero {
@@ -11,7 +11,7 @@
 
 .equipment-hero h1 {
     color: var(--accent);
-    font-size: 5.625rem;
+    font-size: 5.62rem;
     font-weight: normal;
     padding-bottom: 1.25rem;
 }
@@ -24,20 +24,20 @@
 .equipment-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2.1875rem;
-    padding: 2.5rem 10% 5.625rem;
+    gap: 2.19rem;
+    padding: 2.5rem 10% 5.62rem;
 }
 
 
 .equipment-card {
     background-color: #d9d9d9;
-    padding: 2.1875rem;
+    padding: 2.19rem;
     border-left: 0.5rem solid var(--accent);
     overflow: hidden;
 }
 
 .equipment-card-img {
-    margin: -2.1875rem -2.1875rem 1.25rem;
+    margin: -2.19rem -2.19rem 1.25rem;
     height: 12rem;
     overflow: hidden;
 }
@@ -51,14 +51,14 @@
 
 .equipment-card h2 {
     color: #4f4f4f;
-    font-size: 2.625rem;
+    font-size: 2.62rem;
     font-weight: normal;
 }
 
 .equipment-card p {
     color: #4f4f4f;
     font-size: 1.5rem;
-    margin: 0.625rem 0;
+    margin: 0.62rem 0;
 }
 
 .status {
@@ -66,17 +66,17 @@
     margin-top: 1.25rem;
     padding: 0.5rem 1.25rem;
     border-radius: 2.5rem;
-    font-size: 1.375rem;
+    font-size: 1.38rem;
 }
 
 .status.available {
     color: var(--accent);
-    border: 0.125rem solid var(--accent);
+    border: 0.12rem solid var(--accent);
 }
 
 .status.unavailable {
     color: var(--admin-accent);
-    border: 0.125rem solid var(--admin-accent);
+    border: 0.12rem solid var(--admin-accent);
 }
 
 @media (max-width: 56.25rem) {
@@ -110,9 +110,9 @@
 
 
 .equip-gym-header {
-    padding: 0.75rem 1.125rem;
+    padding: 0.75rem 1.12rem;
     background: #0d0d0d;
-    border-bottom: 0.0625rem solid #1e1e1e;
+    border-bottom: 0.06rem solid #1e1e1e;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -188,7 +188,7 @@
     border-radius: 0.5rem;
     background: rgba(0, 0, 0, 0.08);
     color: #4f4f4f;
-    border: 0.0625rem solid rgba(0, 0, 0, 0.12);
+    border: 0.06rem solid rgba(0, 0, 0, 0.12);
     cursor: pointer;
     font-size: 0.95rem;
     text-decoration: none;
@@ -224,10 +224,10 @@
 .equip-loadmore-btn {
     background: transparent;
     color: var(--accent);
-    border: 0.125rem solid var(--accent);
+    border: 0.12rem solid var(--accent);
     padding: 0.75rem 2rem;
     border-radius: 2.5rem;
-    font-size: 1.125rem;
+    font-size: 1.12rem;
     font-family: inherit;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
@@ -242,7 +242,7 @@
 }
 
 .equip-loadmore-btn i {
-    font-size: 0.875rem;
+    font-size: 0.88rem;
 }
 
 .admin-empty-state {
@@ -289,7 +289,7 @@
     transform: translate(-50%, -48%) scale(0.97);
     width: min(28rem, 92vw);
     background: #111;
-    border: 0.0625rem solid #272727;
+    border: 0.06rem solid #272727;
     border-radius: 1.25rem;
     overflow: hidden;
     z-index: 1200;
@@ -359,8 +359,8 @@
 
 .equip-modal-muscles {
     background: #1a1a1a;
-    border-radius: 0.625rem;
-    padding: 0.875rem 1rem;
+    border-radius: 0.62rem;
+    padding: 0.88rem 1rem;
     margin-bottom: 1rem;
 }
 
@@ -385,7 +385,7 @@
 .equip-modal-diagrams img {
     height: 9rem;
     width: auto;
-    border-radius: 0.375rem;
+    border-radius: 0.38rem;
     background: #111;
     object-fit: contain;
     filter: brightness(0.9);

@@ -19,9 +19,9 @@ section.about-hero {
 }
 
 section.about-hero h1 {
-    font-size: 6.875rem;
+    font-size: 6.88rem;
     line-height: 0.9;
-    margin: 0 0 1.875rem;
+    margin: 0 0 1.88rem;
     color: var(--text-main);
 }
 
@@ -29,7 +29,7 @@ section.about-hero p {
     font-size: 2.25rem;
     color: var(--accent);
     margin: 0;
-    letter-spacing: 0.0625rem;
+    letter-spacing: 0.06rem;
 }
 
 /* intro */
@@ -57,17 +57,17 @@ section.about-intro h2 span {
 }
 
 section.about-intro .divider {
-    width: 11.875rem;
-    height: 0.125rem;
+    width: 11.88rem;
+    height: 0.12rem;
     background-color: var(--accent);
-    margin: 1.25rem 0 1.875rem;
+    margin: 1.25rem 0 1.88rem;
 }
 
 section.about-intro p {
     font-size: 1.75rem;
     line-height: 1.3;
     color: var(--text-dim);
-    margin: 0 0 0.625rem;
+    margin: 0 0 0.62rem;
 }
 
 section.about-intro > div:last-child {
@@ -78,7 +78,7 @@ section.about-intro > div:last-child img {
     width: 100%;
     height: auto;
     display: block;
-    border: 1.125rem solid var(--accent);
+    border: 1.12rem solid var(--accent);
 }
 
 /* values */
@@ -89,7 +89,7 @@ section.about-values {
 }
 
 section.about-values h2 {
-    font-size: 4.375rem;
+    font-size: 4.38rem;
     margin: 0 0 3.75rem;
     font-weight: normal;
 }
@@ -97,14 +97,14 @@ section.about-values h2 {
 section.about-values > div {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1.875rem;
+    gap: 1.88rem;
 }
 
 section.about-values article {
     background-color: #111;
-    border: 0.0625rem solid #222;
-    border-top: 0.1875rem solid var(--accent);
-    padding: 3.125rem 1.875rem;
+    border: 0.06rem solid #222;
+    border-top: 0.19rem solid var(--accent);
+    padding: 3.12rem 1.88rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -122,13 +122,13 @@ section.about-values article i {
 }
 
 section.about-values article h3 {
-    font-size: 2.625rem;
+    font-size: 2.62rem;
     margin: 0;
     font-weight: normal;
 }
 
 section.about-values article p {
-    font-size: 1.375rem;
+    font-size: 1.38rem;
     color: var(--text-dim);
     margin: 0;
     line-height: 1.3;
@@ -165,7 +165,7 @@ section.about-classes .class-card > div {
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 1.875rem;
+    padding: 1.88rem;
     pointer-events: none;
 }
 
@@ -176,7 +176,7 @@ section.about-classes .class-card h3 {
 }
 
 section.about-classes .class-card p {
-    font-size: 1.375rem;
+    font-size: 1.38rem;
     color: #ccc;
     margin: 0;
 }
@@ -192,7 +192,7 @@ section.join {
 }
 
 section.join h2 {
-    font-size: 5.625rem;
+    font-size: 5.62rem;
     margin: 0 0 1.25rem;
     font-weight: normal;
 }
@@ -200,20 +200,20 @@ section.join h2 {
 section.join p {
     font-size: 2rem;
     color: var(--text-dim);
-    margin: 0 0 3.125rem;
+    margin: 0 0 3.12rem;
 }
 
 section.join > div {
     display: flex;
-    gap: 1.875rem;
+    gap: 1.88rem;
 }
 
 section.join .btn-filled,
 section.join .btn-border {
-    padding: 0.875rem 3rem;
-    border-radius: 62.4375rem;
+    padding: 0.88rem 3rem;
+    border-radius: 62.44rem;
     font-family: 'League Gothic', sans-serif;
-    font-size: 1.875rem;
+    font-size: 1.88rem;
     text-decoration: none;
     transition: transform 0.3s;
 }
@@ -226,13 +226,13 @@ section.join .btn-border:hover {
 section.join .btn-filled {
     background-color: var(--accent);
     color: var(--bg-color);
-    border: 0.1875rem solid var(--accent);
+    border: 0.19rem solid var(--accent);
 }
 
 section.join .btn-border {
     background-color: transparent;
     color: var(--text-main);
-    border: 0.1875rem solid var(--text-main);
+    border: 0.19rem solid var(--text-main);
 }
 
 section.join .btn-border:hover {
@@ -257,11 +257,11 @@ section.join .btn-border:hover {
 
 @media (max-width: 48rem) {
     section.about-hero h1 {
-        font-size: 4.6875rem;
+        font-size: 4.69rem;
     }
 
     section.about-hero p {
-        font-size: 1.625rem;
+        font-size: 1.62rem;
     }
 
     section.about-intro {
@@ -287,7 +287,7 @@ section.join .btn-border:hover {
     }
 
     section.join h2 {
-        font-size: 4.0625rem;
+        font-size: 4.06rem;
     }
 
     section.join > div {

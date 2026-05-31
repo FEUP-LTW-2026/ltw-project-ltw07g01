@@ -44,25 +44,25 @@ section.type-section > div {
     text-decoration: none;
     display: flex;
     justify-content: center;
-    gap: 3.125rem;
+    gap: 3.12rem;
     color: white;
 }
 
 .types-memberships a {
-    padding: 0.625rem 1.25rem;
+    padding: 0.62rem 1.25rem;
     width: fit-content;
     text-decoration: none;
     color: white;
     background-color: black;
-    border: 0.125rem solid black;
-    border-radius: 0.9375rem;
+    border: 0.12rem solid black;
+    border-radius: 0.94rem;
     cursor: pointer;
 }
 
 .types-memberships a:hover {
     background-color: var(--accent);
-    border: 0.125rem solid white;
-    border-radius: 0.9375rem;
+    border: 0.12rem solid white;
+    border-radius: 0.94rem;
 }
 
 html {
@@ -88,7 +88,7 @@ html {
 }
 
 .banner h1 {
-    font-size: 3.125rem;
+    font-size: 3.12rem;
     font-style: italic;
     text-align: center;
     padding: 1.5rem 2rem 0.5rem;
@@ -96,7 +96,7 @@ html {
 }
 
 .banner p {
-    font-size: 1.125rem;
+    font-size: 1.12rem;
     color: #555;
     letter-spacing: 0.04rem;
     margin-bottom: 0.5rem;
@@ -126,7 +126,7 @@ section.type-section > h2::after {
     content: '';
     display: block;
     width: 4rem;
-    height: 0.1875rem;
+    height: 0.19rem;
     background: var(--accent);
     margin: 0.4rem auto 0;
 }
@@ -153,8 +153,8 @@ section.type-section > h2::after {
 
 .plan h3 {
     width: 80%;
-    border-bottom: 0.125rem solid white;
-    padding-bottom: 0.625rem;
+    border-bottom: 0.12rem solid white;
+    padding-bottom: 0.62rem;
     text-align: center;
 }
 
@@ -170,7 +170,7 @@ section.type-section > h2::after {
     background: var(--accent);
     color: black;
     padding: 0.2rem 0.9rem;
-    border-radius: 62.4375rem;
+    border-radius: 62.44rem;
     font-size: 0.78rem;
     letter-spacing: 0.08rem;
     font-weight: bold;
@@ -228,7 +228,7 @@ section.type-section > h2::after {
     text-align: center;
 
     width: 80%;
-    border-bottom: 0.125rem solid white;
+    border-bottom: 0.12rem solid white;
     padding-bottom: 0.75rem;
     transition: border-color 0.4s;
 }
@@ -242,7 +242,7 @@ section.type-section > h2::after {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 3.125rem 1.25rem;
+    padding: 3.12rem 1.25rem;
     background: #111;
 }
 
@@ -272,7 +272,7 @@ section.comparison table {
 
 section.comparison table th,
 section.comparison table td {
-    padding: 0.9375rem 1.5rem;
+    padding: 0.94rem 1.5rem;
     text-align: center;
 }
 
@@ -284,7 +284,7 @@ section.comparison table th:first-child {
 section.comparison table thead tr {
     background-color: black;
     color: white;
-    font-size: 1.125rem;
+    font-size: 1.12rem;
     letter-spacing: 0.05rem;
 }
 
@@ -337,7 +337,7 @@ section.comparison table tbody tr:hover .icon-xmark {
 .faq-item {
     width: 100%;
     max-width: 40rem;
-    border: 0.125rem solid var(--accent);
+    border: 0.12rem solid var(--accent);
     border-radius: 0.75rem;
     margin-bottom: 0.75rem;
     overflow: hidden;
@@ -352,7 +352,7 @@ section.wrapper-perguntas details summary {
     width: 100%;
     background: #1a1a1a;
     color: white;
-    padding: 1.125rem 1.5rem;
+    padding: 1.12rem 1.5rem;
     font-size: 1.4rem;
     letter-spacing: 0.03rem;
     user-select: none;
@@ -388,13 +388,13 @@ section.wrapper-perguntas details > div {
 
 @media (max-width: 48rem) {
     .slogan {
-        font-size: 1.375rem;
-        margin: 0.625rem;
+        font-size: 1.38rem;
+        margin: 0.62rem;
         text-align: center;
     }
 
     section.type-section > img {
-        max-height: 15.625rem;
+        max-height: 15.62rem;
     }
 
     section.type-section > h2 {
@@ -444,12 +444,12 @@ section.wrapper-perguntas details > div {
     font-size: 1.1rem;
     color: #111;
     background: #fff;
-    border: 0.125rem solid var(--accent);
+    border: 0.12rem solid var(--accent);
     border-radius: 0.5rem;
     padding: 1rem 1.5rem;
     margin: 1.5rem auto;
     max-width: 50rem;
-    box-shadow: 0 0.125rem 0.5rem rgba(0,191,166,0.15);
+    box-shadow: 0 0.12rem 0.5rem rgba(0,191,166,0.15);
 }
 
 .credits-balance-banner i {

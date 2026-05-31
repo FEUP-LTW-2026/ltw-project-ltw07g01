@@ -3,6 +3,10 @@ const main      = document.getElementById('trainersMain');
 const isAdmin   = main?.dataset.isAdmin === '1';
 const isLogged  = main?.dataset.isLogged === '1';
 
+if (window.location.search.includes('msg=')) {
+    history.replaceState(null, '', window.location.pathname);
+}
+
 let allTrainers = [];
 let classTypes  = [];
 let gymList     = [];
