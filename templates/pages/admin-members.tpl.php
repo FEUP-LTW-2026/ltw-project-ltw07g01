@@ -147,7 +147,7 @@
                         <td>
                             <div class="admin-row-actions">
                                 <button class="btn-admin-sm" title="Edit"
-                                        onclick="editMember(<?= $m['id'] ?>, <?= htmlspecialchars(json_encode($m['first_name'])) ?>, <?= htmlspecialchars(json_encode($m['last_name'])) ?>, <?= htmlspecialchars(json_encode($m['email'])) ?>, <?= htmlspecialchars(json_encode($m['gym_plan'] ?? '')) ?>, <?= htmlspecialchars(json_encode($m['gym_start'] ? date('d-m-Y', strtotime($m['gym_start'])) : '')) ?>, <?= htmlspecialchars(json_encode($m['gym_end'] ? date('d-m-Y', strtotime($m['gym_end'])) : '')) ?>, <?= htmlspecialchars(json_encode($m['profile_photo'] ?? '')) ?>, <?= (int)$m['classes_remaining'] ?>)">
+                                        onclick="editMember(<?= $m['id'] ?>, <?= htmlspecialchars(json_encode($m['first_name'])) ?>, <?= htmlspecialchars(json_encode($m['last_name'])) ?>, <?= htmlspecialchars(json_encode($m['email'])) ?>, <?= htmlspecialchars(json_encode($m['username'])) ?>, <?= htmlspecialchars(json_encode($m['gym_plan'] ?? '')) ?>, <?= htmlspecialchars(json_encode($m['gym_start'] ? date('d-m-Y', strtotime($m['gym_start'])) : '')) ?>, <?= htmlspecialchars(json_encode($m['gym_end'] ? date('d-m-Y', strtotime($m['gym_end'])) : '')) ?>, <?= htmlspecialchars(json_encode($m['profile_photo'] ?? '')) ?>, <?= (int)$m['classes_remaining'] ?>)">
                                     <i class="fa fa-pen"></i>
                                 </button>
                                 <a href="/pages/profile.php?id=<?= $m['id'] ?>" class="btn-admin-sm"

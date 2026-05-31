@@ -14,7 +14,7 @@ $id     = isset($_GET['id']) ? (int)$_GET['id'] : null;
 if ($method === 'GET') {
     if ($id) {
         $stmt = $db->prepare("
-            SELECT u.id, u.first_name, u.last_name, u.username, u.profile_photo,
+            SELECT u.id, u.first_name, u.last_name, u.username, u.email, u.profile_photo,
                    t.bio, t.certifications,
                    GROUP_CONCAT(DISTINCT gl.name) AS gyms,
                    GROUP_CONCAT(DISTINCT ct.name) AS class_types
@@ -169,6 +169,8 @@ if ($method === 'PUT') {
     $firstName = trim($_POST['first_name'] ?? '');
     $lastName  = trim($_POST['last_name']  ?? '');
     $email     = trim($_POST['email']      ?? '');
+    $username  = trim($_POST['username']   ?? '');
+    $password  = $_POST['password']        ?? '';
     $bio       = mb_substr(trim($_POST['bio']            ?? ''), 0, 500);
     $certs     = mb_substr(trim($_POST['certifications'] ?? ''), 0, 500);
 
@@ -176,16 +178,29 @@ if ($method === 'PUT') {
         http_response_code(422);
         die(json_encode(['error' => 'Invalid data.']));
     }
-
-    $s = $db->prepare('SELECT 1 FROM users WHERE email = ? AND id != ?');
-    $s->execute([$email, $id]);
-    if ($s->fetch()) {
-        http_response_code(409);
-        die(json_encode(['error' => 'Email already in use.']));
+    if (!preg_match('/^[\w.]{3,30}$/', $username)) {
+        http_response_code(422);
+        die(json_encode(['error' => 'Username: 3-30 chars, letters/numbers/underscore/dot.']));
+    }
+    if ($password !== '' && strlen($password) < 6) {
+        http_response_code(422);
+        die(json_encode(['error' => 'Password min 6 chars.']));
     }
 
-    $db->prepare('UPDATE users SET first_name=?, last_name=?, email=? WHERE id=?')
-       ->execute([$firstName, $lastName, $email, $id]);
+    $s = $db->prepare('SELECT 1 FROM users WHERE (email = ? OR username = ?) AND id != ?');
+    $s->execute([$email, $username, $id]);
+    if ($s->fetch()) {
+        http_response_code(409);
+        die(json_encode(['error' => 'Email or username already in use.']));
+    }
+
+    if ($password !== '') {
+        $db->prepare('UPDATE users SET first_name=?, last_name=?, email=?, username=?, password_hash=? WHERE id=?')
+           ->execute([$firstName, $lastName, $email, $username, password_hash($password, PASSWORD_DEFAULT), $id]);
+    } else {
+        $db->prepare('UPDATE users SET first_name=?, last_name=?, email=?, username=? WHERE id=?')
+           ->execute([$firstName, $lastName, $email, $username, $id]);
+    }
     $db->prepare('UPDATE trainers SET bio=?, certifications=? WHERE user_id=?')
        ->execute([$bio ?: null, $certs ?: null, $id]);
 

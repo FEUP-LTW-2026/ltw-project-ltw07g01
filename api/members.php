@@ -112,6 +112,8 @@ if ($method === 'PUT') {
     $firstName = trim($_POST['first_name'] ?? '');
     $lastName  = trim($_POST['last_name']  ?? '');
     $email     = trim($_POST['email']      ?? '');
+    $username  = trim($_POST['username']   ?? '');
+    $password  = $_POST['password']        ?? '';
     $plan      = $_POST['gym_plan']        ?? '';
     $start     = parseDMY(trim($_POST['gym_start'] ?? '')) ?? date('Y-m-d');
     $end       = parseDMY(trim($_POST['gym_end']   ?? ''));
@@ -121,16 +123,29 @@ if ($method === 'PUT') {
         http_response_code(422);
         die(json_encode(['error' => 'Invalid data.']));
     }
-
-    $s = $db->prepare('SELECT 1 FROM users WHERE email = ? AND id != ?');
-    $s->execute([$email, $id]);
-    if ($s->fetch()) {
-        http_response_code(409);
-        die(json_encode(['error' => 'That email is already in use.']));
+    if (!preg_match('/^[\w.]{3,30}$/', $username)) {
+        http_response_code(422);
+        die(json_encode(['error' => 'Username must be 3-30 characters (letters, numbers, underscores, dots).']));
+    }
+    if ($password !== '' && strlen($password) < 6) {
+        http_response_code(422);
+        die(json_encode(['error' => 'Password must be at least 6 characters.']));
     }
 
-    $db->prepare('UPDATE users SET first_name = ?, last_name = ?, email = ? WHERE id = ?')
-       ->execute([$firstName, $lastName, $email, $id]);
+    $s = $db->prepare('SELECT 1 FROM users WHERE (email = ? OR username = ?) AND id != ?');
+    $s->execute([$email, $username, $id]);
+    if ($s->fetch()) {
+        http_response_code(409);
+        die(json_encode(['error' => 'Email or username is already in use.']));
+    }
+
+    if ($password !== '') {
+        $db->prepare('UPDATE users SET first_name = ?, last_name = ?, email = ?, username = ?, password_hash = ? WHERE id = ?')
+           ->execute([$firstName, $lastName, $email, $username, password_hash($password, PASSWORD_DEFAULT), $id]);
+    } else {
+        $db->prepare('UPDATE users SET first_name = ?, last_name = ?, email = ?, username = ? WHERE id = ?')
+           ->execute([$firstName, $lastName, $email, $username, $id]);
+    }
 
     if ($plan === 'none' || $plan === '') {
         $db->prepare('DELETE FROM memberships WHERE client_id = ?')->execute([$id]);

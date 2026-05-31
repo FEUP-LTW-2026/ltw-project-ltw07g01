@@ -55,6 +55,7 @@
             document.getElementById('formSubmit').innerHTML         = '<i class="fa fa-plus"></i> Create';
             document.getElementById('usernameField').style.display  = '';
             document.getElementById('passwordField').style.display  = '';
+            document.getElementById('f_password').placeholder        = 'Min 6 characters';
             document.getElementById('membershipSection').style.display = '';
             document.getElementById('promoteSection').style.display = 'none';
             document.getElementById('formPhotoPreview').src         = '../images/profile_pic.webp';
@@ -71,15 +72,15 @@
         document.getElementById('memberForm').hidden = true;
     };
 
-    window.editMember = function (id, first, last, email, plan, gymStart, gymEnd, photo, credits) {
+    window.editMember = function (id, first, last, email, username, plan, gymStart, gymEnd, photo, credits) {
         var f = document.getElementById('memberForm');
         f.hidden = false;
         document.getElementById('formTitle').textContent             = 'Edit Member';
         document.getElementById('formAction').value                  = 'update';
         document.getElementById('formTargetId').value                = id;
         document.getElementById('formSubmit').innerHTML              = '<i class="fa fa-save"></i> Save';
-        document.getElementById('usernameField').style.display       = 'none';
-        document.getElementById('passwordField').style.display       = 'none';
+        document.getElementById('usernameField').style.display       = '';
+        document.getElementById('passwordField').style.display       = '';
         document.getElementById('membershipSection').style.display   = 'flex';
         document.getElementById('promoteSection').style.display      = 'block';
         document.getElementById('promoteTargetId').value             = id;
@@ -87,6 +88,9 @@
         document.getElementById('f_first').value   = first;
         document.getElementById('f_last').value    = last;
         document.getElementById('f_email').value   = email;
+        document.getElementById('f_username').value = username;
+        document.getElementById('f_password').value = '';
+        document.getElementById('f_password').placeholder = 'Leave blank to keep current password';
         document.getElementById('f_plan').value    = plan || 'none';
         document.getElementById('f_start').value   = gymStart || '';
         document.getElementById('f_end').value     = gymEnd || '';

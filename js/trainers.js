@@ -172,6 +172,7 @@ function openCreateForm() {
 
     document.getElementById('usernameField')?.removeAttribute('hidden');
     document.getElementById('passwordField')?.removeAttribute('hidden');
+    f.querySelector('[name="password"]').placeholder = 'Min 6 chars';
     document.getElementById('promoteSection')?.setAttribute('hidden', '');
     document.getElementById('trainerPhotoPreview').src = '../images/profile_pic.webp';
     document.getElementById('formSubmitBtn').innerHTML = '<i class="fa fa-plus"></i> Create';
@@ -215,12 +216,15 @@ async function editTrainer(id) {
     f.querySelector('[name="first_name"]').value      = t.first_name      ?? '';
     f.querySelector('[name="last_name"]').value       = t.last_name       ?? '';
     f.querySelector('[name="email"]').value           = t.email           ?? '';
+    f.querySelector('[name="username"]').value        = t.username        ?? '';
+    f.querySelector('[name="password"]').value        = '';
+    f.querySelector('[name="password"]').placeholder  = 'Leave blank to keep current password';
     f.querySelector('[name="bio"]').value             = t.bio             ?? '';
     f.querySelector('[name="certifications"]').value  = t.certifications  ?? '';
 
     document.getElementById('trainerPhotoPreview').src = t.profile_photo || '../images/profile_pic.webp';
-    document.getElementById('usernameField')?.setAttribute('hidden', '');
-    document.getElementById('passwordField')?.setAttribute('hidden', '');
+    document.getElementById('usernameField')?.removeAttribute('hidden');
+    document.getElementById('passwordField')?.removeAttribute('hidden');
     document.getElementById('formSubmitBtn').innerHTML = '<i class="fa fa-save"></i> Save';
     document.getElementById('trainerFormError').hidden = true;
 
