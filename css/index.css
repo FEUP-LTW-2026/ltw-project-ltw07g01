@@ -11,7 +11,6 @@ section.hero {
 }
 
 section.hero .hero-title {
-    font-family: 'League Gothic', sans-serif;
     color: var(--text-main);
     margin: 0;
     margin-top: 10rem;
@@ -31,7 +30,6 @@ section.hero h2 {
 .hero-buttons {
     display: flex;
     font-size: 1.5625rem;
-    font-family: 'League Gothic', sans-serif;
     align-items: center;
     gap: 5.3125rem;
 }
@@ -73,7 +71,6 @@ section.stats {
     justify-content: space-around;
     padding: 3.75rem 8%;
     background-color: var(--text-main);
-    font-family: 'League Gothic', sans-serif;
     color: var(--text-dim);
 }
 
@@ -114,7 +111,6 @@ section.about {
 
 section.about .about-text {
     max-width: 26.25rem;
-    font-family: 'League Gothic', sans-serif;
 }
 
 section.about h2 {
@@ -155,7 +151,6 @@ section.about p + p {
     border-radius: 62.4375rem;
     color: var(--text-main);
     text-decoration: none;
-    font-family: 'League Gothic', sans-serif;
     font-size: 1.75rem;
     line-height: 1;
     transition: 0.3s;
@@ -205,7 +200,6 @@ section.cards {
     font-size: 4.375rem;
     line-height: 0.9;
     max-width: 20rem;
-    font-family: 'League Gothic', sans-serif;
     font-weight: normal;
 }
 
@@ -233,7 +227,6 @@ section.cards {
     margin: 0 0 1.875rem;
     font-size: 1.75rem;
     line-height: 1.25;
-    font-family: 'League Gothic', sans-serif;
     max-width: 31.25rem;
 }
 
@@ -253,7 +246,6 @@ section.cards {
     padding: 0.75rem 2.375rem;
     border-radius: 3.125rem;
     text-decoration: none;
-    font-family: 'League Gothic', sans-serif;
     font-size: 1.75rem;
     transition: 0.3s;
 }
