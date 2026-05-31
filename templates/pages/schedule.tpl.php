@@ -226,7 +226,7 @@
             </div>
             <div class="sc-modal-body">
                 <div id="scModalClassPhotoWrap" class="sc-class-photo-wrap" style="display:none;">
-                    <img id="scModalClassPhoto" src="" alt="" class="sc-class-photo">
+                    <img id="scModalClassPhoto" src="/images/gym.png" alt="" class="sc-class-photo">
                 </div>
                 <div class="sc-modal-info-grid">
                     <div class="sc-modal-info-item" id="scModalTrainerItem">

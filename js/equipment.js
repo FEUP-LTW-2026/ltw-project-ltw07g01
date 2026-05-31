@@ -53,30 +53,6 @@ if (equipForm) {
     });
 }
 
-// Delete forms
-document.querySelectorAll('.form-inline').forEach(form => {
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const id    = this.querySelector('[name="target_id"]').value;
-        const token = this.querySelector('[name="csrf_token"]').value;
-        const fd    = new FormData();
-        fd.append('_method', 'DELETE');
-        fd.append('csrf_token', token);
-        let res;
-        try {
-            res = await fetch('/api/equipment.php?id=' + id, {method: 'POST', body: fd});
-        } catch {
-            alert('Network error.');
-            return;
-        }
-        if (res.status === 204 || res.ok) {
-            this.closest('.equipment-card--admin')?.remove();
-        } else {
-            const data = await res.json();
-            alert(data.error || 'Error removing equipment.');
-        }
-    });
-});
 
 function openEquipModal(card) {
     var name     = card.dataset.name;
@@ -253,4 +229,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     refreshAll();
+
+    // Delete forms — inside DOMContentLoaded to access refreshAll
+    document.querySelectorAll('.form-inline').forEach(form => {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id    = this.querySelector('[name="target_id"]').value;
+            const token = this.querySelector('[name="csrf_token"]').value;
+            const fd    = new FormData();
+            fd.append('_method', 'DELETE');
+            fd.append('csrf_token', token);
+            let res;
+            try {
+                res = await fetch('/api/equipment.php?id=' + id, {method: 'POST', body: fd});
+            } catch {
+                alert('Network error.');
+                return;
+            }
+            if (res.status === 204 || res.ok) {
+                const card = this.closest('.equipment-card--admin');
+                const grid = card?.closest('.equipment-grid');
+                card?.remove();
+                if (grid) applyGridVisibility(grid);
+            } else {
+                const data = await res.json();
+                alert(data.error || 'Error removing equipment.');
+            }
+        });
+    });
 });

@@ -82,7 +82,7 @@
 
         <div class="main-content">
 
-            <section class="profile-details">
+            <div class="profile-details">
                 <div class="detail-item">
                     <span class="detail-label">Full Name</span>
                     <p class="detail-value"><?= htmlspecialchars($fullName) ?></p>
@@ -103,7 +103,7 @@
                     <span class="detail-label">Class Credits</span>
                     <p class="detail-value"><?= $totalCredits ?></p>
                 </div>
-            </section>
+            </div>
 
             <section class="metrics-section">
                 <h3>MY METRICS</h3>

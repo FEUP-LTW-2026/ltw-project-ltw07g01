@@ -60,11 +60,9 @@
                      onclick="openEquipModal(this)"
                      style="cursor:pointer">
 
-                    <?php if ($img): ?>
-                        <div class="equipment-card-img">
-                            <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($item['name']) ?>">
-                        </div>
-                    <?php endif; ?>
+                    <div class="equipment-card-img">
+                        <img src="<?= htmlspecialchars($img ?? '/images/gym.png') ?>" alt="<?= htmlspecialchars($item['name']) ?>">
+                    </div>
 
                     <h2><?= htmlspecialchars($item['name']) ?></h2>
                     <p><?= htmlspecialchars($item['gym_name']) ?></p>
@@ -229,11 +227,9 @@
                          onclick="openEquipModal(this)"
                          style="cursor:pointer">
 
-                        <?php if ($img): ?>
-                            <div class="equipment-card-img">
-                                <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($eq['name']) ?>">
-                            </div>
-                        <?php endif; ?>
+                        <div class="equipment-card-img">
+                            <img src="<?= htmlspecialchars($img ?? '/images/gym.png') ?>" alt="<?= htmlspecialchars($eq['name']) ?>">
+                        </div>
 
                         <h2><?= htmlspecialchars($eq['name']) ?></h2>
                         <p><?= htmlspecialchars($eq['body_part']) ?></p>

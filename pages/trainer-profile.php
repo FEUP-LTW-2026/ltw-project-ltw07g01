@@ -9,14 +9,15 @@ require_once(__DIR__ . '/../templates/pages/trainer-profile.tpl.php');
 
 $db = getDatabaseConnection();
 
-if (!$session->isLoggedIn()) {
-    header('Location: /actions/login.php');
+$currentUserId = $session->isLoggedIn() ? (int)$session->getId() : 0;
+$userId        = (isset($_GET['id']) && (int)$_GET['id'] > 0) ? (int)$_GET['id'] : 0;
+
+if ($userId === 0) {
+    header('Location: /pages/trainers.php');
     exit;
 }
 
-$currentUserId = (int)$session->getId();
-$userId        = (isset($_GET['id']) && (int)$_GET['id'] > 0) ? (int)$_GET['id'] : $currentUserId;
-$isOwnProfile  = ($userId === $currentUserId);
+$isOwnProfile = ($currentUserId > 0 && $userId === $currentUserId);
 $role = null;
 
 foreach (['admins' => 'admin', 'trainers' => 'trainer', 'clients' => 'client'] as $tbl => $r) {
@@ -40,7 +41,7 @@ $stmt->execute([':id' => $userId]);
 $user = $stmt->fetch();
 
 if (!$user) {
-    header('Location: /actions/login.php');
+    header('Location: /pages/trainers.php');
     exit;
 }
 
