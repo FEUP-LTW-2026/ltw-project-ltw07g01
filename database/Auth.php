@@ -32,8 +32,9 @@ class Auth
             http_response_code(403);
             die(json_encode(['error' => 'Forbidden']));
         }
-        $body  = json_decode(file_get_contents('php://input'), true) ?? [];
-        $token = $body['csrf_token'] ?? $_POST['csrf_token'] ?? '';
+        $token = $_POST['csrf_token']
+            ?? (json_decode(file_get_contents('php://input'), true) ?? [])['csrf_token']
+            ?? '';
         if (!$session->validateCsrfToken($token)) {
             http_response_code(403);
             die(json_encode(['error' => 'Invalid CSRF token']));
