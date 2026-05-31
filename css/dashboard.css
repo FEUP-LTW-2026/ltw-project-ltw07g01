@@ -56,9 +56,7 @@ header.dash-navbar .logo img {
 .dashboard-admin   .dash-nav-pfp { border-color: var(--accent); }
 
 
-/* ------------------------------------------------------------------
-   Layout base
------------------------------------------------------------------- */
+
 main.dashboard-page {
     padding: 6.62rem 2rem 3.12rem;
     max-width: 100rem;
