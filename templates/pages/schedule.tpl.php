@@ -145,9 +145,9 @@
                         </div>
                         <?php if ($role === 'admin'): ?>
                             <div class="admin-field">
-                                <label>Trainer <span class="admin-optional">(optional)</span></label>
-                                <select name="trainer_id" id="editTrainerId">
-                                    <option value="">— no trainer —</option>
+                                <label>Trainer</label>
+                                <select name="trainer_id" id="editTrainerId" required>
+                                    <option value="">— select trainer —</option>
                                     <?php foreach ($trainers as $tr): ?>
                                         <option value="<?= $tr['id'] ?>"
                                                 data-specs="<?= htmlspecialchars($tr['spec_ids'] ?? '') ?>"

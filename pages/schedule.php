@@ -52,6 +52,20 @@ function trainerCanUseClassOption(string $role, int $classTypeId, int $gymId, ar
         && in_array($gymId, $trainerGymIds, true);
 }
 
+function adminTrainerCanTeachClass(PDO $db, ?int $trainerId, int $classTypeId, int $gymId): bool {
+    if (!$trainerId) return false;
+
+    $s = $db->prepare('
+        SELECT 1
+        FROM trainers t
+        JOIN trainer_specializations ts ON ts.trainer_id = t.user_id AND ts.class_type_id = ?
+        JOIN trainer_locations tl ON tl.trainer_id = t.user_id AND tl.gym_id = ?
+        WHERE t.user_id = ?
+    ');
+    $s->execute([$classTypeId, $gymId, $trainerId]);
+    return (bool)$s->fetch();
+}
+
 // admin/trainer: criar aula; trainer só edita/apaga aulas próprias
 if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && empty($_GET['ajax'])) {
     if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
@@ -69,7 +83,12 @@ if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && 
         $duration     = (int)($_POST['duration_min']   ?? 0);
         $capacity     = (int)($_POST['capacity']        ?? 0);
         $description  = mb_substr(trim($_POST['description'] ?? ''), 0, 500);
-        if ($classTypeId && $gymId && $schedule && $duration > 0 && $capacity > 0 && trainerCanUseClassOption($role ?? '', $classTypeId, $gymId, $trainerClassTypeIds, $trainerGymIds)) {
+        $canCreate = $classTypeId && $gymId && $schedule && $duration > 0 && $capacity > 0
+            && trainerCanUseClassOption($role ?? '', $classTypeId, $gymId, $trainerClassTypeIds, $trainerGymIds);
+        if ($canCreate && $role === 'admin') {
+            $canCreate = adminTrainerCanTeachClass($db, $trainerId, $classTypeId, $gymId);
+        }
+        if ($canCreate) {
             $db->prepare('INSERT INTO classes (class_type_id, gym_id, trainer_id, schedule, duration_min, capacity, description) VALUES (?,?,?,?,?,?,?)')
                ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity, $description]);
             saveClassPhoto($db, (int)$db->lastInsertId(), $_FILES['class_photo'] ?? null);
@@ -92,6 +111,8 @@ if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && 
             $s = $db->prepare('SELECT 1 FROM classes WHERE id=? AND trainer_id=?');
             $s->execute([$targetId, $userId]);
             $canUpdate = (bool)$s->fetch();
+        } elseif ($canUpdate && $role === 'admin') {
+            $canUpdate = adminTrainerCanTeachClass($db, $trainerId, $classTypeId, $gymId);
         }
         if ($canUpdate) {
             if ($role === 'trainer') {
