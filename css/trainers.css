@@ -26,6 +26,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, 22.5rem);
     justify-content: center;
+    align-items: stretch;
     gap: 2.8125rem;
     padding: 3.125rem 10% 6.25rem;
 }
@@ -117,12 +118,14 @@
     flex-direction: column;
     border-radius: inherit;
     overflow: hidden;
+    height: 100%;
 }
 
 .trainer-card-admin .trainer-card {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     margin-bottom: 0;
+    flex: 1;
 }
 
 .trainer-card-admin .admin-trainer-actions {

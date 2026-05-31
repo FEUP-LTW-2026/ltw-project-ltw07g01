@@ -397,9 +397,11 @@ main.sc-has-navbar {
     white-space: nowrap;
 }
 
-.sc-badge--enrolled { color: var(--accent); border: 0.0625rem solid var(--accent); }
-.sc-badge--full     { color: #555;          border: 0.0625rem solid #333; }
-.sc-badge--filling  { color: #fb923c;       border: 0.0625rem solid #fb923c; }
+.sc-badge--enrolled  { color: var(--accent); border: 0.0625rem solid var(--accent); }
+.sc-badge--full      { color: #555;          border: 0.0625rem solid #333; }
+.sc-badge--filling   { color: #fb923c;       border: 0.0625rem solid #fb923c; }
+.sc-badge--attended  { color: #a3a3a3;       border: 0.0625rem solid #3a3a3a; }
+.sc-badge--reviewed  { color: #f59e0b;       border: 0.0625rem solid #f59e0b; }
 
 .sc-card-meta {
     display: flex;
