@@ -338,6 +338,14 @@ if ($method === 'PUT') {
         die(json_encode(['error' => 'Missing required fields.']));
     }
 
+    $s = $db->prepare('SELECT COUNT(*) FROM client_classes WHERE class_id=?');
+    $s->execute([$id]);
+    $currentEnrolled = (int)$s->fetchColumn();
+    if ($capacity < $currentEnrolled) {
+        http_response_code(422);
+        die(json_encode(['error' => "Não é possível reduzir a capacidade abaixo dos inscritos actuais ($currentEnrolled inscritos)."]));
+    }
+
     if ($role === 'trainer') {
         $db->prepare('UPDATE classes SET class_type_id=?, gym_id=?, trainer_id=?, schedule=?, duration_min=?, capacity=?, description=? WHERE id=? AND trainer_id=?')
            ->execute([$classTypeId, $gymId, $trainerId, $schedule, $duration, $capacity, $description, $id, $userId]);
