@@ -89,7 +89,7 @@ main.sc-has-navbar {
 }
 
 .sc-stat small {
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     color: var(--text-dim);
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -140,7 +140,7 @@ main.sc-has-navbar {
 }
 
 .sc-week-today {
-    font-size: 0.78rem;
+    font-size: 0.92rem;
     color: var(--accent);
     text-decoration: none;
     background: transparent;
@@ -196,7 +196,7 @@ main.sc-has-navbar {
 
 .sc-day-btn--active {
     border-color: var(--accent) !important;
-    background: rgba(0, 191, 166, 0.07);
+    background: color-mix(in srgb, var(--accent) 7%, transparent);
 }
 
 .sc-day-btn--empty {
@@ -204,7 +204,7 @@ main.sc-has-navbar {
 }
 
 .sc-day-name {
-    font-size: 0.65rem;
+    font-size: 0.78rem;
     color: var(--text-dim);
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -261,7 +261,7 @@ main.sc-has-navbar {
 }
 
 .sc-panel-count {
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     color: var(--text-dim);
     background: var(--card-bg);
     border: var(--border);
@@ -328,14 +328,14 @@ main.sc-has-navbar {
 }
 
 .sc-time {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: 900;
     color: var(--text-main);
     line-height: 1;
 }
 
 .sc-dur {
-    font-size: 0.72rem;
+    font-size: 0.9rem;
     color: var(--text-dim);
 }
 
@@ -375,7 +375,7 @@ main.sc-has-navbar {
 }
 
 .sc-class-name {
-    font-size: 1.15rem;
+    font-size: 1.3rem;
     font-weight: 800;
     color: var(--text-main);
 }
@@ -387,7 +387,7 @@ main.sc-has-navbar {
 }
 
 .sc-badge {
-    font-size: 0.7rem;
+    font-size: 0.85rem;
     font-weight: 700;
     border-radius: 3.125rem;
     padding: 0.1875rem 0.6875rem;
@@ -432,7 +432,7 @@ main.sc-has-navbar {
 
 .sc-trainer-link span,
 .sc-location {
-    font-size: 0.85rem;
+    font-size: 0.97rem;
     color: inherit;
     display: flex;
     align-items: center;
@@ -445,7 +445,7 @@ main.sc-has-navbar {
 
 .sc-location i {
     opacity: 0.6;
-    font-size: 0.75rem;
+    font-size: 0.88rem;
 }
 
 .sc-capacity-row {
@@ -476,7 +476,7 @@ main.sc-has-navbar {
 }
 
 .sc-spots {
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     color: var(--text-dim);
     white-space: nowrap;
     flex-shrink: 0;
@@ -501,7 +501,7 @@ main.sc-has-navbar {
     color: #000;
     border: none;
     border-radius: 0.5rem;
-    font-size: 0.88rem;
+    font-size: 1rem;
     font-weight: 700;
     padding: 0.5rem 1.125rem;
     cursor: pointer;
@@ -520,7 +520,7 @@ main.sc-has-navbar {
 }
 
 .sc-enrolled-confirm {
-    font-size: 0.82rem;
+    font-size: 0.95rem;
     color: var(--accent);
     display: flex;
     align-items: center;
@@ -528,7 +528,7 @@ main.sc-has-navbar {
 }
 
 .sc-full-msg {
-    font-size: 0.82rem;
+    font-size: 0.95rem;
     color: #555;
 }
 
@@ -536,7 +536,7 @@ main.sc-has-navbar {
     width: 100%;
     margin-top: 0.375rem;
     color: #fbbf24;
-    font-size: 0.82rem;
+    font-size: 0.95rem;
     display: flex;
     align-items: center;
     gap: 0.375rem;
@@ -558,7 +558,7 @@ main.sc-has-navbar {
     border: 0.0625rem solid #2a2a2a;
     border-radius: 0.5rem;
     color: var(--text-dim);
-    font-size: 0.82rem;
+    font-size: 0.95rem;
     padding: 0.4375rem 0.875rem;
     cursor: pointer;
     transition: border-color 0.2s, color 0.2s;
@@ -583,7 +583,7 @@ main.sc-has-navbar {
     display: flex;
     align-items: center;
     gap: 0.4375rem;
-    font-size: 0.82rem;
+    font-size: 0.95rem;
     color: var(--text-dim);
 }
 
@@ -674,7 +674,7 @@ main.sc-has-navbar {
 }
 
 .sc-modal-type {
-    font-size: 0.72rem;
+    font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.125rem;
@@ -691,7 +691,7 @@ main.sc-has-navbar {
 
 .sc-modal-datetime {
     margin: 0;
-    font-size: 0.88rem;
+    font-size: 1.05rem;
     color: var(--text-dim);
 }
 
@@ -736,14 +736,14 @@ main.sc-has-navbar {
 }
 
 .sc-modal-info-item small {
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     color: var(--text-dim);
     text-transform: uppercase;
     letter-spacing: 0.06em;
 }
 
 .sc-modal-info-item strong {
-    font-size: 0.92rem;
+    font-size: 1.05rem;
     color: var(--text-main);
     white-space: nowrap;
     overflow: hidden;
@@ -775,13 +775,13 @@ main.sc-has-navbar {
 }
 
 .sc-modal-cap-wrap > span {
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     color: var(--text-dim);
     white-space: nowrap;
 }
 
 .sc-modal-section h3 {
-    font-size: 0.72rem;
+    font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.0938rem;
@@ -794,7 +794,7 @@ main.sc-has-navbar {
 
 .sc-modal-desc {
     margin: 0;
-    font-size: 0.92rem;
+    font-size: 1.05rem;
     color: var(--text-dim);
     line-height: 1.7;
 }
@@ -819,7 +819,7 @@ main.sc-has-navbar {
 }
 
 .sc-modal-rating-sub {
-    font-size: 0.82rem;
+    font-size: 0.95rem;
     color: var(--text-dim);
 }
 
@@ -1053,12 +1053,12 @@ main.sc-has-navbar {
 .sc-review-item-stars {
     display: flex;
     gap: 0.125rem;
-    font-size: 0.8rem;
+    font-size: 0.92rem;
 }
 
 .sc-review-item-name {
     flex: 1;
-    font-size: 0.8rem;
+    font-size: 0.92rem;
     color: var(--text-dim);
     white-space: nowrap;
     overflow: hidden;
@@ -1072,7 +1072,7 @@ main.sc-has-navbar {
     color: var(--text-dim);
     padding: 0.125rem 0.25rem;
     border-radius: 0.25rem;
-    font-size: 0.75rem;
+    font-size: 0.88rem;
     line-height: 1;
     transition: color 0.15s, background 0.15s;
 }
@@ -1084,7 +1084,7 @@ main.sc-has-navbar {
 
 .sc-review-item-comment {
     margin: 0.375rem 0 0;
-    font-size: 0.8rem;
+    font-size: 0.92rem;
     color: var(--text-dim);
     font-style: italic;
     line-height: 1.4;
@@ -1093,7 +1093,7 @@ main.sc-has-navbar {
 .sc-review-loading {
     text-align: center;
     color: var(--text-dim);
-    font-size: 0.8rem;
+    font-size: 0.92rem;
     padding: 0.5rem 0;
     margin: 0;
 }
@@ -1110,15 +1110,15 @@ main.sc-has-navbar {
     }
 
     .sc-day-num {
-        font-size: 1.1rem;
+        font-size: 1.25rem;
     }
 
     .sc-time-col {
-        min-width: 2.5rem;
+        min-width: 2.75rem;
     }
 
     .sc-time {
-        font-size: 1rem;
+        font-size: 1.2rem;
     }
 
     .sc-modal-info-grid {
@@ -1147,8 +1147,8 @@ main.sc-has-navbar {
 .sc-enroll-item:last-child { border-bottom: none; }
 .sc-enroll-avatar { width: 2.25rem; height: 2.25rem; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: #111; }
 .sc-enroll-info { flex: 1; min-width: 0; }
-.sc-enroll-info strong { display: block; font-size: 0.9rem; color: var(--text-main); }
-.sc-enroll-info span { font-size: 0.78rem; color: var(--text-dim); }
+.sc-enroll-info strong { display: block; font-size: 1rem; color: var(--text-main); }
+.sc-enroll-info span { font-size: 0.9rem; color: var(--text-dim); }
 .sc-enroll-empty { text-align: center; color: var(--text-dim); padding: 2rem 0; }
 .sc-enroll-empty i { display: block; font-size: 1.75rem; margin-bottom: 0.5rem; }
 .sc-modal-loading { text-align: center; color: var(--text-dim); padding: 2rem 0; }

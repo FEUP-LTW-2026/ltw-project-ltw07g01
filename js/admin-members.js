@@ -1,4 +1,30 @@
 (function () {
+    function autoFormatDMY(input) {
+        var digits = input.value.replace(/\D/g, '').substring(0, 8);
+        var v = digits.substring(0, 2);
+        if (digits.length > 2) v += '-' + digits.substring(2, 4);
+        if (digits.length > 4) v += '-' + digits.substring(4, 8);
+        input.value = v;
+    }
+
+    ['f_start', 'f_end'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('input', function () { autoFormatDMY(this); });
+    });
+
+    function fadeOutAlert(el, delay) {
+        setTimeout(function () {
+            el.style.opacity = '0';
+            el.addEventListener('transitionend', function () { el.remove(); }, { once: true });
+        }, delay);
+    }
+
+    document.querySelectorAll('.admin-alert--ok, .admin-alert--err').forEach(function (el) {
+        if (!el.classList.contains('admin-alert--ajax')) {
+            fadeOutAlert(el, 3500);
+        }
+    });
+
     document.getElementById('memberSearch').addEventListener('input', function () {
         var q = this.value.toLowerCase();
         document.querySelectorAll('.admin-table tbody tr').forEach(function (row) {
@@ -106,6 +132,6 @@
         el.innerHTML = '<i class="fa fa-' + (type === 'ok' ? 'circle-check' : 'triangle-exclamation') + '"></i> ' + msg;
         var header = document.querySelector('.admin-header');
         header.parentNode.insertBefore(el, header.nextSibling);
-        setTimeout(function () { el.remove(); }, 5000);
+        fadeOutAlert(el, 4000);
     }
 }());

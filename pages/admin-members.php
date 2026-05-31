@@ -6,6 +6,12 @@ require_once('../database/connection.db.php');
 require_once('../templates/layout/common.tpl.php');
 require_once('../templates/pages/admin-members.tpl.php');
 
+function parseDMY(string $s): string {
+    if ($s === '') return '';
+    $d = DateTime::createFromFormat('d-m-Y', $s);
+    return $d ? $d->format('Y-m-d') : '';
+}
+
 if (!$session->isLoggedIn()) {
     header('Location: /actions/login.php');
     exit;
@@ -64,8 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $plan    = $_POST['gym_plan'] ?? 'none';
                 $credits = max(0, (int)($_POST['classes_remaining'] ?? 0));
                 if ($plan !== 'none' && $plan !== '') {
-                    $start = trim($_POST['gym_start'] ?? '') ?: date('Y-m-d');
-                    $end   = trim($_POST['gym_end']   ?? '') ?: null;
+                    $start = parseDMY(trim($_POST['gym_start'] ?? '')) ?: date('Y-m-d');
+                    $end   = parseDMY(trim($_POST['gym_end']   ?? '')) ?: null;
                     $db->prepare('INSERT INTO memberships (client_id, gym_plan, gym_start, gym_end, classes_remaining) VALUES (?,?,?,?,?)')
                        ->execute([$newId, $plan, $start, $end, $credits]);
                 }
@@ -92,8 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $lastName  = trim($_POST['last_name']   ?? '');
         $email     = trim($_POST['email']       ?? '');
         $plan      = $_POST['gym_plan']         ?? '';
-        $start     = trim($_POST['gym_start']   ?? '');
-        $end       = trim($_POST['gym_end']     ?? '') ?: null;
+        $start     = parseDMY(trim($_POST['gym_start'] ?? ''));
+        $end       = parseDMY(trim($_POST['gym_end']   ?? '')) ?: null;
         $credits   = max(0, (int)($_POST['classes_remaining'] ?? 0));
 
         if (!$targetId || !$firstName || !$lastName || !filter_var($email, FILTER_VALIDATE_EMAIL)) {

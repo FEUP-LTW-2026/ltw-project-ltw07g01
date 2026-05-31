@@ -70,13 +70,13 @@
 }
 
 .status.available {
-    color: #00bfa6;
-    border: 0.125rem solid #00bfa6;
+    color: var(--accent);
+    border: 0.125rem solid var(--accent);
 }
 
 .status.unavailable {
-    color: #e11d48;
-    border: 0.125rem solid #e11d48;
+    color: var(--admin-accent);
+    border: 0.125rem solid var(--admin-accent);
 }
 
 @media (max-width: 56.25rem) {
