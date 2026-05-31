@@ -34,6 +34,12 @@ CUBO GYM is a modern fitness club offering gym, pilates, and cycling memberships
 - [x] Personal training booking for members to schedule 1-on-1 sessions with trainers.
 - [x] Trainer analytics with attendance stats and ratings summaries per class.
 - [x] Admin dashboard with gym-wide metrics and member management.
+- [x] Badge and achievement system based on visits, classes attended, and training minutes.
+- [x] Purchase class credit packs (1, 5, or 10 credits) to book group classes.
+- [x] Visit history and personal stats on the member dashboard.
+- [x] Gym location management for admins (add, edit, upload photos).
+- [x] CSRF protection across all forms and AJAX endpoints.
+- [x] Real-time equipment availability toggle without page reload.
 
 
 ## Running
