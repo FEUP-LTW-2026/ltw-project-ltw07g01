@@ -1,4 +1,4 @@
-<?php function drawEquipment(array $equipment): void
+<?php function drawEquipment(array $byGym): void
 { ?>
     <main class="equipment-page">
         <section class="equipment-filters filter-bar" aria-label="Equipment filters">
@@ -6,9 +6,11 @@
 
             <select class="filter-select" id="filter-location">
                 <option value="all">All Locations</option>
-                <option value="Antas">Antas</option>
-                <option value="Matosinhos">Matosinhos</option>
-                <option value="Braga">Braga</option>
+                <?php foreach ($byGym as $gymData): ?>
+                    <option value="<?= htmlspecialchars($gymData['gym_name']) ?>">
+                        <?= htmlspecialchars($gymData['gym_city'] . ' — ' . $gymData['gym_name']) ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
 
             <select class="filter-select" id="filter-body">
@@ -40,46 +42,54 @@
 
         <?php
         require __DIR__ . '/../../utils/equipment-data.php';
-        ?>
-        <section class="equipment-grid" data-loadmore="3">
-            <?php foreach ($equipment as $item):
-                $img = $item['photo'] ?? $equipmentImages[$item['name']] ?? null;
-                $muscles = $equipmentMuscles[$item['name']] ?? null;
-                $diagrams = array_map(fn($m) => '/images/equipment/muscles/' . $m . '.png', $equipmentMuscleDiagrams[$item['name']] ?? []);
-                $available = (int)$item['is_available'] === 1;
-                ?>
-                <div class="equipment-card"
-                     data-location="<?= htmlspecialchars($item['gym_name']) ?>"
-                     data-body="<?= htmlspecialchars($item['body_part']) ?>"
-                     data-status="<?= $available ? 'available' : 'out' ?>"
-                     data-name="<?= htmlspecialchars($item['name']) ?>"
-                     data-gym="<?= htmlspecialchars($item['gym_name']) ?>"
-                     data-img="<?= htmlspecialchars($img ?? '') ?>"
-                     data-muscles="<?= htmlspecialchars($muscles ?? '') ?>"
-                     data-diagrams="<?= htmlspecialchars(implode(',', $diagrams)) ?>"
-                     onclick="openEquipModal(this)"
-                     style="cursor:pointer">
+        foreach ($byGym as $gymData): ?>
+            <div class="equip-gym-header">
+                <span class="equip-gym-name">
+                    <i class="fa fa-location-dot"></i>
+                    <?= htmlspecialchars($gymData['gym_city'] . ' — ' . $gymData['gym_name']) ?>
+                </span>
+                <span class="equip-gym-count"><?= count($gymData['items']) ?> item<?= count($gymData['items']) !== 1 ? 's' : '' ?></span>
+            </div>
+            <section class="equipment-grid" data-loadmore="3">
+                <?php foreach ($gymData['items'] as $item):
+                    $img = $item['photo'] ?? $equipmentImages[$item['name']] ?? null;
+                    $muscles = $equipmentMuscles[$item['name']] ?? null;
+                    $diagrams = array_map(fn($m) => '/images/equipment/muscles/' . $m . '.png', $equipmentMuscleDiagrams[$item['name']] ?? []);
+                    $available = (int)$item['is_available'] === 1;
+                    ?>
+                    <div class="equipment-card"
+                         data-location="<?= htmlspecialchars($gymData['gym_name']) ?>"
+                         data-body="<?= htmlspecialchars($item['body_part']) ?>"
+                         data-status="<?= $available ? 'available' : 'out' ?>"
+                         data-name="<?= htmlspecialchars($item['name']) ?>"
+                         data-gym="<?= htmlspecialchars($gymData['gym_name']) ?>"
+                         data-img="<?= htmlspecialchars($img ?? '') ?>"
+                         data-muscles="<?= htmlspecialchars($muscles ?? '') ?>"
+                         data-diagrams="<?= htmlspecialchars(implode(',', $diagrams)) ?>"
+                         onclick="openEquipModal(this)"
+                         style="cursor:pointer">
 
-                    <div class="equipment-card-img">
-                        <img src="<?= htmlspecialchars($img ?? '/images/gym.png') ?>" alt="<?= htmlspecialchars($item['name']) ?>">
+                        <div class="equipment-card-img">
+                            <img src="<?= htmlspecialchars($img ?? '/images/gym.png') ?>" alt="<?= htmlspecialchars($item['name']) ?>">
+                        </div>
+
+                        <h2><?= htmlspecialchars($item['name']) ?></h2>
+                        <p><?= htmlspecialchars($item['body_part']) ?></p>
+
+                        <?php if ($available): ?>
+                            <span class="status available">Available</span>
+                        <?php else: ?>
+                            <span class="status unavailable">Out of service</span>
+                        <?php endif; ?>
                     </div>
-
-                    <h2><?= htmlspecialchars($item['name']) ?></h2>
-                    <p><?= htmlspecialchars($item['gym_name']) ?></p>
-
-                    <?php if ($available): ?>
-                        <span class="status available">Available</span>
-                    <?php else: ?>
-                        <span class="status unavailable">Out of service</span>
-                    <?php endif; ?>
-                </div>
-            <?php endforeach; ?>
-        </section>
-        <div class="equip-loadmore-wrap">
-            <button type="button" class="equip-loadmore-btn" data-loadmore-btn>
-                Load more <i class="fa fa-chevron-down"></i>
-            </button>
-        </div>
+                <?php endforeach; ?>
+            </section>
+            <div class="equip-loadmore-wrap">
+                <button type="button" class="equip-loadmore-btn" data-loadmore-btn>
+                    Load more <i class="fa fa-chevron-down"></i>
+                </button>
+            </div>
+        <?php endforeach; ?>
 
         <div class="equip-modal-backdrop" id="equipModalBackdrop" onclick="closeEquipModal()"></div>
         <div class="equip-modal" id="equipModal" aria-hidden="true">

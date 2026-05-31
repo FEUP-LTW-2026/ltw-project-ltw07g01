@@ -57,15 +57,23 @@ if ($isAdmin) {
 
 } else {
     $stmt = $db->prepare('
-        SELECT equipment.name, equipment.body_part, equipment.is_available, equipment.photo, gym_locations.name AS gym_name
-        FROM equipment
-        JOIN gym_locations ON equipment.gym_id = gym_locations.id
-        ORDER BY gym_locations.name, equipment.body_part, equipment.name
+        SELECT e.name, e.body_part, e.is_available, e.photo,
+               gl.name AS gym_name, gl.city AS gym_city
+        FROM equipment e
+        JOIN gym_locations gl ON gl.id = e.gym_id
+        ORDER BY gl.city, gl.name, e.body_part, e.name
     ');
     $stmt->execute();
-    $equipment = $stmt->fetchAll();
+    $byGym = [];
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $eq) {
+        $key = $eq['gym_name'];
+        if (!isset($byGym[$key])) {
+            $byGym[$key] = ['gym_name' => $eq['gym_name'], 'gym_city' => $eq['gym_city'], 'items' => []];
+        }
+        $byGym[$key]['items'][] = $eq;
+    }
 
     drawDashHeader($session, $db, 'equipment', ['equipment']);
-    drawEquipment($equipment);
+    drawEquipment($byGym);
     drawFooter();
 }

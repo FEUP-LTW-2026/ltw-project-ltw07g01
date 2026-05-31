@@ -376,7 +376,7 @@ if ($role === 'admin') {
     )->fetchAll(PDO::FETCH_ASSOC);
 
     $recentReviews = $db->query(
-        'SELECT r.rating, r.comment, r.class_id, u.username, ct.name AS class_name
+        'SELECT r.id, r.rating, r.comment, r.class_id, u.username, ct.name AS class_name
          FROM reviews r
          JOIN users u ON u.id = r.client_id
          JOIN classes cl ON cl.id = r.class_id

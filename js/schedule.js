@@ -500,6 +500,14 @@ var SC = JSON.parse(document.getElementById('schedule-data').textContent);
                 });
             }
             if (currentModalId === classId) openModal(classId);
+            var dashItem = document.querySelector('[data-review-id="' + reviewId + '"]');
+            if (dashItem) {
+                dashItem.remove();
+                var list = document.getElementById('dashReviewList');
+                if (list && list.children.length === 0) {
+                    list.parentNode.innerHTML = '<div class="dash-empty"><span><i class="fa fa-comments"></i></span><p>No reviews yet.</p></div>';
+                }
+            }
         })
         .catch(function() { btn.disabled = false; });
     };

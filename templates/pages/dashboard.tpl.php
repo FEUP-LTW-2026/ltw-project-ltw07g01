@@ -508,9 +508,10 @@
                         <div class="dash-empty"><span><i class="fa fa-comments"></i></span>
                             <p>No reviews yet.</p></div>
                     <?php else: ?>
-                        <ul class="dash-review-list">
+                        <ul class="dash-review-list" id="dashReviewList">
                             <?php foreach ($recentReviews as $rv): ?>
                                 <li class="dash-review-item dash-review-item--clickable"
+                                    data-review-id="<?= (int)$rv['id'] ?>"
                                     onclick="openModal(<?= (int)$rv['class_id'] ?>)">
                                     <div class="dash-review-header">
                                         <span class="dash-review-user">@<?= htmlspecialchars($rv['username']) ?></span>

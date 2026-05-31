@@ -103,6 +103,10 @@
         gap: 1.25rem;
     }
 
+    .equipment-page .equip-gym-header {
+        margin: 1.5rem 6% 0;
+    }
+
     .equipment-card {
         padding: 1.5rem;
     }
@@ -110,12 +114,21 @@
 
 
 .equip-gym-header {
-    padding: 0.75rem 1.12rem;
+    padding: 1rem 1.5rem;
     background: #0d0d0d;
     border-bottom: 0.06rem solid #1e1e1e;
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.equipment-page .equip-gym-header {
+    margin: 2rem 10% 0;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.equipment-page .equipment-grid {
+    padding-top: 1.25rem;
 }
 
 .equip-gym-name {
@@ -126,7 +139,8 @@
     color: var(--text-dim);
 }
 
-.equip-gym-name i { color: var(--admin-accent); }
+.equip-gym-name i { color: var(--accent); }
+.equipment-page--admin .equip-gym-name i { color: var(--admin-accent); }
 
 .equip-gym-count { font-size: 1rem; color: var(--text-dim); }
 

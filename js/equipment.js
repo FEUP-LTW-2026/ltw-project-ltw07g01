@@ -175,6 +175,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.innerHTML = 'Load more (' + remaining + ' more) <i class="fa fa-chevron-down"></i>';
             }
         }
+        const gymHeader = grid.previousElementSibling;
+        if (gymHeader && gymHeader.classList.contains('equip-gym-header')) {
+            gymHeader.hidden = matchedTotal === 0;
+        }
         return matchedTotal;
     }
 
