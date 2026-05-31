@@ -568,7 +568,7 @@
             <?php endif; ?>
 
             <?php if ($unavailableEquip > 0): ?>
-                <div class="admin-alert admin-alert--err admin-alert--mt">
+                <div class="admin-alert admin-alert--err admin-alert--mt admin-alert--persistent">
                     <i class="fa fa-triangle-exclamation"></i>
                     <?= $unavailableEquip ?> equipment item<?= $unavailableEquip !== 1 ? 's' : '' ?> marked as
                     unavailable.
@@ -641,4 +641,3 @@
 
     <?php drawFooter();
 } ?>
-

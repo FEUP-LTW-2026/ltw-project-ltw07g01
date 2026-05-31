@@ -8,7 +8,7 @@
         }, delay);
     }
 
-    document.querySelectorAll('.admin-alert:not([hidden])').forEach(function (el) {
+    document.querySelectorAll('.admin-alert:not([hidden]):not(.admin-alert--persistent)').forEach(function (el) {
         dismissAlert(el, 3500);
     });
 }());

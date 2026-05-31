@@ -292,6 +292,19 @@ main.dashboard-page {
     opacity: 0.7;
 }
 
+.admin-page .dash-card-link,
+.admin-page .admin-alert-link {
+    color: #fff;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.1875rem;
+}
+
+.admin-page .dash-card-link:hover,
+.admin-page .admin-alert-link:hover {
+    color: #fda4af;
+}
+
 .dash-empty {
     display: flex;
     flex-direction: column;
