@@ -43,7 +43,7 @@
         ?>
         <section class="equipment-grid" data-loadmore="3">
             <?php foreach ($equipment as $item):
-                $img = $equipmentImages[$item['name']] ?? null;
+                $img = $item['photo'] ?? $equipmentImages[$item['name']] ?? null;
                 $muscles = $equipmentMuscles[$item['name']] ?? null;
                 $diagrams = array_map(fn($m) => '/images/equipment/muscles/' . $m . '.png', $equipmentMuscleDiagrams[$item['name']] ?? []);
                 $available = (int)$item['is_available'] === 1;
@@ -133,7 +133,8 @@
             <h2 id="formTitle"><?= $editItem ? 'Edit Equipment' : 'Add Equipment' ?></h2>
             <form method="POST"
                       action="<?= $editItem ? '/api/equipment.php?id=' . (int)$editItem['id'] : '/api/equipment.php' ?>"
-                      class="admin-form-grid">
+                      class="admin-form-grid"
+                      enctype="multipart/form-data">
                 <?= csrf_field() ?>
                 <?php if ($editItem): ?>
                     <input type="hidden" name="_method" value="PUT">
@@ -158,6 +159,13 @@
                             </option>
                         <?php endforeach; ?>
                     </select>
+                </div>
+                <div class="admin-field">
+                    <label>Photo <?= $editItem && $editItem['photo'] ? '(leave empty to keep current)' : '(optional)' ?></label>
+                    <?php if ($editItem && $editItem['photo']): ?>
+                        <img src="<?= htmlspecialchars($editItem['photo']) ?>" alt="Current photo" style="height:4rem;object-fit:cover;border-radius:0.25rem;margin-bottom:0.5rem;display:block;">
+                    <?php endif; ?>
+                    <input type="file" name="photo" accept="image/jpeg,image/png,image/webp">
                 </div>
                 <div class="admin-form-actions">
                     <button type="submit" class="btn-admin-primary">
@@ -210,7 +218,7 @@
             </div>
             <section class="equipment-grid equipment-grid--admin" data-loadmore="3">
                 <?php foreach ($gymData['items'] as $eq):
-                    $img = $equipmentImages[$eq['name']] ?? null;
+                    $img = $eq['photo'] ?? $equipmentImages[$eq['name']] ?? null;
                     $muscles = $equipmentMuscles[$eq['name']] ?? null;
                     $diagrams = array_map(fn($m) => '/images/equipment/muscles/' . $m . '.png', $equipmentMuscleDiagrams[$eq['name']] ?? []);
                     $available = (int)$eq['is_available'] === 1;
@@ -244,7 +252,7 @@
                             <a href="/pages/equipment.php?edit=<?= $eq['id'] ?>" class="btn-admin-sm" title="Edit">
                                 <i class="fa fa-pen"></i>
                             </a>
-                            <button class="btn-admin-sm btn-admin-sm--ok" title="Toggle availability"
+                            <button class="btn-admin-sm btn-admin-sm--ok<?= $available ? ' btn-admin-sm--available' : '' ?>" title="Toggle availability"
                                     onclick="toggleEquip(<?= $eq['id'] ?>, this)">
                                 <i class="fa fa-<?= $available ? 'toggle-on' : 'toggle-off' ?>"></i>
                             </button>

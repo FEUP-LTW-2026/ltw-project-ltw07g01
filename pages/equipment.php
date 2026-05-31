@@ -35,7 +35,7 @@ if ($isAdmin) {
     $gymList = $db->query('SELECT id, name, city FROM gym_locations ORDER BY city, name')->fetchAll(PDO::FETCH_ASSOC);
 
     $allEquip = $db->query(
-            'SELECT e.id, e.name, e.body_part, e.is_available, e.gym_id,
+            'SELECT e.id, e.name, e.body_part, e.is_available, e.gym_id, e.photo,
                 gl.name AS gym_name, gl.city AS gym_city
          FROM equipment e
          JOIN gym_locations gl ON gl.id = e.gym_id
@@ -57,7 +57,7 @@ if ($isAdmin) {
 
 } else {
     $stmt = $db->prepare('
-        SELECT equipment.name, equipment.body_part, equipment.is_available, gym_locations.name AS gym_name
+        SELECT equipment.name, equipment.body_part, equipment.is_available, equipment.photo, gym_locations.name AS gym_name
         FROM equipment
         JOIN gym_locations ON equipment.gym_id = gym_locations.id
         ORDER BY gym_locations.name, equipment.body_part, equipment.name

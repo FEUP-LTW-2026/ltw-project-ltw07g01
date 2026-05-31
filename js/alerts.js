@@ -2,9 +2,13 @@
     function dismissAlert(el, delay) {
         setTimeout(function () {
             el.style.opacity = '0';
+            var removed = false;
             el.addEventListener('transitionend', function () {
-                el.remove();
+                if (!removed) { removed = true; el.remove(); }
             }, { once: true });
+            setTimeout(function () {
+                if (!removed) { removed = true; el.remove(); }
+            }, 700);
         }, delay);
     }
 

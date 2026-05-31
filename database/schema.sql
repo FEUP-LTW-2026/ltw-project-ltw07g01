@@ -106,6 +106,7 @@ CREATE TABLE equipment
     gym_id       INTEGER NOT NULL,
     body_part    TEXT NOT NULL,
     is_available INTEGER NOT NULL DEFAULT 1,
+    photo        TEXT,
     FOREIGN KEY (gym_id)
         REFERENCES gym_locations(id)
         ON DELETE CASCADE ON UPDATE NO ACTION
