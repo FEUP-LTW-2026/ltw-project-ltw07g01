@@ -443,6 +443,27 @@ footer .footer-info p {
     box-shadow: 0 0 0 0.1875rem color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
+.edit-datetime-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.edit-datetime-row #editDate {
+    flex: 1;
+    min-width: 0;
+}
+
+.edit-datetime-row #editTime {
+    width: 5.5rem;
+    flex-shrink: 0;
+}
+
+.edit-dt-error {
+    color: #f87171;
+    font-size: 0.75rem;
+    margin: 0.25rem 0 0;
+}
+
 .class-editor-modal .sc-modal-footer {
     justify-content: flex-end;
 }

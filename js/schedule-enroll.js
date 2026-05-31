@@ -28,6 +28,8 @@
                     body.innerHTML = '<p class="sc-enroll-empty"><i class="fa fa-users"></i> No one enrolled yet.</p>';
                     return;
                 }
+                var cls = SC.classes[enrollClassId];
+                var isPast = cls && cls.schedule && new Date(cls.schedule) < new Date();
                 var html = '<ul class="sc-enroll-list">';
                 data.enrollments.forEach(function (u) {
                     var photo = u.profile_photo || '../images/profile_pic.webp';
@@ -37,8 +39,10 @@
                     html += '<div class="sc-enroll-info"><strong>' + escHtml(u.first_name + ' ' + u.last_name) + '</strong>'
                           + '<span>@' + escHtml(u.username) + '</span></div>';
                     html += '</a>';
-                    html += '<button class="btn-admin-sm btn-admin-sm--danger" onclick="removeEnrollment(' + u.id + ')" title="Remove">'
-                          + '<i class="fa fa-trash"></i></button>';
+                    if (!isPast) {
+                        html += '<button class="btn-admin-sm btn-admin-sm--danger" onclick="removeEnrollment(' + u.id + ')" title="Remove">'
+                              + '<i class="fa fa-trash"></i></button>';
+                    }
                     html += '</li>';
                 });
                 html += '</ul>';
@@ -47,6 +51,8 @@
     }
 
     window.removeEnrollment = function (clientId) {
+        var cls = SC.classes[enrollClassId];
+        if (cls && cls.schedule && new Date(cls.schedule) < new Date()) return;
         if (!confirm('Remove this student from the class?')) return;
         var fd = new FormData();
         fd.append('ajax',       '1');

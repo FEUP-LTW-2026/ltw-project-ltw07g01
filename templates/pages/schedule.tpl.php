@@ -156,7 +156,11 @@
                         <?php endif; ?>
                         <div class="admin-field">
                             <label>Date &amp; Time</label>
-                            <input type="datetime-local" name="schedule" id="editSchedule" required>
+                            <div class="edit-datetime-row">
+                                <input type="text" id="editDate" placeholder="dd/mm/yyyy" maxlength="10" autocomplete="off" required>
+                                <input type="text" id="editTime" placeholder="HH:mm" maxlength="5" autocomplete="off" required>
+                            </div>
+                            <input type="hidden" name="schedule" id="editSchedule">
                         </div>
                         <div class="admin-field">
                             <label>Duration (min)</label>
@@ -190,7 +194,7 @@
             </div>
             <div class="sc-modal-footer">
                 <button class="sc-modal-book-btn" id="editSubmitBtn"
-                        onclick="document.getElementById('editForm').submit()">
+                        onclick="document.getElementById('editForm').requestSubmit()">
                     <i class="fa fa-save"></i> Save
                 </button>
             </div>
@@ -260,6 +264,7 @@
                 <div class="sc-modal-section">
                     <h3><i class="fa fa-star"></i> Rating &amp; Reviews</h3>
                     <div id="scModalRating"></div>
+                    <div id="scModalReviewList" class="sc-review-list"></div>
                 </div>
             </div>
             <div class="sc-modal-footer" id="scModalFooter"></div>
@@ -267,7 +272,7 @@
     </div>
 
     <script type="application/json" id="schedule-data">
-        <?= json_encode(['isClient' => $role === 'client', 'weekOffset' => $weekOffset, 'defaultDay' => $defaultDay, 'classes' => $classesForJS ?: new stdClass()]) ?>
+        <?= json_encode(['isClient' => $role === 'client', 'isAdmin' => $role === 'admin', 'weekOffset' => $weekOffset, 'defaultDay' => $defaultDay, 'classes' => $classesForJS ?: new stdClass()]) ?>
     </script>
     <?php if ($role === 'admin'): ?>
     <script src="../../js/schedule-admin.js"></script>
@@ -443,9 +448,11 @@
                                 <button class="sc-details-btn" onclick="openEnrollmentsModal(<?= $cls['id'] ?>)">
                                     <i class="fa fa-users"></i> <span id="enroll-count-<?= $cls['id'] ?>"><?= (int)$cls['enrolled'] ?></span>
                                 </button>
+                                <?php if (strtotime($cls['schedule']) > time()): ?>
                                 <button class="sc-details-btn" onclick="openEditModal(<?= $cls['id'] ?>)">
                                     <i class="fa fa-pen"></i> Edit
                                 </button>
+                                <?php endif; ?>
                             </div>
                             <form method="POST" class="form-inline"
                                   onsubmit="return confirm('Delete this class? All enrollments will also be removed.')">

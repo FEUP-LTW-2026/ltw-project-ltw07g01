@@ -18,6 +18,7 @@
         int     $classesTaught = 0,
         string  $avgRating = '—',
         array   $recentStudents = [],
+        array   $trainerReviews = [],
         array   $specializations = [],
         int     $totalMembers = 0,
         int     $totalTrainers = 0,
@@ -361,6 +362,37 @@
 
             </div>
 
+            <section class="dash-card dash-card--mt">
+                <div class="dash-card-header">
+                    <h2><i class="fa fa-star"></i> Class Reviews</h2>
+                    <a href="schedule.php" class="dash-link-small">See Schedule →</a>
+                </div>
+                <?php if (empty($trainerReviews)): ?>
+                    <div class="dash-empty"><span><i class="fa fa-comments"></i></span>
+                        <p>No reviews yet.</p></div>
+                <?php else: ?>
+                    <ul class="dash-review-list">
+                        <?php foreach ($trainerReviews as $rv): ?>
+                            <li class="dash-review-item dash-review-item--clickable"
+                                onclick="openModal(<?= (int)$rv['class_id'] ?>)">
+                                <div class="dash-review-header">
+                                    <span class="dash-review-user">@<?= htmlspecialchars($rv['username']) ?></span>
+                                    <span class="dash-review-class"><?= htmlspecialchars($rv['class_name']) ?></span>
+                                    <span class="dash-review-stars">
+                                        <?php for ($s = 1; $s <= 5; $s++): ?>
+                                            <i class="fa fa-star <?= $s <= $rv['rating'] ? 'dash-star--lit' : '' ?>"></i>
+                                        <?php endfor; ?>
+                                    </span>
+                                </div>
+                                <?php if ($rv['comment']): ?>
+                                    <p class="dash-review-comment"><?= htmlspecialchars($rv['comment']) ?></p>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </section>
+
         <?php endif; ?>
 
 
@@ -478,14 +510,14 @@
                     <?php else: ?>
                         <ul class="dash-review-list">
                             <?php foreach ($recentReviews as $rv): ?>
-                                <li class="dash-review-item">
+                                <li class="dash-review-item dash-review-item--clickable"
+                                    onclick="openModal(<?= (int)$rv['class_id'] ?>)">
                                     <div class="dash-review-header">
                                         <span class="dash-review-user">@<?= htmlspecialchars($rv['username']) ?></span>
                                         <span class="dash-review-class"><?= htmlspecialchars($rv['class_name']) ?></span>
                                         <span class="dash-review-stars">
                                 <?php for ($s = 1; $s <= 5; $s++): ?>
-                                    <i class="fa fa-star"
-                                       style="color:<?= $s <= $rv['rating'] ? '#f59e0b' : '#333' ?>;font-size:.7rem"></i>
+                                    <i class="fa fa-star <?= $s <= $rv['rating'] ? 'dash-star--lit' : '' ?>"></i>
                                 <?php endfor; ?>
                             </span>
                                     </div>
@@ -548,7 +580,7 @@
 
     </main>
 
-    <?php if (in_array($role, ['client', 'trainer'])): ?>
+    <?php if (in_array($role, ['client', 'trainer', 'admin'])): ?>
     <div class="sc-modal" id="scModal" aria-hidden="true">
         <div class="sc-modal-backdrop" id="scModalBackdrop"></div>
         <div class="sc-modal-panel" id="scModalPanel">
@@ -602,7 +634,7 @@
         </div>
     </div>
     <script type="application/json" id="schedule-data">
-        <?= json_encode(['isClient' => $role === 'client', 'weekOffset' => 0, 'defaultDay' => '', 'classes' => $dashClassesForSC ?: new stdClass()]) ?>
+        <?= json_encode(['isClient' => $role === 'client', 'isAdmin' => $role === 'admin', 'weekOffset' => 0, 'defaultDay' => '', 'classes' => $dashClassesForSC ?: new stdClass()]) ?>
     </script>
     <script src="../../js/schedule.js"></script>
 <?php endif; ?>

@@ -64,7 +64,8 @@ if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && 
         $classTypeId  = (int)($_POST['class_type_id'] ?? 0);
         $gymId        = (int)($_POST['gym_id']         ?? 0);
         $trainerId    = $role === 'trainer' ? $userId : ((int)($_POST['trainer_id'] ?? 0) ?: null);
-        $schedule     = trim($_POST['schedule']         ?? '');
+        $scheduleRaw  = trim($_POST['schedule']         ?? '');
+        $schedule     = $scheduleRaw ? date('Y-m-d H:i:s', strtotime($scheduleRaw)) : '';
         $duration     = (int)($_POST['duration_min']   ?? 0);
         $capacity     = (int)($_POST['capacity']        ?? 0);
         $description  = mb_substr(trim($_POST['description'] ?? ''), 0, 500);
@@ -80,7 +81,8 @@ if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && 
         $classTypeId  = (int)($_POST['class_type_id']  ?? 0);
         $gymId        = (int)($_POST['gym_id']          ?? 0);
         $trainerId    = $role === 'trainer' ? $userId : ((int)($_POST['trainer_id'] ?? 0) ?: null);
-        $schedule     = trim($_POST['schedule']          ?? '');
+        $scheduleRaw  = trim($_POST['schedule']          ?? '');
+        $schedule     = $scheduleRaw ? date('Y-m-d H:i:s', strtotime($scheduleRaw)) : '';
         $duration     = (int)($_POST['duration_min']    ?? 0);
         $capacity     = (int)($_POST['capacity']         ?? 0);
         $description  = mb_substr(trim($_POST['description'] ?? ''), 0, 500);
@@ -116,6 +118,62 @@ if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && 
     }
 }
 
+// ajax: get reviews for a trainer+class_type combination by class_id
+if ($requestMethod === 'GET' && !empty($_GET['ajax']) && ($_GET['action'] ?? '') === 'get_reviews') {
+    header('Content-Type: application/json');
+    $classId = (int)($_GET['class_id'] ?? 0);
+    if (!$classId) { echo json_encode(['ok' => false]); exit; }
+    $s = $db->prepare('SELECT class_type_id, trainer_id FROM classes WHERE id = ?');
+    $s->execute([$classId]);
+    $cl = $s->fetch();
+    if (!$cl) { echo json_encode(['ok' => false]); exit; }
+    $s = $db->prepare('
+        SELECT r.id, r.rating, r.comment, r.client_id,
+               u.first_name, u.last_name
+        FROM reviews r
+        JOIN classes c ON c.id = r.class_id
+        JOIN users u ON u.id = r.client_id
+        WHERE c.trainer_id = ? AND c.class_type_id = ?
+        ORDER BY r.id DESC
+    ');
+    $s->execute([$cl['trainer_id'], $cl['class_type_id']]);
+    $reviews = $s->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode(['ok' => true, 'reviews' => $reviews, 'my_id' => $userId]);
+    exit;
+}
+
+// ajax: delete review (own review for clients, any review for admins)
+if ($requestMethod === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? '') === 'delete_review' && $userId) {
+    header('Content-Type: application/json');
+    if (!$session->validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        http_response_code(403);
+        echo json_encode(['ok' => false, 'error' => 'Invalid CSRF token']);
+        exit;
+    }
+    $reviewId = (int)($_POST['review_id'] ?? 0);
+    $classId  = (int)($_POST['class_id']  ?? 0);
+    if (!$reviewId || !$classId) { echo json_encode(['ok' => false]); exit; }
+    $s = $db->prepare('SELECT client_id FROM reviews WHERE id = ?');
+    $s->execute([$reviewId]);
+    $rev = $s->fetch();
+    if (!$rev) { echo json_encode(['ok' => false, 'error' => 'not_found']); exit; }
+    if ($role !== 'admin' && (int)$rev['client_id'] !== $userId) {
+        echo json_encode(['ok' => false, 'error' => 'forbidden']); exit;
+    }
+    $db->prepare('DELETE FROM reviews WHERE id = ?')->execute([$reviewId]);
+    $s = $db->prepare('SELECT class_type_id, trainer_id FROM classes WHERE id = ?');
+    $s->execute([$classId]);
+    $cl = $s->fetch();
+    $agg = ['avg_rating' => 0, 'review_count' => 0];
+    if ($cl) {
+        $s = $db->prepare('SELECT ROUND(AVG(r.rating),1) AS avg_rating, COUNT(*) AS review_count FROM reviews r JOIN classes c2 ON c2.id = r.class_id WHERE c2.trainer_id = ? AND c2.class_type_id = ?');
+        $s->execute([$cl['trainer_id'], $cl['class_type_id']]);
+        $agg = $s->fetch() ?: $agg;
+    }
+    echo json_encode(['ok' => true, 'avg_rating' => (float)($agg['avg_rating'] ?? 0), 'review_count' => (int)($agg['review_count'] ?? 0)]);
+    exit;
+}
+
 // ajax: lista de inscritos (admin e trainer)
 if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'GET' && !empty($_GET['ajax']) && ($_GET['action'] ?? '') === 'enrollments') {
     header('Content-Type: application/json');
@@ -143,6 +201,12 @@ if (in_array($role, ['admin', 'trainer'], true) && $requestMethod === 'POST' && 
     $classId  = (int)($_POST['class_id']  ?? 0);
     $clientId = (int)($_POST['client_id'] ?? 0);
     if (!$classId || !$clientId) { echo json_encode(['ok' => false]); exit; }
+    $s = $db->prepare('SELECT schedule FROM classes WHERE id=?');
+    $s->execute([$classId]);
+    $clRow = $s->fetch();
+    if (!$clRow || strtotime($clRow['schedule']) <= time()) {
+        echo json_encode(['ok' => false, 'error' => 'past_class']); exit;
+    }
     if ($role === 'trainer') {
         $s = $db->prepare('SELECT 1 FROM classes WHERE id=? AND trainer_id=?');
         $s->execute([$classId, $userId]);
@@ -176,7 +240,7 @@ if ($requestMethod === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? 
     $s = $db->prepare('SELECT class_type_id, trainer_id, schedule FROM classes WHERE id=?');
     $s->execute([$classId]);
     $cl = $s->fetch();
-    if (!$cl || $cl['schedule'] >= date('Y-m-d H:i:s')) { echo json_encode(['ok' => false, 'error' => 'not_past']); exit; }
+    if (!$cl || strtotime($cl['schedule']) >= time()) { echo json_encode(['ok' => false, 'error' => 'not_past']); exit; }
     $s = $db->prepare('SELECT COUNT(*) FROM reviews WHERE client_id=? AND class_id=?');
     $s->execute([$userId, $classId]);
     if ($s->fetchColumn()) { echo json_encode(['ok' => false, 'error' => 'already_reviewed']); exit; }
@@ -203,7 +267,7 @@ if ($requestMethod === 'POST' && !empty($_POST['ajax']) && ($_POST['action'] ?? 
     $s->execute([$userId, $classId]);
     $enrollment = $s->fetch();
     if (!$enrollment) { echo json_encode(['ok' => false, 'error' => 'not_enrolled']); exit; }
-    if ($enrollment['schedule'] <= date('Y-m-d H:i:s')) { echo json_encode(['ok' => false, 'error' => 'past_class']); exit; }
+    if (strtotime($enrollment['schedule']) <= time()) { echo json_encode(['ok' => false, 'error' => 'past_class']); exit; }
     $db->beginTransaction();
     $db->prepare('DELETE FROM client_classes WHERE client_id=? AND class_id=?')->execute([$userId, $classId]);
     $db->prepare('UPDATE memberships SET classes_remaining = classes_remaining + 1 WHERE client_id = ?')->execute([$userId]);

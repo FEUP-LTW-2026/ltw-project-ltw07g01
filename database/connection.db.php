@@ -11,6 +11,7 @@
         ensureClassesDescriptionColumn($db);
         ensureClassesPhotoColumn($db);
         dropOrphanBadgeTables($db);
+        normalizeClassSchedules($db);
         return $db;
     }
 
@@ -40,6 +41,18 @@
         $cols = array_column($db->query('PRAGMA table_info(classes)')->fetchAll(PDO::FETCH_ASSOC), 'name');
         if (!in_array('photo', $cols, true)) {
             $db->exec('ALTER TABLE classes ADD COLUMN photo TEXT');
+        }
+    }
+
+    function normalizeClassSchedules(PDO $db): void {
+        // Fix schedules stored in ISO format ("2026-05-30T13:22") from datetime-local inputs.
+        // SQLite string comparison treats 'T' > ' ', making these classes appear as future forever.
+        $rows = $db->query("SELECT id, schedule FROM classes WHERE schedule LIKE '%T%'")->fetchAll(PDO::FETCH_ASSOC);
+        if (!$rows) return;
+        $stmt = $db->prepare("UPDATE classes SET schedule = ? WHERE id = ?");
+        foreach ($rows as $row) {
+            $normalized = date('Y-m-d H:i:s', strtotime($row['schedule']));
+            $stmt->execute([$normalized, $row['id']]);
         }
     }
 

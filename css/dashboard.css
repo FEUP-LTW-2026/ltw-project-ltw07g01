@@ -926,6 +926,15 @@ main.dashboard-page {
 
 .dash-review-item:last-child { border-bottom: none; }
 
+.dash-review-item--clickable {
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.dash-review-item--clickable:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
 .dash-review-header {
     display: flex;
     align-items: center;
@@ -949,6 +958,15 @@ main.dashboard-page {
 }
 
 .dash-review-stars { margin-left: auto; white-space: nowrap; }
+
+.dash-review-stars .fa-star {
+    font-size: .7rem;
+    color: #333;
+}
+
+.dash-review-stars .dash-star--lit {
+    color: #f59e0b;
+}
 
 .dash-review-comment {
     font-size: 0.8rem;
