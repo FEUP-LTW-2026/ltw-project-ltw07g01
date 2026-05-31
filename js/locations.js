@@ -32,10 +32,10 @@
             e.preventDefault();
             const fd     = new FormData(this);
             const method = fd.get('_method') || 'POST';
-            fd.delete('_method');
+            if (method === 'POST') fd.delete('_method');
             let res;
             try {
-                res = await fetch(this.action, { method, body: fd });
+                res = await fetch(this.action, { method: 'POST', body: fd });
             } catch {
                 alert('Network error. Please try again.');
                 return;
