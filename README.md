@@ -30,7 +30,7 @@ CUBO GYM is a modern fitness club offering gym, pilates, and cycling memberships
 
 **Extra:**
 - [x] Membership plans with flexible tiers (basic, pro, ultra) and class credits.
-- [x] Personalised workout plans for members.
+
 
 ## Running
 

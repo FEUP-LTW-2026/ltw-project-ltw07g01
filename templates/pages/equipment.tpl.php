@@ -60,11 +60,9 @@
                      onclick="openEquipModal(this)"
                      style="cursor:pointer">
 
-                    <?php if ($img): ?>
-                        <div class="equipment-card-img">
-                            <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($item['name']) ?>">
-                        </div>
-                    <?php endif; ?>
+                    <div class="equipment-card-img">
+                        <img src="<?= htmlspecialchars($img ?? '/images/gym.png') ?>" alt="<?= htmlspecialchars($item['name']) ?>">
+                    </div>
 
                     <h2><?= htmlspecialchars($item['name']) ?></h2>
                     <p><?= htmlspecialchars($item['gym_name']) ?></p>
@@ -133,10 +131,13 @@
 
         <div class="admin-form-card" id="equipForm" <?= ($editItem || $error) ? '' : 'hidden' ?>>
             <h2 id="formTitle"><?= $editItem ? 'Edit Equipment' : 'Add Equipment' ?></h2>
-            <form method="POST" class="admin-form-grid">
+            <form method="POST"
+                      action="<?= $editItem ? '/api/equipment.php?id=' . (int)$editItem['id'] : '/api/equipment.php' ?>"
+                      class="admin-form-grid">
                 <?= csrf_field() ?>
-                <input type="hidden" name="_action" value="<?= $editItem ? 'update' : 'create' ?>" id="formAction">
-                <input type="hidden" name="target_id" value="<?= $editItem['id'] ?? '' ?>">
+                <?php if ($editItem): ?>
+                    <input type="hidden" name="_method" value="PUT">
+                <?php endif; ?>
                 <div class="admin-field">
                     <label>Name</label>
                     <input type="text" name="name" required value="<?= htmlspecialchars($editItem['name'] ?? '') ?>">
@@ -162,7 +163,7 @@
                     <button type="submit" class="btn-admin-primary">
                         <?= $editItem ? '<i class="fa fa-save"></i> Save' : '<i class="fa fa-plus"></i> Add' ?>
                     </button>
-                    <a href="/pages/equipment.php" class="btn-admin-ghost">Cancel</a>
+                    <button type="button" class="btn-admin-ghost" onclick="closeEquipForm()">Cancel</button>
                 </div>
             </form>
         </div>
@@ -226,11 +227,9 @@
                          onclick="openEquipModal(this)"
                          style="cursor:pointer">
 
-                        <?php if ($img): ?>
-                            <div class="equipment-card-img">
-                                <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($eq['name']) ?>">
-                            </div>
-                        <?php endif; ?>
+                        <div class="equipment-card-img">
+                            <img src="<?= htmlspecialchars($img ?? '/images/gym.png') ?>" alt="<?= htmlspecialchars($eq['name']) ?>">
+                        </div>
 
                         <h2><?= htmlspecialchars($eq['name']) ?></h2>
                         <p><?= htmlspecialchars($eq['body_part']) ?></p>
@@ -298,32 +297,4 @@
     </main>
 
     <script src="../../js/equipment.js"></script>
-    <script>
-        function openCreateForm() {
-            var f = document.getElementById('equipForm');
-            f.hidden = false;
-            document.getElementById('formTitle').textContent = 'Add Equipment';
-            f.scrollIntoView({behavior: 'smooth', block: 'start'});
-        }
-
-        function toggleEquip(id, btn) {
-            var fd = new FormData();
-            fd.append('_action', 'toggle');
-            fd.append('target_id', id);
-            fd.append('ajax', '1');
-            fetch('/pages/equipment.php', {method: 'POST', body: fd})
-                .then(function (r) { return r.json(); })
-                .then(function (data) {
-                    if (!data.ok) return;
-                    var avail = data.is_available;
-                    var icon = btn.querySelector('i');
-                    icon.className = 'fa fa-' + (avail ? 'toggle-on' : 'toggle-off');
-                    var card = btn.closest('.equipment-card');
-                    var status = card.querySelector('.status');
-                    status.className = 'status ' + (avail ? 'available' : 'unavailable');
-                    status.textContent = avail ? 'Available' : 'Out of service';
-                    card.dataset.status = avail ? 'available' : 'out';
-                });
-        }
-    </script>
 <?php } ?>

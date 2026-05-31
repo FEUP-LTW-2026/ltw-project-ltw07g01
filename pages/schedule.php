@@ -457,7 +457,7 @@ if ($role === 'admin') {
                 return $c;
             }, $allClasses)
           )
-        : new stdClass();
+        : [];
 } else {
     $classesForJS = $allClasses ? array_combine(
         array_column($allClasses, 'id'),
@@ -488,7 +488,7 @@ if ($role === 'admin') {
                 'my_comment'   => $c['my_comment'] ?? null,
             ];
         }, $allClasses)
-    ) : new stdClass();
+    ) : [];
 }
 
 if (!empty($_GET['ajax'])) {

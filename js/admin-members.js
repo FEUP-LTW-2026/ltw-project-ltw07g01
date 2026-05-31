@@ -1,4 +1,6 @@
 (function () {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+
     function autoFormatDMY(input) {
         var digits = input.value.replace(/\D/g, '').substring(0, 8);
         var v = digits.substring(0, 2);
@@ -92,36 +94,94 @@
         f.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
+    // Main form — create or update member
+    document.getElementById('memberFormEl').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var action   = document.getElementById('formAction').value;
+        var targetId = document.getElementById('formTargetId').value;
+        var fd = new FormData(this);
+        var url;
+        if (action === 'update' && targetId) {
+            url = '/api/members.php?id=' + targetId;
+            fd.append('_method', 'PUT');
+        } else {
+            url = '/api/members.php';
+        }
+        var btn = document.getElementById('formSubmit');
+        btn.disabled = true;
+        try {
+            var res  = await fetch(url, { method: 'POST', body: fd });
+            var data = await res.json();
+            if (res.ok) {
+                window.location.href = '/pages/admin-members.php?msg=' + encodeURIComponent(data.msg);
+            } else {
+                showMemberNotification(data.error || 'An error occurred.', 'err');
+                btn.disabled = false;
+            }
+        } catch (_) {
+            showMemberNotification('Network error. Please try again.', 'err');
+            btn.disabled = false;
+        }
+    });
+
+    // Delete forms
+    document.querySelectorAll('.form-inline').forEach(function (form) {
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            var name = this.closest('tr')?.querySelector('td')?.textContent?.trim() || 'this member';
+            if (!confirm('Remove ' + name + '? This cannot be undone.')) return;
+            var fd  = new FormData(this);
+            var res = await fetch(this.action, { method: 'POST', body: fd });
+            if (res.status === 204 || res.ok) {
+                this.closest('tr').remove();
+            } else {
+                var data = await res.json().catch(function () { return {}; });
+                showMemberNotification(data.error || 'Error removing member.', 'err');
+            }
+        });
+    });
+
+    // Promote to trainer
+    document.getElementById('promoteForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (!confirm('Promote this member to trainer? This cannot be undone.')) return;
+        var targetId = document.getElementById('promoteTargetId').value;
+        var fd = new FormData(this);
+        var res  = await fetch('/api/members.php?action=promote_trainer', { method: 'POST', body: fd });
+        var data = await res.json();
+        if (data.ok) {
+            window.location.href = '/pages/trainers.php?msg=' + encodeURIComponent(data.msg);
+        } else {
+            showMemberNotification(data.error || 'Error promoting member.', 'err');
+        }
+    });
+
+    // Promote to admin
     document.getElementById('promoteAdminBtn').addEventListener('click', function () {
         var targetId = document.getElementById('promoteTargetId').value;
         if (!confirm('Promote this member to admin? This cannot be undone.')) return;
         var btn = this;
         btn.disabled = true;
-        var data = new FormData();
-        data.append('_action',    'promote_admin');
-        data.append('target_id',  targetId);
-        data.append('_ajax',      '1');
-        data.append('csrf_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-        var responsePromise = fetch('/pages/admin-members.php', { method: 'POST', body: data })
-            .then(function (r) { return r.json(); });
-        setTimeout(function () {
-            responsePromise.then(function (res) {
-                showMemberNotification(
-                    res.ok ? 'Member promoted to admin successfully.' : (res.error || 'Error promoting member.'),
-                    res.ok ? 'ok' : 'err'
-                );
-                if (res.ok) {
+        var fd = new FormData();
+        fd.append('user_id',    targetId);
+        fd.append('csrf_token', csrfToken);
+        fetch('/api/admins.php', { method: 'POST', body: fd })
+            .then(function (r) { return r.json(); })
+            .then(function (res) {
+                if (res.msg || res.id) {
+                    showMemberNotification('Member promoted to admin successfully.', 'ok');
                     document.getElementById('memberForm').hidden = true;
                     var row = document.querySelector('tr[data-member-id="' + targetId + '"]');
                     if (row) row.remove();
                 } else {
+                    showMemberNotification(res.error || 'Error promoting member.', 'err');
                     btn.disabled = false;
                 }
-            }).catch(function () {
+            })
+            .catch(function () {
                 showMemberNotification('Network error. Please try again.', 'err');
                 btn.disabled = false;
             });
-        }, 3000);
     });
 
     function showMemberNotification(msg, type) {
