@@ -63,11 +63,11 @@
                         </div>
                         <div class="admin-field">
                             <label>Start Date</label>
-                            <input type="text" name="gym_start" id="f_start" pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
+                            <input type="text" name="gym_start" id="f_start" pattern="\d{2}-\d{2}-\d{4}" placeholder="DD-MM-YYYY">
                         </div>
                         <div class="admin-field">
                             <label>End Date <span class="admin-optional">(optional)</span></label>
-                            <input type="text" name="gym_end" id="f_end" pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
+                            <input type="text" name="gym_end" id="f_end" pattern="\d{2}-\d{2}-\d{4}" placeholder="DD-MM-YYYY">
                         </div>
                         <div class="admin-field">
                             <label>Class Credits</label>
@@ -149,7 +149,7 @@
                         <td>
                             <div class="admin-row-actions">
                                 <button class="btn-admin-sm" title="Edit"
-                                        onclick="editMember(<?= $m['id'] ?>, <?= htmlspecialchars(json_encode($m['first_name'])) ?>, <?= htmlspecialchars(json_encode($m['last_name'])) ?>, <?= htmlspecialchars(json_encode($m['email'])) ?>, <?= htmlspecialchars(json_encode($m['gym_plan'] ?? '')) ?>, <?= htmlspecialchars(json_encode($m['gym_start'] ? date('Y-m-d', strtotime($m['gym_start'])) : '')) ?>, <?= htmlspecialchars(json_encode($m['gym_end'] ? date('Y-m-d', strtotime($m['gym_end'])) : '')) ?>, <?= htmlspecialchars(json_encode($m['profile_photo'] ?? '')) ?>, <?= (int)$m['classes_remaining'] ?>)">
+                                        onclick="editMember(<?= $m['id'] ?>, <?= htmlspecialchars(json_encode($m['first_name'])) ?>, <?= htmlspecialchars(json_encode($m['last_name'])) ?>, <?= htmlspecialchars(json_encode($m['email'])) ?>, <?= htmlspecialchars(json_encode($m['gym_plan'] ?? '')) ?>, <?= htmlspecialchars(json_encode($m['gym_start'] ? date('d-m-Y', strtotime($m['gym_start'])) : '')) ?>, <?= htmlspecialchars(json_encode($m['gym_end'] ? date('d-m-Y', strtotime($m['gym_end'])) : '')) ?>, <?= htmlspecialchars(json_encode($m['profile_photo'] ?? '')) ?>, <?= (int)$m['classes_remaining'] ?>)">
                                     <i class="fa fa-pen"></i>
                                 </button>
                                 <a href="/pages/profile.php?id=<?= $m['id'] ?>" class="btn-admin-sm"

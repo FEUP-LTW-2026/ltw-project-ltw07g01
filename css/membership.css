@@ -1,5 +1,5 @@
 body {
-    font-family: 'League Gothic', sans-serif;
+    font-family: 'Barlow Condensed', sans-serif;
     color: black !important;
     background: linear-gradient(
             45deg,
@@ -60,7 +60,7 @@ section.type-section > div {
 }
 
 .types-memberships a:hover {
-    background-color: #00bfa6;
+    background-color: var(--accent);
     border: 0.125rem solid white;
     border-radius: 0.9375rem;
 }
@@ -71,7 +71,7 @@ html {
 
 .subscribe-success {
     text-align: center;
-    background: #00bfa6;
+    background: var(--accent);
     color: black;
     font-size: 1.2rem;
     padding: 1rem 2rem;
@@ -127,7 +127,7 @@ section.type-section > h2::after {
     display: block;
     width: 4rem;
     height: 0.1875rem;
-    background: #00bfa6;
+    background: var(--accent);
     margin: 0.4rem auto 0;
 }
 
@@ -140,7 +140,7 @@ section.type-section > h2::after {
     position: relative;
 
     text-align: justify;
-    border: 0.5rem solid #00bfa6;
+    border: 0.5rem solid var(--accent);
     border-radius: 1.25rem;
     width: 22.5rem;
     min-height: 28rem;
@@ -160,14 +160,14 @@ section.type-section > h2::after {
 
 .plan-popular {
     transform: scale(1.05);
-    border-color: #00bfa6;
-    box-shadow: 0 0 1.5rem rgba(0, 191, 166, 0.35);
+    border-color: var(--accent);
+    box-shadow: 0 0 1.5rem color-mix(in srgb, var(--accent) 35%, transparent);
 }
 
 .popular-badge {
     position: absolute;
     top: -1.1rem;
-    background: #00bfa6;
+    background: var(--accent);
     color: black;
     padding: 0.2rem 0.9rem;
     border-radius: 62.4375rem;
@@ -177,7 +177,7 @@ section.type-section > h2::after {
 }
 
 .plan:hover {
-    background-color: #00bfa6;
+    background-color: var(--accent);
     border: 0.5rem solid azure;
     transform: scale(1.1);
     color: black;
@@ -185,7 +185,7 @@ section.type-section > h2::after {
 
 .plan:hover .popular-badge {
     background: black;
-    color: #00bfa6;
+    color: var(--accent);
 }
 
 .plan ul {
@@ -202,7 +202,7 @@ section.type-section > h2::after {
 
 .plan ul li::before {
     content: '✓';
-    color: #00bfa6;
+    color: var(--accent);
     position: absolute;
     left: 0;
     font-weight: bold;
@@ -247,7 +247,7 @@ section.type-section > h2::after {
 }
 
 section.wrapper-perguntas h2 {
-    color: #00bfa6;
+    color: var(--accent);
     font-size: 2rem;
     margin-bottom: 2rem;
     text-align: center;
@@ -297,7 +297,7 @@ section.comparison table tbody tr:nth-child(even) {
 }
 
 section.comparison table tbody tr:hover {
-    background-color: #00bfa6;
+    background-color: var(--accent);
     color: black;
 }
 
@@ -337,7 +337,7 @@ section.comparison table tbody tr:hover .icon-xmark {
 .faq-item {
     width: 100%;
     max-width: 40rem;
-    border: 0.125rem solid #00bfa6;
+    border: 0.125rem solid var(--accent);
     border-radius: 0.75rem;
     margin-bottom: 0.75rem;
     overflow: hidden;
@@ -366,7 +366,7 @@ section.wrapper-perguntas details summary::-webkit-details-marker {
 section.wrapper-perguntas details summary::after {
     content: '+';
     font-size: 1.4rem;
-    color: #00bfa6;
+    color: var(--accent);
     transition: transform 0.3s;
     line-height: 1;
 }
@@ -444,7 +444,7 @@ section.wrapper-perguntas details > div {
     font-size: 1.1rem;
     color: #111;
     background: #fff;
-    border: 0.125rem solid #00bfa6;
+    border: 0.125rem solid var(--accent);
     border-radius: 0.5rem;
     padding: 1rem 1.5rem;
     margin: 1.5rem auto;
@@ -454,7 +454,7 @@ section.wrapper-perguntas details > div {
 
 .credits-balance-banner i {
     font-size: 1.5rem;
-    color: #00bfa6;
+    color: var(--accent);
     flex-shrink: 0;
 }
 
@@ -462,8 +462,8 @@ p.credits-universal-note {
     font-size: 1.25rem;
     font-weight: 600;
     color: #222;
-    background: rgba(0, 191, 166, 0.12);
-    border-left: 0.25rem solid #00bfa6;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border-left: 0.25rem solid var(--accent);
     padding: 0.85rem 1.25rem;
     margin-bottom: 1.5rem;
     border-radius: 0.25rem;
@@ -518,7 +518,7 @@ p.credits-universal-note {
 
 .info-card h4 {
     font-size: 1.4rem;
-    color: #00bfa6;
+    color: var(--accent);
     margin: 0;
 }
 
@@ -594,7 +594,7 @@ main.confirm-page {
 
 .confirm-credits {
     font-size: 0.95rem;
-    color: #00a08a;
+    color: var(--accent);
     font-weight: 600;
     margin: 0;
 }

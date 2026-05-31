@@ -252,7 +252,7 @@ body.admin-theme main.admin-profile-page {
 .badge-toggle.selected {
     border: 0.125rem solid var(--accent);
     background: var(--card-bg);
-    box-shadow: 0 0 0 0.375rem rgba(0, 191, 166, 0.06);
+    box-shadow: 0 0 0 0.375rem color-mix(in srgb, var(--accent) 6%, transparent);
 }
 
 .badge-toggle:hover {
@@ -685,7 +685,7 @@ body.admin-theme main.admin-profile-page {
 }
 
 .trainer-tag {
-    background: #7c3aed;
+    background: var(--accent);
 }
 
 .specializations-list {
@@ -698,7 +698,7 @@ body.admin-theme main.admin-profile-page {
 .specialization-tag {
     background: transparent;
     color: #a78bfa;
-    border: 0.0625rem solid #7c3aed;
+    border: 0.0625rem solid var(--accent);
     padding: 0.25rem 0.875rem;
     font-size: 0.78rem;
     border-radius: 3.125rem;
@@ -732,7 +732,7 @@ body.admin-theme main.admin-profile-page {
 .certification-card {
     background: var(--card-bg);
     border: var(--border);
-    border-left: 0.1875rem solid #7c3aed;
+    border-left: 0.1875rem solid var(--accent);
     border-radius: 0.75rem;
     padding: 1rem 1.125rem;
     display: flex;
@@ -741,7 +741,7 @@ body.admin-theme main.admin-profile-page {
 }
 
 .cert-icon {
-    color: #7c3aed;
+    color: var(--accent);
     font-size: 1.2rem;
     flex-shrink: 0;
 }
@@ -800,8 +800,8 @@ body.admin-theme main.admin-profile-page {
 }
 
 .spec-toggle.selected {
-    border-color: #7c3aed;
-    background: rgba(124, 58, 237, 0.12);
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
     color: #a78bfa;
 }
 
@@ -823,7 +823,7 @@ body.admin-theme main.admin-profile-page {
 }
 
 .trainer-theme .btn-save-changes {
-    background: #7c3aed;
+    background: var(--accent);
     color: #fff;
 }
 
