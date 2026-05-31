@@ -120,15 +120,6 @@ document.addEventListener('keydown', function(e) {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    var msgEl = document.getElementById('equipMsg');
-    if (msgEl) {
-        setTimeout(function () {
-            msgEl.style.transition = 'opacity .4s';
-            msgEl.style.opacity = '0';
-            setTimeout(function () { msgEl.remove(); }, 420);
-        }, 3500);
-    }
-
     const locationFilter = document.getElementById('filter-location');
     const bodyFilter = document.getElementById('filter-body');
     const statusFilter = document.getElementById('filter-status');

@@ -207,6 +207,7 @@ require_once(__DIR__ . '/../../utils/session.php');
             <p>&copy; All rights reserved.</p>
         </div>
     </footer>
+    <script src="../../js/alerts.js"></script>
 </body>
 </html>
 <?php } ?>

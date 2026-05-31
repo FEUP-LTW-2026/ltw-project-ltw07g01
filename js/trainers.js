@@ -308,7 +308,15 @@ function showFormError(msg) {
     const el = document.getElementById('trainerFormError');
     if (!el) return;
     el.innerHTML = `<i class="fa fa-triangle-exclamation"></i> ${msg}`;
+    el.style.opacity = '1';
     el.hidden = false;
+    setTimeout(() => {
+        el.style.opacity = '0';
+        el.addEventListener('transitionend', () => {
+            el.hidden = true;
+            el.style.opacity = '1';
+        }, { once: true });
+    }, 4000);
 }
 
 // ── Promote form ──────────────────────────────────────────────────────────────
@@ -346,17 +354,6 @@ document.querySelectorAll('.admin-photo-picker input[type="file"]').forEach(inp 
         reader.readAsDataURL(file);
     });
 });
-
-// ── Success message auto-dismiss ──────────────────────────────────────────────
-
-const msgEl = document.getElementById('trainerMsg');
-if (msgEl) {
-    setTimeout(() => {
-        msgEl.style.transition = 'opacity .4s';
-        msgEl.style.opacity = '0';
-        setTimeout(() => msgEl.remove(), 420);
-    }, 3500);
-}
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 

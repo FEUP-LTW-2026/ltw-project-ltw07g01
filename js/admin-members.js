@@ -21,12 +21,6 @@
         }, delay);
     }
 
-    document.querySelectorAll('.admin-alert--ok, .admin-alert--err').forEach(function (el) {
-        if (!el.classList.contains('admin-alert--ajax')) {
-            fadeOutAlert(el, 3500);
-        }
-    });
-
     document.getElementById('memberSearch').addEventListener('input', function () {
         var q = this.value.toLowerCase();
         document.querySelectorAll('.admin-table tbody tr').forEach(function (row) {
