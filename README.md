@@ -40,6 +40,8 @@ CUBO GYM is a modern fitness club offering gym, pilates, and cycling memberships
 - [x] Gym location management for admins (add, edit, upload photos).
 - [x] CSRF protection across all forms and AJAX endpoints.
 - [x] Real-time equipment availability toggle without page reload.
+- [x] Each user has a different type of statistics tracking.
+- [x] Warning equipment notifications for admins
 
 
 ## Running

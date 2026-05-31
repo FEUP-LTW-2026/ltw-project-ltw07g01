@@ -115,7 +115,8 @@ if ($method === 'DELETE') {
         die(json_encode(['error' => 'Missing location id in URL (?id=X)']));
     }
 
-    $db->prepare('DELETE FROM gym_locations WHERE id=?')->execute([$id]);
+    $db->prepare('DELETE FROM classes WHERE gym_id = ?')->execute([$id]);
+    $db->prepare('DELETE FROM gym_locations WHERE id = ?')->execute([$id]);
     http_response_code(204);
     exit;
 }

@@ -171,11 +171,14 @@
                     </select>
                 </div>
                 <div class="admin-field">
-                    <label>Photo <?= $editItem && $editItem['photo'] ? '(leave empty to keep current)' : '(optional)' ?></label>
-                    <?php if ($editItem && $editItem['photo']): ?>
-                        <img src="<?= htmlspecialchars($editItem['photo']) ?>" alt="Current photo" style="height:4rem;object-fit:cover;border-radius:0.25rem;margin-bottom:0.5rem;display:block;">
-                    <?php endif; ?>
-                    <input type="file" name="photo" accept="image/jpeg,image/png,image/webp">
+                    <label>Photo</label>
+                    <figure class="equip-photo-upload" id="equipPhotoWrapper" onclick="document.getElementById('equipPhotoInput').click()">
+                        <img id="equipPhotoPreview"
+                             src="<?= htmlspecialchars($editItem['photo'] ?? '/images/gym.png') ?>"
+                             alt="Equipment photo">
+                        <span class="equip-photo-overlay"><i class="fa fa-camera"></i></span>
+                    </figure>
+                    <input type="file" id="equipPhotoInput" name="photo" accept="image/jpeg,image/png,image/webp" style="display:none">
                 </div>
                 <div class="admin-form-actions">
                     <button type="submit" class="btn-admin-primary">

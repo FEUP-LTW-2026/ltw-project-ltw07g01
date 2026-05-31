@@ -228,7 +228,8 @@ if ($method === 'DELETE') {
         die(json_encode(['error' => 'Missing trainer id in URL (?id=X)']));
     }
 
-    $db->prepare('DELETE FROM users WHERE id=?')->execute([$id]);
+    $db->prepare('DELETE FROM classes WHERE trainer_id = ?')->execute([$id]);
+    $db->prepare('DELETE FROM users WHERE id = ?')->execute([$id]);
     http_response_code(204);
     exit;
 }

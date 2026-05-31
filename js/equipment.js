@@ -11,6 +11,20 @@ function closeEquipForm() {
     document.getElementById('equipForm').hidden = true;
 }
 
+(function () {
+    var input   = document.getElementById('equipPhotoInput');
+    var preview = document.getElementById('equipPhotoPreview');
+    if (!input || !preview) return;
+    input.addEventListener('change', function () {
+        var file = input.files[0];
+        if (file && file.type.startsWith('image/')) {
+            var reader = new FileReader();
+            reader.onload = function (e) { preview.src = e.target.result; };
+            reader.readAsDataURL(file);
+        }
+    });
+}());
+
 function toggleEquip(id, btn) {
     const fd = new FormData();
     fd.append('_method', 'PATCH');
