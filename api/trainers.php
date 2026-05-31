@@ -8,11 +8,8 @@ header('Content-Type: application/json');
 $session = new Session();
 $db      = getDatabaseConnection();
 
-// Allow PUT/DELETE override via _method for multipart forms
 $method = strtoupper($_POST['_method'] ?? $_SERVER['REQUEST_METHOD']);
 $id     = isset($_GET['id']) ? (int)$_GET['id'] : null;
-
-// ── GET ──────────────────────────────────────────────────────────────────────
 
 if ($method === 'GET') {
     if ($id) {
@@ -76,8 +73,6 @@ if ($method === 'GET') {
     exit;
 }
 
-// ── Admin-only methods below ─────────────────────────────────────────────────
-
 function requireAdmin(Session $session, PDO $db): void {
     if (!$session->isLoggedIn()) {
         http_response_code(401);
@@ -109,8 +104,6 @@ function saveTrainerPhoto(PDO $db, int $userId): void {
            ->execute(['../images/profile_photos/' . $fn, $userId]);
     }
 }
-
-// ── POST — create trainer ─────────────────────────────────────────────────────
 
 if ($method === 'POST') {
     requireAdmin($session, $db);
@@ -165,8 +158,6 @@ if ($method === 'POST') {
     exit;
 }
 
-// ── PUT — update trainer ──────────────────────────────────────────────────────
-
 if ($method === 'PUT') {
     requireAdmin($session, $db);
 
@@ -213,8 +204,6 @@ if ($method === 'PUT') {
     echo json_encode(['msg' => 'Trainer updated.']);
     exit;
 }
-
-// ── DELETE — remove trainer ───────────────────────────────────────────────────
 
 if ($method === 'DELETE') {
     requireAdmin($session, $db);

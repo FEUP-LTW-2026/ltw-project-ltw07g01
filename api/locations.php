@@ -11,8 +11,6 @@ $db      = getDatabaseConnection();
 $method = strtoupper($_POST['_method'] ?? $_SERVER['REQUEST_METHOD']);
 $id     = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
-// ── GET ──────────────────────────────────────────────────────────────────────
-
 if ($method === 'GET') {
     if ($id) {
         $stmt = $db->prepare('SELECT id, name, city, address, photo FROM gym_locations WHERE id = ?');
@@ -29,8 +27,6 @@ if ($method === 'GET') {
     }
     exit;
 }
-
-// ── Admin-only methods below ──────────────────────────────────────────────────
 
 function requireAdmin(Session $session, PDO $db): void {
     if (!$session->isLoggedIn()) {
@@ -64,8 +60,6 @@ function savePhoto(PDO $db, int $locId): void {
     }
 }
 
-// ── POST — create location ────────────────────────────────────────────────────
-
 if ($method === 'POST') {
     requireAdmin($session, $db);
 
@@ -87,8 +81,6 @@ if ($method === 'POST') {
     echo json_encode(['id' => $newId, 'msg' => 'Location added.']);
     exit;
 }
-
-// ── PUT — update location ─────────────────────────────────────────────────────
 
 if ($method === 'PUT') {
     requireAdmin($session, $db);
@@ -114,8 +106,6 @@ if ($method === 'PUT') {
     echo json_encode(['msg' => 'Location updated.']);
     exit;
 }
-
-// ── DELETE — remove location ──────────────────────────────────────────────────
 
 if ($method === 'DELETE') {
     requireAdmin($session, $db);

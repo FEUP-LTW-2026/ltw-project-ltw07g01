@@ -11,8 +11,6 @@ $db      = getDatabaseConnection();
 $method = strtoupper($_POST['_method'] ?? $_SERVER['REQUEST_METHOD']);
 $id     = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
-// ── GET ──────────────────────────────────────────────────────────────────────
-
 if ($method === 'GET') {
     if ($id) {
         $stmt = $db->prepare(
@@ -42,8 +40,6 @@ if ($method === 'GET') {
     exit;
 }
 
-// ── Admin-only methods below ──────────────────────────────────────────────────
-
 function requireAdmin(Session $session, PDO $db): void {
     if (!$session->isLoggedIn()) {
         http_response_code(401);
@@ -60,8 +56,6 @@ function requireAdmin(Session $session, PDO $db): void {
         die(json_encode(['error' => 'Invalid CSRF token']));
     }
 }
-
-// ── POST — create equipment ───────────────────────────────────────────────────
 
 if ($method === 'POST') {
     requireAdmin($session, $db);
@@ -82,8 +76,6 @@ if ($method === 'POST') {
     echo json_encode(['id' => (int)$db->lastInsertId(), 'msg' => 'Equipment added.']);
     exit;
 }
-
-// ── PUT — update equipment ────────────────────────────────────────────────────
 
 if ($method === 'PUT') {
     requireAdmin($session, $db);
@@ -109,8 +101,6 @@ if ($method === 'PUT') {
     exit;
 }
 
-// ── PATCH — toggle availability ───────────────────────────────────────────────
-
 if ($method === 'PATCH') {
     requireAdmin($session, $db);
 
@@ -128,8 +118,6 @@ if ($method === 'PATCH') {
     echo json_encode(['is_available' => (bool)$row['is_available']]);
     exit;
 }
-
-// ── DELETE — remove equipment ─────────────────────────────────────────────────
 
 if ($method === 'DELETE') {
     requireAdmin($session, $db);

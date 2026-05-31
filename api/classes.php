@@ -53,8 +53,6 @@ function saveClassPhoto(PDO $db, int $classId): void {
     }
 }
 
-// ── GET: enrollments list ─────────────────────────────────────────────────────
-
 if ($method === 'GET' && $action === 'enrollments') {
     requireAdminOrTrainer($role);
     $classId = $id ?? (int)($_GET['class_id'] ?? 0);
@@ -81,8 +79,6 @@ if ($method === 'GET' && $action === 'enrollments') {
     echo json_encode(['ok' => true, 'enrollments' => $s->fetchAll(PDO::FETCH_ASSOC)]);
     exit;
 }
-
-// ── POST?action=enroll — book class (client) ──────────────────────────────────
 
 if ($method === 'POST' && $action === 'enroll') {
     requireAuth($role);
@@ -132,8 +128,6 @@ if ($method === 'POST' && $action === 'enroll') {
     exit;
 }
 
-// ── POST?action=cancel — cancel own enrollment (client) ───────────────────────
-
 if ($method === 'POST' && $action === 'cancel') {
     requireAuth($role);
     requireCsrf($session);
@@ -179,8 +173,6 @@ if ($method === 'POST' && $action === 'cancel') {
     exit;
 }
 
-// ── POST?action=unenroll — admin/trainer remove enrollment ────────────────────
-
 if ($method === 'POST' && $action === 'unenroll') {
     requireAdminOrTrainer($role);
     requireCsrf($session);
@@ -207,8 +199,6 @@ if ($method === 'POST' && $action === 'unenroll') {
     echo json_encode(['ok' => true, 'enrolled' => (int)$s->fetchColumn()]);
     exit;
 }
-
-// ── POST?action=review — submit review (client) ───────────────────────────────
 
 if ($method === 'POST' && $action === 'review') {
     requireAuth($role);
@@ -267,8 +257,6 @@ if ($method === 'POST' && $action === 'review') {
     exit;
 }
 
-// ── POST — create class ───────────────────────────────────────────────────────
-
 if ($method === 'POST') {
     requireAdminOrTrainer($role);
     requireCsrf($session);
@@ -319,8 +307,6 @@ if ($method === 'POST') {
     exit;
 }
 
-// ── PUT — update class ────────────────────────────────────────────────────────
-
 if ($method === 'PUT') {
     requireAdminOrTrainer($role);
     requireCsrf($session);
@@ -364,8 +350,6 @@ if ($method === 'PUT') {
     echo json_encode(['msg' => 'Class updated.']);
     exit;
 }
-
-// ── DELETE — remove class ─────────────────────────────────────────────────────
 
 if ($method === 'DELETE') {
     requireAdminOrTrainer($role);

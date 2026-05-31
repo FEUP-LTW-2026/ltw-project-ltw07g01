@@ -88,7 +88,6 @@ if ($method === 'POST') {
         die(json_encode(['error' => 'User is already an admin']));
     }
 
-    // Clean up trainer role if applicable
     $s = $db->prepare('SELECT 1 FROM trainers WHERE user_id = ?');
     $s->execute([$userId]);
     if ($s->fetch()) {
@@ -97,7 +96,6 @@ if ($method === 'POST') {
         $db->prepare('DELETE FROM trainers WHERE user_id=?')->execute([$userId]);
     }
 
-    // Clean up client role if applicable
     $s = $db->prepare('SELECT 1 FROM clients WHERE user_id = ?');
     $s->execute([$userId]);
     if ($s->fetch()) {
@@ -121,7 +119,6 @@ if ($method === 'DELETE') {
         die(json_encode(['error' => 'Missing admin id in URL (?id=X)']));
     }
 
-    // Prevent removing yourself
     if ($id === (int)$session->getId()) {
         http_response_code(403);
         die(json_encode(['error' => 'Cannot remove your own admin role']));

@@ -22,8 +22,6 @@ function savePhoto(PDO $db, int $userId): void {
     User::saveProfilePhoto($db, $userId, __DIR__ . '/../images/profile_photos/');
 }
 
-// ── POST?action=promote_trainer — promote client to trainer ───────────────────
-
 if ($method === 'POST' && $action === 'promote_trainer') {
     requireAdmin($session, $db);
     $targetId = (int)($_POST['target_id'] ?? 0);
@@ -44,8 +42,6 @@ if ($method === 'POST' && $action === 'promote_trainer') {
     echo json_encode(['ok' => true, 'msg' => 'Member promoted to trainer.']);
     exit;
 }
-
-// ── POST — create member ──────────────────────────────────────────────────────
 
 if ($method === 'POST') {
     requireAdmin($session, $db);
@@ -98,8 +94,6 @@ if ($method === 'POST') {
     exit;
 }
 
-// ── PUT — update member ───────────────────────────────────────────────────────
-
 if ($method === 'PUT') {
     requireAdmin($session, $db);
 
@@ -147,8 +141,6 @@ if ($method === 'PUT') {
     echo json_encode(['msg' => 'Member updated.']);
     exit;
 }
-
-// ── DELETE — remove member ────────────────────────────────────────────────────
 
 if ($method === 'DELETE') {
     requireAdmin($session, $db);
