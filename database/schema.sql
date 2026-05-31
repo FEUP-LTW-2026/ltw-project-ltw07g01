@@ -42,7 +42,7 @@ CREATE TABLE class_types
 );
 
 CREATE TABLE archetypes
-(
+(INSERT INTO archetypes (name) VALUES ('POWERLIFTER');
     id   INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL
 );
@@ -260,7 +260,6 @@ INSERT INTO class_types (name) VALUES ('Personal Training');
 
 INSERT INTO archetypes (name) VALUES ('SPINNER');
 INSERT INTO archetypes (name) VALUES ('POWERLIFTER');
-INSERT INTO archetypes (name) VALUES ('YOGI');
 INSERT INTO archetypes (name) VALUES ('PILATES PRACTITIONER');
 INSERT INTO archetypes (name) VALUES ('RUNNER');
 INSERT INTO archetypes (name) VALUES ('CROSSFITTER');
@@ -281,7 +280,7 @@ INSERT INTO trainers (user_id, bio, certifications)
 VALUES (2, 'Pilates instructor with 10 years experience.', 'ACE, Mat Pilates');
 
 INSERT INTO users (id, username, email, password_hash, first_name, last_name)
-VALUES (4, 'mia.fernandes', 'maria@cubogym.com',
+VALUES (4, 'mia.fernandes', 'mia@cubogym.com',
         '$2y$12$RLrV1W7DVRUuO64nGrcxKeM9yl8qIE7V86o3zswBXQyLg96ASGA26',
         'Mia', 'Fernandes');
 

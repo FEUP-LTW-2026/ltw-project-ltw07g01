@@ -24,7 +24,7 @@
             <input type="text" id="last_name" name="last_name" placeholder="Pork" required maxlength="20">
 
             <label for="email">Email</label>
-            <input type="text" id="email" name="email" inputmode="email" autocomplete="email" placeholder="john67pork@example.com" required>
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="john67pork@example.com" required>
 
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required minlength="6">
