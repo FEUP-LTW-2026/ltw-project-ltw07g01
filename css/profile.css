@@ -312,7 +312,7 @@ body.admin-theme main.admin-profile-page {
 }
 
 .btn-save-changes:hover {
-    background: #00d4b3;
+    filter: brightness(0.88);
 }
 
 .btn-cancel {
@@ -828,7 +828,7 @@ body.admin-theme main.admin-profile-page {
 }
 
 .trainer-theme .btn-save-changes:hover {
-    background: #6d28d9;
+    filter: brightness(0.88);
 }
 
 .trainer-schedule-section {

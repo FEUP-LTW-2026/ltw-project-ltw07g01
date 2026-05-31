@@ -336,7 +336,7 @@ main.sc-has-navbar {
 
 .sc-dur {
     font-size: 0.9rem;
-    color: var(--text-dim);
+    color: var(--text-main);
 }
 
 .sc-card {
