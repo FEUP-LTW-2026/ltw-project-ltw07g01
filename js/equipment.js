@@ -116,6 +116,26 @@ function closeEquipModal() {
     document.getElementById('equipModalBackdrop').classList.remove('open');
 }
 
+function updateGymItemCount(grid) {
+    const countEl = grid?.previousElementSibling?.querySelector('.equip-gym-count');
+    if (!countEl) return;
+
+    const total = grid.querySelectorAll('.equipment-card').length;
+    countEl.textContent = `${total} item${total !== 1 ? 's' : ''}`;
+}
+
+function removeEmptyGymSection(grid) {
+    if (grid.querySelector('.equipment-card')) return false;
+
+    const header = grid.previousElementSibling;
+    const loadMore = grid.nextElementSibling;
+
+    if (header?.classList.contains('equip-gym-header')) header.remove();
+    if (loadMore?.classList.contains('equip-loadmore-wrap')) loadMore.remove();
+    grid.remove();
+    return true;
+}
+
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeEquipModal();
 });
@@ -127,12 +147,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.equipment-card');
     const clearButton = document.getElementById('equipment-filter-clear');
     const count = document.getElementById('equipment-filter-count');
-    const grids = document.querySelectorAll('.equipment-grid[data-loadmore]');
+    const getGrids = () => document.querySelectorAll('.equipment-grid[data-loadmore]');
 
     const INITIAL = 3;
     const STEP = 9;
     const visibleCount = new WeakMap();
-    grids.forEach(grid => visibleCount.set(grid, INITIAL));
+    getGrids().forEach(grid => visibleCount.set(grid, INITIAL));
 
     function cardMatchesFilters(card) {
         if (!locationFilter) return true;
@@ -184,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function refreshAll() {
         let total = 0;
-        grids.forEach(grid => { total += applyGridVisibility(grid); });
+        getGrids().forEach(grid => { total += applyGridVisibility(grid); });
         if (count && locationFilter) {
             const hasFilter = locationFilter.value !== 'all'
                 || bodyFilter.value !== 'all'
@@ -197,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetAndRefresh() {
-        grids.forEach(grid => visibleCount.set(grid, INITIAL));
+        getGrids().forEach(grid => visibleCount.set(grid, INITIAL));
         refreshAll();
     }
 
@@ -245,7 +265,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const card = this.closest('.equipment-card--admin');
                 const grid = card?.closest('.equipment-grid');
                 card?.remove();
-                if (grid) applyGridVisibility(grid);
+                if (grid) {
+                    updateGymItemCount(grid);
+                    if (!removeEmptyGymSection(grid)) applyGridVisibility(grid);
+                }
             } else {
                 const data = await res.json();
                 alert(data.error || 'Error removing equipment.');
