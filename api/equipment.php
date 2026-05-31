@@ -14,7 +14,7 @@ $id     = isset($_GET['id']) ? (int)$_GET['id'] : null;
 if ($method === 'GET') {
     if ($id) {
         $stmt = $db->prepare(
-            'SELECT e.id, e.name, e.body_part, e.is_available, e.gym_id,
+            'SELECT e.id, e.name, e.body_part, e.is_available, e.gym_id, e.photo,
                     gl.name AS gym_name, gl.city AS gym_city
              FROM equipment e
              JOIN gym_locations gl ON gl.id = e.gym_id
@@ -29,7 +29,7 @@ if ($method === 'GET') {
         echo json_encode($item);
     } else {
         $stmt = $db->query(
-            'SELECT e.id, e.name, e.body_part, e.is_available, e.gym_id,
+            'SELECT e.id, e.name, e.body_part, e.is_available, e.gym_id, e.photo,
                     gl.name AS gym_name, gl.city AS gym_city
              FROM equipment e
              JOIN gym_locations gl ON gl.id = e.gym_id
@@ -57,6 +57,21 @@ function requireAdmin(Session $session, PDO $db): void {
     }
 }
 
+function savePhoto(PDO $db, int $equipId): void {
+    $pf = $_FILES['photo'] ?? null;
+    if (!$pf || $pf['error'] !== UPLOAD_ERR_OK || $pf['size'] > 5 * 1024 * 1024) return;
+    $ext  = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif'];
+    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($pf['tmp_name']);
+    if (!isset($ext[$mime])) return;
+    $dir = __DIR__ . '/../images/equipment_photos/';
+    @mkdir($dir, 0755, true);
+    $fn = 'equip_' . $equipId . '_' . time() . '.' . $ext[$mime];
+    if (move_uploaded_file($pf['tmp_name'], $dir . $fn)) {
+        $db->prepare('UPDATE equipment SET photo=? WHERE id=?')
+           ->execute(['../images/equipment_photos/' . $fn, $equipId]);
+    }
+}
+
 if ($method === 'POST') {
     requireAdmin($session, $db);
 
@@ -71,9 +86,11 @@ if ($method === 'POST') {
 
     $db->prepare('INSERT INTO equipment (name, gym_id, body_part, is_available) VALUES (?,?,?,1)')
        ->execute([$name, $gymId, $bodyPart]);
+    $newId = (int)$db->lastInsertId();
+    savePhoto($db, $newId);
 
     http_response_code(201);
-    echo json_encode(['id' => (int)$db->lastInsertId(), 'msg' => 'Equipment added.']);
+    echo json_encode(['id' => $newId, 'msg' => 'Equipment added.']);
     exit;
 }
 
@@ -96,6 +113,7 @@ if ($method === 'PUT') {
 
     $db->prepare('UPDATE equipment SET name=?, gym_id=?, body_part=? WHERE id=?')
        ->execute([$name, $gymId, $bodyPart, $id]);
+    savePhoto($db, $id);
 
     echo json_encode(['msg' => 'Equipment updated.']);
     exit;

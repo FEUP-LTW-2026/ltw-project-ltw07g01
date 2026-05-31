@@ -21,6 +21,7 @@ function toggleEquip(id, btn) {
             const avail = data.is_available;
             const icon  = btn.querySelector('i');
             icon.className = 'fa fa-' + (avail ? 'toggle-on' : 'toggle-off');
+            btn.classList.toggle('btn-admin-sm--available', avail);
             const card   = btn.closest('.equipment-card');
             const status = card.querySelector('.status');
             status.className  = 'status ' + (avail ? 'available' : 'unavailable');
@@ -128,9 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const count = document.getElementById('equipment-filter-count');
     const grids = document.querySelectorAll('.equipment-grid[data-loadmore]');
 
-    const STEP = 3;
+    const INITIAL = 3;
+    const STEP = 9;
     const visibleCount = new WeakMap();
-    grids.forEach(grid => visibleCount.set(grid, STEP));
+    grids.forEach(grid => visibleCount.set(grid, INITIAL));
 
     function cardMatchesFilters(card) {
         if (!locationFilter) return true;
@@ -191,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetAndRefresh() {
-        grids.forEach(grid => visibleCount.set(grid, STEP));
+        grids.forEach(grid => visibleCount.set(grid, INITIAL));
         refreshAll();
     }
 
