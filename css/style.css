@@ -18,6 +18,11 @@
     --border: 0.0625rem solid #222;
 }
 
+input:-webkit-autofill {
+    -webkit-text-fill-color: white;
+    box-shadow: 0 0 0 1000px #111 inset;
+}
+
 .admin-theme {
     --accent: #e11d48;
 }

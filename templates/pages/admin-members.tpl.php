@@ -38,7 +38,7 @@
                 </div>
                 <div class="admin-field">
                     <label>Email</label>
-                    <input type="email" name="email" id="f_email" required>
+                    <input type="text" name="email" id="f_email" inputmode="email" autocomplete="email" required>
                 </div>
                 <div class="admin-field" id="usernameField">
                     <label>Username</label>

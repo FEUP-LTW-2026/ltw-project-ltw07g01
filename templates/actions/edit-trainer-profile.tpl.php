@@ -57,7 +57,7 @@
                 </div>
                 <div class="detail-item">
                     <label class="detail-label" for="email">Email Address</label>
-                    <input type="email" id="email" name="email" class="detail-input" value="<?= htmlspecialchars($user['email']) ?>" required>
+                    <input type="text" id="email" name="email" class="detail-input" inputmode="email" autocomplete="email" value="<?= htmlspecialchars($user['email']) ?>" required>
                 </div>
                 <div class="detail-item detail-item--bio">
                     <label class="detail-label" for="bio">Bio <span class="bio-char-count">(<span id="bioCount"><?= mb_strlen($bio) ?></span>/300)</span></label>
