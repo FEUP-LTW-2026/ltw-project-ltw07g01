@@ -42,7 +42,7 @@ CREATE TABLE class_types
 );
 
 CREATE TABLE archetypes
-(INSERT INTO archetypes (name) VALUES ('POWERLIFTER');
+(
     id   INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL
 );
