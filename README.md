@@ -1,7 +1,43 @@
-# ltw07g01
+# CUBO GYM: Fitness Club Web Application
 
-CUBO GYM is a modern fitness club offering gym, pilates, and cycling memberships across multiple locations, with flexible plans ranging from basic to ultra
----
+**ltw07g01**: group project for the **Web Languages and Technologies** course (L.EIC019) of the Bachelor in Informatics and Computing Engineering at FEUP (University of Porto), 2025/26.
+
+CUBO GYM is a modern fitness club offering gym, pilates and cycling memberships across multiple locations, with flexible plans ranging from basic to ultra. This web application lets **members** book classes and track their progress, **trainers** manage their schedules and profiles, and **admins** run the whole club.
+
+## Technologies
+
+PHP 8 (server-side rendering, no framework) · SQLite · HTML5 · CSS3 · vanilla JavaScript (AJAX with `fetch`) · JSON REST API
+
+## Architecture
+
+```
+pages/        entry points: load data and render a page
+templates/    reusable HTML templates (layout, pages, forms)
+actions/      form handlers (login, register, edit profile, subscribe…)
+api/          JSON REST endpoints (classes, equipment, members, trainers, locations, admins)
+database/     data-access classes (User, Trainer, GymClass, Membership, Badge…) and the schema (17 tables)
+js/           client-side interactivity: schedule, enrolment, equipment, admin tools
+utils/        session management and helpers
+```
+
+Pages, templates, actions and data access are kept separate. The front-end updates parts of the page (enrolments, equipment availability, admin search) through the JSON API, without reloading the page.
+
+## Security
+
+- **SQL injection:** every query uses prepared statements.
+- **XSS:** all user-provided content is escaped before it is rendered.
+- **CSRF:** tokens on every form and AJAX endpoint.
+- **Passwords:** stored as hashes and checked with `password_verify`.
+- **Access control:** role-based (member / trainer / admin) on pages, actions and API endpoints. The database is kept in `private/`, which isn't served to the browser.
+
+## My contribution (André Baptista, [@andrefb26](https://github.com/andrefb26))
+
+- Member **profile and dashboard** pages, and the **trainer profile** and its editing.
+- The **class schedule**, including the trainers' schedules.
+- **Admin pages**, with restructuring and member search, and equipment management with JavaScript.
+- **Membership** updates and cancellation, and **class reviews**.
+- Most of the final bug-fixing and restructuring rounds before submission.
+
 ## Features
 
 **All users:**
