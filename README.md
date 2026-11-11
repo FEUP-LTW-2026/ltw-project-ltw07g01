@@ -6,7 +6,7 @@ CUBO GYM is a modern fitness club offering gym, pilates and cycling memberships 
 
 ## Technologies
 
-PHP 8 (server-side rendering, no framework) · SQLite · HTML5 · CSS3 · vanilla JavaScript (AJAX with `fetch`) · JSON REST API
+PHP (server-side rendering, no framework) · SQLite · HTML5 · CSS3 · vanilla JavaScript (AJAX with `fetch`) · JSON REST API
 
 ## Architecture
 
@@ -28,7 +28,7 @@ Pages, templates, actions and data access are kept separate. The front-end updat
 - **XSS:** all user-provided content is escaped before it is rendered.
 - **CSRF:** tokens on every form and AJAX endpoint.
 - **Passwords:** stored as hashes and checked with `password_verify`.
-- **Access control:** role-based (member / trainer / admin) on pages, actions and API endpoints. The database is kept in `private/`, which isn't served to the browser.
+- **Access control:** restricted pages and actions check the user's role (member / trainer / admin). The database is kept in `private/`, which isn't served to the browser.
 
 ## My contribution (André Baptista, [@andrefb26](https://github.com/andrefb26))
 
